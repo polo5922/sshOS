@@ -109,7 +109,7 @@ frontend/    interface Leptos : wm.rs (bureau, fenêtres, dock, spotlight), apps
 
 ## Licence
 
-[GPL-3.0-or-later](LICENSE), comme Davish.
+[GPL-3.0-or-later](LICENSE)
 
 ## Démarrage et serveurs
 - Le dernier serveur actif est reconnecté automatiquement au lancement (une déconnexion volontaire l'oublie).
