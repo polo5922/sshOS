@@ -8,6 +8,16 @@ Rust — backend [Tauri v2](https://tauri.app) + [russh](https://github.com/Euge
 > dont il reprend le concept et les règles de sécurité. Merci à ses auteurs. sshOs est un projet
 > indépendant et n'utilise ni le nom ni le logo de Davish.
 
+![Le bureau sshOs : Fichiers (SFTP) et Moniteur ouverts, Dock en bas](docs/screenshots/desktop.png)
+
+| Lanceur d'applications (F4) | Docker (thème sombre) |
+|---|---|
+| ![Lanceur : toutes les apps par catégorie, + / ✓ pour le Dock](docs/screenshots/launcher.png) | ![Docker : conteneurs regroupés par projet compose](docs/screenshots/docker.png) |
+
+![Sécurité : tentatives SSH, IP les plus actives et utilisateurs visés](docs/screenshots/security.png)
+
+<sub>Captures prises avec des données fictives (aucun vrai serveur).</sub>
+
 ## Applications (MVP)
 
 | App | Ce qu'elle fait |
