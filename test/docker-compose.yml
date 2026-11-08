@@ -1,0 +1,41 @@
+# Test server for sshOs: an SSH box with native nginx, plus Nginx Proxy Manager.
+#   docker compose -f test/docker-compose.yml up -d
+# SSH:  host 127.0.0.1, port 2222, user "dev", password "dev"   (sudo allowed)
+# NPM:  web UI http://127.0.0.1:8181  (first login: admin@example.com / changeme)
+#       In sshOs, set the connection's "Nginx Proxy Manager API" field to  npm:81  (reachable from the SSH box).
+services:
+  ssh:
+    image: lscr.io/linuxserver/openssh-server:latest
+    environment:
+      PUID: "1000"
+      PGID: "1000"
+      USER_NAME: dev
+      USER_PASSWORD: dev
+      PASSWORD_ACCESS: "true"
+      SUDO_ACCESS: "true"
+      DOCKER_MODS: linuxserver/mods:openssh-server-ssh-tunnel
+    # Install nginx at first start (Alpine based image). Alpine reads http.d/; sshOs manages conf.d/.
+    entrypoint:
+      - /bin/sh
+      - -c
+      - >-
+        apk add --no-cache nginx >/dev/null &&
+        mkdir -p /etc/nginx/conf.d &&
+        rm -rf /etc/nginx/http.d && ln -s /etc/nginx/conf.d /etc/nginx/http.d &&
+        nginx; exec /init
+    ports:
+      - "2222:2222"
+
+  npm:
+    image: jc21/nginx-proxy-manager:latest
+    ports:
+      - "8080:80"
+      - "8443:443"
+      - "8181:81"
+    volumes:
+      - npm-data:/data
+      - npm-letsencrypt:/etc/letsencrypt
+
+volumes:
+  npm-data:
+  npm-letsencrypt:

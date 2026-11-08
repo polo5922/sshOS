@@ -1,0 +1,699 @@
+# english	deutsch	español (one line per English label; see i18n.rs)
+ — GPL-3.0 license.	 — Lizenz GPL-3.0.	 — licencia GPL-3.0.
+(empty)	(leer)	(vacío)
+(no difference)	(kein Unterschied)	(sin diferencias)
++ my IP	+ meine IP	+ mi IP
+1 minute	1 Minute	1 minuto
+1 minute ago	vor 1 Minute	hace 1 minuto
+100 lines	100 Zeilen	100 líneas
+1000 lines	1000 Zeilen	1000 líneas
+15 minutes	15 Minuten	15 minutos
+15 minutes ago	vor 15 Minuten	hace 15 minutos
+300 lines	300 Zeilen	300 líneas
+5 minutes	5 Minuten	5 minutos
+5 minutes ago	vor 5 Minuten	hace 5 minutos
+A Rust port of Davish, keeping its concept and safety rules.	Eine Rust-Portierung von Davish, die dessen Konzept und Sicherheitsregeln beibehält.	Una adaptación de Davish a Rust que conserva su concepto y sus reglas de seguridad.
+A container shell opens inside the Docker app.	Eine Container-Shell öffnet sich in der Docker-App.	Se abre una shell del contenedor dentro de la app Docker.
+A desktop for your servers, agentless: everything goes through SSH.	Ein Desktop für Ihre Server, ohne Agent: alles läuft über SSH.	Un escritorio para tus servidores, sin agente: todo pasa por SSH.
+A quick look at the desktop. You can start it again at any time from the sshOs menu.	Ein kurzer Rundgang über den Desktop. Sie können ihn jederzeit über das sshOs-Menü erneut starten.	Un recorrido rápido por el escritorio. Puedes volver a iniciarlo en cualquier momento desde el menú sshOs.
+APT cache	APT-Cache	Caché de APT
+About	Über	Acerca de
+About sshOs	Über sshOs	Acerca de sshOs
+Accent color	Akzentfarbe	Color de acento
+Accepted	Akzeptiert	Aceptado
+Accepted logins	Akzeptierte Anmeldungen	Inicios de sesión aceptados
+Access list	Zugriffsliste	Lista de acceso
+Actions	Aktionen	Acciones
+Active server	Aktiver Server	Servidor activo
+Add	Hinzufügen	Añadir
+Add a jail…	Jail hinzufügen…	Añadir una jail…
+Add a repository	Repository hinzufügen	Añadir un repositorio
+Add a repository…	Repository hinzufügen…	Añadir un repositorio…
+Add a server	Server hinzufügen	Añadir un servidor
+Add domains	Domains hinzufügen	Añadir dominios
+Add the IP of your SSH session	IP Ihrer SSH-Sitzung hinzufügen	Añadir la IP de tu sesión SSH
+Addresses are opened from the server through an SSH tunnel: localhost means the server.	Adressen werden vom Server aus über einen SSH-Tunnel geöffnet: localhost ist der Server.	Las direcciones se abren desde el servidor a través de un túnel SSH: localhost es el servidor.
+Advanced (nginx) config	Erweiterte Konfiguration (nginx)	Configuración avanzada (nginx)
+All	Alle	Todos
+All containers	Alle Container	Todos los contenedores
+Always on	Immer an	Siempre activo
+An unknown host key is shown before being trusted; a changed key blocks the connection.	Ein unbekannter Host-Schlüssel wird vor dem Vertrauen angezeigt; ein geänderter Schlüssel blockiert die Verbindung.	Una clave de host desconocida se muestra antes de confiar en ella; una clave cambiada bloquea la conexión.
+Analyse	Analysieren	Analizar
+Analysis	Analyse	Análisis
+App menus	App-Menüs	Menús de la app
+Appearance	Darstellung	Apariencia
+Appearance, Dock and security options go back to their defaults.	Darstellung, Dock und Sicherheitsoptionen werden auf die Standardwerte zurückgesetzt.	La apariencia, el Dock y las opciones de seguridad vuelven a sus valores predeterminados.
+Appearance, Dock, security.	Darstellung, Dock, Sicherheit.	Apariencia, Dock, seguridad.
+Apply	Anwenden	Aplicar
+Apply configuration	Konfiguration anwenden	Aplicar la configuración
+Apply fail2ban configuration	fail2ban-Konfiguration anwenden	Aplicar la configuración de fail2ban
+Apply…	Anwenden…	Aplicar…
+Architecture	Architektur	Arquitectura
+At launch, reopens the connection that was active.	Stellt beim Start die zuletzt aktive Verbindung wieder her.	Al iniciar, vuelve a abrir la conexión que estaba activa.
+Attempts	Versuche	Intentos
+Attempts (failed + invalid)	Versuche (fehlgeschlagen + ungültig)	Intentos (fallidos + inválidos)
+Attempts per hour	Versuche pro Stunde	Intentos por hora
+Aurora	Polarlicht	Aurora
+Authentication	Authentifizierung	Autenticación
+Auto	Auto	Auto
+Auto follows the Windows theme.	Auto folgt dem Windows-Design.	Auto sigue el tema de Windows.
+Available	Verfügbar	Disponible
+Avoids closing every connection by mistake.	Verhindert, dass versehentlich alle Verbindungen geschlossen werden.	Evita cerrar todas las conexiones por error.
+Back	Zurück	Atrás
+Ban	Sperren	Bloquear
+Banned	Gesperrt	Bloqueadas
+Bans IPs that fail to log in too often.	Sperrt IPs, die sich zu oft erfolglos anmelden.	Bloquea las IP que fallan demasiadas veces al iniciar sesión.
+Blank page? Some sites refuse to be embedded. 	Leere Seite? Manche Websites lassen sich nicht einbetten. 	¿Página en blanco? Algunos sitios no permiten ser incrustados.
+Block common exploits	Gängige Exploits blockieren	Bloquear exploits comunes
+Blue	Blau	Azul
+Blurs user@host (screen sharing, demos). Hover to read.	Verwischt user@host (Bildschirmfreigabe, Demos). Zum Lesen darüberfahren.	Difumina user@host (compartir pantalla, demos). Pasa el ratón para leerlo.
+Both	Beides	Ambos
+Branches	Branches	Ramas
+Browser	Browser	Navegador
+CPU, memory, disk and network of the active server.	CPU, Speicher, Festplatte und Netzwerk des aktiven Servers.	CPU, memoria, disco y red del servidor activo.
+CPU, memory, disk and network speed of the active server. Click to open the Monitor.	CPU, Speicher, Festplatte und Netzwerkgeschwindigkeit des aktiven Servers. Klicken, um den Monitor zu öffnen.	CPU, memoria, disco y velocidad de red del servidor activo. Haz clic para abrir el Monitor.
+Cache & buffers	Cache & Puffer	Caché y búferes
+Cache assets	Assets cachen	Cachear recursos
+Cancel	Abbrechen	Cancelar
+Certificate	Zertifikat	Certificado
+Certificate created	Zertifikat erstellt	Certificado creado
+Certificate deleted	Zertifikat gelöscht	Certificado eliminado
+Certificate renewed	Zertifikat erneuert	Certificado renovado
+Certificates	Zertifikate	Certificados
+Check the server key fingerprint before trusting it:	Prüfen Sie den Fingerabdruck des Serverschlüssels, bevor Sie ihm vertrauen:	Comprueba la huella de la clave del servidor antes de confiar en ella:
+Checkout	Auschecken	Cambiar a
+Clean up…	Aufräumen…	Limpiar…
+Cleanup	Aufräumen	Limpieza
+Clear	Leeren	Vaciar
+Clear finished transfers	Abgeschlossene Übertragungen entfernen	Quitar las transferencias terminadas
+Clear the log	Verlauf leeren	Vaciar el historial
+Clear the log…	Verlauf leeren…	Vaciar el historial…
+Click to type a path	Klicken, um einen Pfad einzugeben	Haz clic para escribir una ruta
+Close	Schließen	Cerrar
+Close all shells	Alle Shells schließen	Cerrar todas las shells
+Close window	Fenster schließen	Cerrar ventana
+Closes every SSH connection after no keyboard or mouse activity.	Schließt alle SSH-Verbindungen nach einer Zeit ohne Tastatur- oder Mausaktivität.	Cierra todas las conexiones SSH tras un tiempo sin actividad de teclado o ratón.
+Command	Befehl	Comando
+Command copied.	Befehl kopiert.	Comando copiado.
+Command log	Befehlsverlauf	Historial de comandos
+Command run as root. nginx -t runs before the reload; on failure the backup is restored.	Befehl wird als root ausgeführt. nginx -t läuft vor dem Neuladen; bei einem Fehler wird die Sicherung wiederhergestellt.	Comando ejecutado como root. nginx -t se ejecuta antes de recargar; si falla, se restaura la copia de seguridad.
+Command run on the server:	Auf dem Server ausgeführter Befehl:	Comando ejecutado en el servidor:
+Command shown before running	Befehl wird vor der Ausführung angezeigt	Comando mostrado antes de ejecutarse
+Config files, nginx -t before every reload	Konfigurationsdateien, nginx -t vor jedem Neuladen	Archivos de configuración, nginx -t antes de cada recarga
+Config generated by NPM (read-only: change it through NPM).	Von NPM erzeugte Konfiguration (schreibgeschützt: über NPM ändern).	Configuración generada por NPM (solo lectura: modifícala a través de NPM).
+Config tested before reload	Konfiguration vor dem Neuladen getestet	Configuración probada antes de recargar
+Configuration	Konfiguration	Configuración
+Configuration applied, nginx reloaded.	Konfiguration angewendet, nginx neu geladen.	Configuración aplicada, nginx recargado.
+Configure	Konfigurieren	Configurar
+Configure fail2ban	fail2ban konfigurieren	Configurar fail2ban
+Confirm before quitting	Vor dem Beenden bestätigen	Confirmar antes de salir
+Confirm operation	Vorgang bestätigen	Confirmar la operación
+Connect	Verbinden	Conectar
+Connect to	Verbinden mit	Conectar a
+Connect to a server first.	Verbinden Sie sich zuerst mit einem Server.	Conéctate primero a un servidor.
+Connected	Verbunden	Conectado
+Connected to	Verbunden mit	Conectado a
+Connecting to Nginx Proxy Manager through the SSH tunnel…	Verbindung zu Nginx Proxy Manager über den SSH-Tunnel…	Conectando con Nginx Proxy Manager a través del túnel SSH…
+Connecting…	Verbinde…	Conectando…
+Connections	Verbindungen	Conexiones
+Connections…	Verbindungen…	Conexiones…
+Containers	Container	Contenedores
+Containers CPU	Container-CPU	CPU de contenedores
+Containers RAM	Container-RAM	RAM de contenedores
+Continue…	Weiter…	Continuar…
+Copy	Kopieren	Copiar
+Copy as	Kopieren als	Copiar como
+Cores	Kerne	Núcleos
+Could not open the page	Seite konnte nicht geöffnet werden	No se pudo abrir la página
+Create	Erstellen	Crear
+Created	Erstellt	Creado
+Create…	Erstellen…	Crear…
+Ctrl+K to launch an app	Strg+K startet eine App	Ctrl+K para abrir una app
+Ctrl+K to launch an app or switch server.	Strg+K startet eine App oder wechselt den Server.	Ctrl+K para abrir una app o cambiar de servidor.
+Ctrl+K: open an app, a server or a setting by typing a few letters.	Strg+K: eine App, einen Server oder eine Einstellung mit wenigen Buchstaben öffnen.	Ctrl+K: abre una app, un servidor o un ajuste escribiendo unas pocas letras.
+Dark	Dunkel	Oscuro
+Dark theme	Dunkles Design	Tema oscuro
+Dead	Tot	Muerto
+Defaults	Standardwerte	Valores predeterminados
+Delete	Löschen	Eliminar
+Delete certificate	Zertifikat löschen	Eliminar certificado
+Delete connection	Verbindung löschen	Eliminar conexión
+Delete in Nginx Proxy Manager:	In Nginx Proxy Manager löschen:	Eliminar en Nginx Proxy Manager:
+Delete proxy host	Proxy-Host löschen	Eliminar proxy host
+Delete redirection	Weiterleitung löschen	Eliminar redirección
+Delete stream	Stream löschen	Eliminar stream
+Delete…	Löschen…	Eliminar…
+Desktop	Schreibtisch	Escritorio
+Desktop & Dock	Schreibtisch & Dock	Escritorio y Dock
+Detecting nginx…	nginx wird erkannt…	Detectando nginx…
+Disable	Deaktivieren	Desactivar
+Discard unsaved changes?	Ungespeicherte Änderungen verwerfen?	¿Descartar los cambios no guardados?
+Disconnect	Trennen	Desconectar
+Disconnect from	Trennen von	Desconectar de
+Disconnect when idle	Bei Inaktivität trennen	Desconectar por inactividad
+Discover	Entdecken	Descubrir
+Disk	Festplatte	Disco
+Disks	Festplatten	Discos
+Disks · disk space	Festplatten · Speicherplatz	Discos · espacio en disco
+Dismiss	Ausblenden	Descartar
+Dock	Dock	Dock
+Docker	Docker	Docker
+Docker shell	Docker-Shell	Shell de Docker
+Document root	Dokumentstamm	Raíz de documentos
+Domains	Domains	Dominios
+Domains must point to this server (HTTP challenge).	Die Domains müssen auf diesen Server zeigen (HTTP-Challenge).	Los dominios deben apuntar a este servidor (desafío HTTP).
+Domains, forward host and port are required.	Domains, Ziel-Host und Port sind erforderlich.	Los dominios, el host de destino y el puerto son obligatorios.
+Done	Fertig	Terminar
+Done.	Erledigt.	Hecho.
+Download	Herunterladen	Descargar
+Downloaded .deb packages, can be fetched again.	Heruntergeladene .deb-Pakete, können erneut geladen werden.	Paquetes .deb descargados, se pueden volver a obtener.
+Download…	Herunterladen…	Descargar…
+Drag files here from your file manager	Dateien aus Ihrem Dateimanager hierher ziehen	Arrastra aquí archivos desde tu explorador de archivos
+Drop files on a Files or Transfers window.	Dateien auf ein Dateien- oder Übertragungen-Fenster ziehen.	Suelta archivos en una ventana de Archivos o Transferencias.
+Duplicate…	Duplizieren…	Duplicar…
+Durations: 10m, 1h, 1d, 1w… · -1 = permanent ban · empty = inherited value	Dauern: 10m, 1h, 1d, 1w… · -1 = dauerhafte Sperre · leer = geerbter Wert	Duraciones: 10m, 1h, 1d, 1w… · -1 = bloqueo permanente · vacío = valor heredado
+Each cleanup opens a terminal with the command ready; nothing is deleted until you confirm.	Jede Bereinigung öffnet ein Terminal mit dem vorbereiteten Befehl; nichts wird gelöscht, bevor Sie bestätigen.	Cada limpieza abre un terminal con el comando preparado; no se borra nada hasta que confirmes.
+Edit	Bearbeiten	Editar
+Edit connection	Verbindung bearbeiten	Editar conexión
+Edit proxy host (NPM)	Proxy-Host bearbeiten (NPM)	Editar proxy host (NPM)
+Editor	Editor	Editor
+Effects	Effekte	Efectos
+Enable	Aktivieren	Activar
+Enable / disable	Aktivieren / deaktivieren	Activar / desactivar
+Enclosing folder	Übergeordneter Ordner	Carpeta contenedora
+Erase	Löschen	Borrar
+Erase all local data?	Alle lokalen Daten löschen?	¿Borrar todos los datos locales?
+Erase everything	Alles löschen	Borrar todo
+Erase…	Löschen…	Borrar…
+Errors	Fehler	Errores
+Every command is shown before it runs, sudo is always typed in a terminal without being run, and the Command log app lists everything sshOs ran.	Jeder Befehl wird vor der Ausführung angezeigt, sudo wird immer nur in ein Terminal getippt und nicht ausgeführt, und die App Befehlsverlauf listet alles, was sshOs ausgeführt hat.	Cada comando se muestra antes de ejecutarse, sudo siempre se escribe en un terminal sin ejecutarse, y la app Historial de comandos lista todo lo que sshOs ha ejecutado.
+Every entry is removed from sshOs memory.	Alle Einträge werden aus dem Speicher von sshOs entfernt.	Todas las entradas se eliminan de la memoria de sshOs.
+Every operation shows the exact command before running it.	Jede Operation zeigt den genauen Befehl, bevor er ausgeführt wird.	Cada operación muestra el comando exacto antes de ejecutarlo.
+Every operation shows the exact command it runs.	Jede Operation zeigt den genauen Befehl, den sie ausführt.	Cada operación muestra el comando exacto que ejecuta.
+Every window will be closed.	Alle Fenster werden geschlossen.	Se cerrarán todas las ventanas.
+Everything	Alles	Todo
+Exited	Beendet	Detenido
+Expires on	Läuft ab am	Caduca el
+F11 toggles full screen; Quit is in the sshOs menu.	F11 schaltet den Vollbildmodus um; Beenden ist im sshOs-Menü.	F11 activa o desactiva la pantalla completa; Salir está en el menú sshOs.
+Failed	Fehlgeschlagen	Fallido
+File	Datei	Archivo
+File downloaded.	Datei heruntergeladen.	Archivo descargado.
+File name	Dateiname	Nombre del archivo
+Files	Dateien	Archivos
+Files in /tmp unused for 7 days.	Dateien in /tmp, seit 7 Tagen unbenutzt.	Archivos de /tmp sin usar desde hace 7 días.
+Filter	Filtern	Filtrar
+First connection to	Erste Verbindung zu	Primera conexión a
+Fix in terminal	Im Terminal beheben	Corregir en un terminal
+Follow (auto refresh)	Folgen (automatisch aktualisieren)	Seguir (actualización automática)
+Follow (every 3 s)	Folgen (alle 3 s)	Seguir (cada 3 s)
+Force SSL	SSL erzwingen	Forzar SSL
+Forest	Wald	Bosque
+Forget	Vergessen	Olvidar
+Forget NPM credentials	NPM-Zugangsdaten vergessen	Olvidar las credenciales de NPM
+Forward	Vorwärts	Adelante
+Forward host	Ziel-Host	Host de destino
+Français, English, Deutsch or Español. Defaults to the system language.	Français, English, Deutsch oder Español. Standardmäßig die Systemsprache.	Français, English, Deutsch o Español. Por defecto, el idioma del sistema.
+Free	Frei	Libre
+Frosted glass on windows, Dock and menus.	Milchglas auf Fenstern, Dock und Menüs.	Cristal esmerilado en ventanas, Dock y menús.
+Full screen	Vollbild	Pantalla completa
+General	Allgemein	General
+Get started	Los geht's	Empezar
+Go	Los	Ir
+Go to folder…	Gehe zu Ordner…	Ir a la carpeta…
+Graphite	Graphit	Grafito
+Green	Grün	Verde
+HTTP request from the server (curl)	HTTP-Anfrage vom Server (curl)	Petición HTTP desde el servidor (curl)
+HTTPS: once created, use the HTTPS button (certbot in a terminal).	HTTPS: nach dem Erstellen den HTTPS-Knopf verwenden (certbot in einem Terminal).	HTTPS: una vez creado, usa el botón HTTPS (certbot en un terminal).
+Hardware	Hardware	Hardware
+Hidden files	Versteckte Dateien	Archivos ocultos
+Hide	Ausblenden	Ocultar
+Hide addresses	Adressen verbergen	Ocultar direcciones
+High	Hoch	Alta
+History	Verlauf	Historial
+Home	Start	Inicio
+Home · server ports	Start · Server-Ports	Inicio · puertos del servidor
+Host	Host	Host
+Host and user are required.	Host und Benutzer sind erforderlich.	El host y el usuario son obligatorios.
+Hostname	Hostname	Nombre de host
+I/O wait	E/A-Wartezeit	Espera de E/S
+IP addresses	IP-Adressen	Direcciones IP
+IP or user	IP oder Benutzer	IP o usuario
+Icons grow under the pointer.	Symbole wachsen unter dem Mauszeiger.	Los iconos crecen bajo el puntero.
+Import ~/.ssh/config	~/.ssh/config importieren	Importar ~/.ssh/config
+In the clock.	In der Uhr.	En el reloj.
+In use	Belegt	En uso
+Incoming port	Eingangsport	Puerto de entrada
+Info	Info	Info
+Inspect	Untersuchen	Inspeccionar
+Install	Installieren	Instalar
+Install fail2ban	fail2ban installieren	Instalar fail2ban
+Interfaces	Schnittstellen	Interfaces
+Invalid user	Ungültiger Benutzer	Usuario inválido
+Invalid users	Ungültige Benutzer	Usuarios inválidos
+Its database and files are never edited directly.	Seine Datenbank und Dateien werden nie direkt bearbeitet.	Su base de datos y sus archivos nunca se editan directamente.
+Journal	Journal	Journal
+Jump host (ProxyJump)	Sprung-Host (ProxyJump)	Host de salto (ProxyJump)
+Keeps the last 7 days of logs.	Behält die Protokolle der letzten 7 Tage.	Conserva los registros de los últimos 7 días.
+Kernel	Kernel	Kernel
+Key file	Schlüsseldatei	Archivo de clave
+Keyboard shortcuts	Tastenkürzel	Atajos de teclado
+Kind	Art	Tipo
+Language	Sprache	Idioma
+Language & window	Sprache & Fenster	Idioma y ventana
+Large	Groß	Grande
+Last	Zuletzt	Último
+Last active server	Zuletzt aktiver Server	Último servidor activo
+Let's Encrypt certificate	Let's-Encrypt-Zertifikat	Certificado de Let's Encrypt
+Let's Encrypt e-mail	Let's-Encrypt-E-Mail	Correo de Let's Encrypt
+Light	Hell	Claro
+Like on macOS, the top bar shows the menus of the frontmost window: actions, view options, shortcuts.	Wie unter macOS zeigt die obere Leiste die Menüs des vordersten Fensters: Aktionen, Darstellung, Tastenkürzel.	Como en macOS, la barra superior muestra los menús de la ventana en primer plano: acciones, vista, atajos.
+Listening ports	Offene Ports	Puertos a la escucha
+Live resources	Live-Ressourcen	Recursos en directo
+Load average	Durchschnittliche Last	Carga media
+Loading…	Lädt…	Cargando…
+Local data	Lokale Daten	Datos locales
+Log	Verlauf	Historial
+Logs	Protokolle	Registros
+Logs · journal	Protokolle · Journal	Registros · journal
+Magnification	Vergrößerung	Ampliación
+Manage both in a single list	Beide in einer Liste verwalten	Gestionar ambos en una sola lista
+Manage connections…	Verbindungen verwalten…	Gestionar conexiones…
+Manage disk space…	Speicherplatz verwalten…	Gestionar el espacio en disco…
+Maximize	Maximieren	Maximizar
+Measuring…	Messe…	Midiendo…
+Medium	Mittel	Media
+Memory	Speicher	Memoria
+Menu bar	Menüleiste	Barra de menús
+Menu of a Dock icon	Menü eines Dock-Symbols	Menú de un icono del Dock
+Method	Methode	Método
+Minimize	Minimieren	Minimizar
+Minimize all	Alle minimieren	Minimizar todo
+Minimize sshOs	sshOs minimieren	Minimizar sshOs
+Modified	Geändert	Modificado
+Monitor	Monitor	Monitor
+More	Mehr	Más
+NPM logout	NPM-Abmeldung	Cerrar sesión de NPM
+NPM proxy host	NPM-Proxy-Host	Proxy host de NPM
+Name	Name	Nombre
+Navigation	Navigation	Navegación
+Needs root	Benötigt root	Requiere root
+Neither nginx nor Nginx Proxy Manager was found on this server. If NPM runs elsewhere, set its API address in the connection.	Weder nginx noch Nginx Proxy Manager wurde auf diesem Server gefunden. Läuft NPM woanders, tragen Sie seine API-Adresse in der Verbindung ein.	No se encontró nginx ni Nginx Proxy Manager en este servidor. Si NPM se ejecuta en otro lugar, indica su dirección de API en la conexión.
+Network	Netzwerk	Red
+Never	Nie	Nunca
+Never a silent sudo	Nie ein stilles sudo	Nunca un sudo silencioso
+Never a silent sudo: the command opens pre-typed in a Terminal, you press Enter.	Nie ein stilles sudo: der Befehl öffnet sich vorgetippt in einem Terminal, Sie drücken Enter.	Nunca un sudo silencioso: el comando se abre ya escrito en un Terminal y tú pulsas Intro.
+Never banned IPs (ignoreip)	Nie gesperrte IPs (ignoreip)	IP nunca bloqueadas (ignoreip)
+New	Neu	Nuevo
+New Let's Encrypt certificate	Neues Let's-Encrypt-Zertifikat	Nuevo certificado de Let's Encrypt
+New TCP/UDP stream (NPM)	Neuer TCP/UDP-Stream (NPM)	Nuevo stream TCP/UDP (NPM)
+New connection	Neue Verbindung	Nueva conexión
+New file	Neue Datei	Nuevo archivo
+New folder	Neuer Ordner	Nueva carpeta
+New nginx site	Neue nginx-Site	Nuevo sitio nginx
+New proxy host (NPM)	Neuer Proxy-Host (NPM)	Nuevo proxy host (NPM)
+New redirection (NPM)	Neue Weiterleitung (NPM)	Nueva redirección (NPM)
+New terminal	Neues Terminal	Nuevo terminal
+New window	Neues Fenster	Nueva ventana
+Next	Weiter	Siguiente
+Nginx / NPM choice per server	Wahl Nginx / NPM pro Server	Elección Nginx / NPM por servidor
+Nginx Proxy Manager (Docker)	Nginx Proxy Manager (Docker)	Nginx Proxy Manager (Docker)
+Nginx Proxy Manager API (optional)	Nginx Proxy Manager API (optional)	API de Nginx Proxy Manager (opcional)
+Nginx Proxy Manager is only changed through its API.	Nginx Proxy Manager wird nur über seine API geändert.	Nginx Proxy Manager solo se modifica a través de su API.
+Nginx Proxy Manager through its API	Nginx Proxy Manager über seine API	Nginx Proxy Manager a través de su API
+Nginx choices cleared: you will be asked again.	Nginx-Auswahl gelöscht: Sie werden erneut gefragt.	Elecciones de Nginx borradas: se te volverá a preguntar.
+Nginx site	Nginx-Site	Sitio nginx
+No NVIDIA GPU detected (nvidia-smi not found).	Keine NVIDIA-GPU erkannt (nvidia-smi nicht gefunden).	No se detectó ninguna GPU NVIDIA (nvidia-smi no encontrado).
+No Windows title bar or task bar.	Keine Windows-Titelleiste oder Taskleiste.	Sin barra de título ni barra de tareas de Windows.
+No alerts	Keine Warnungen	Sin alertas
+No command.	Kein Befehl.	Ningún comando.
+No commit.	Kein Commit.	Ningún commit.
+No containers	Keine Container	Sin contenedores
+No events	Keine Ereignisse	Sin eventos
+No readable sub-folder.	Kein lesbarer Unterordner.	Ninguna subcarpeta legible.
+No repository found in ~, /var/www, /srv, /opt.	Kein Repository in ~, /var/www, /srv, /opt gefunden.	No se encontró ningún repositorio en ~, /var/www, /srv, /opt.
+No saved connection.	Keine gespeicherte Verbindung.	Ninguna conexión guardada.
+No saved server yet.	Noch kein gespeicherter Server.	Aún no hay ningún servidor guardado.
+No saved server.	Kein gespeicherter Server.	Ningún servidor guardado.
+No server	Kein Server	Sin servidor
+No server connected.	Kein Server verbunden.	Ningún servidor conectado.
+No sessions	Keine Sitzungen	Sin sesiones
+No transfer in progress.	Keine laufende Übertragung.	Ninguna transferencia en curso.
+No volume.	Kein Volume.	Ningún volumen.
+None	Keine	Ninguno
+Normal	Normal	Normal
+Not installed	Nicht installiert	No instalado
+Nothing happens behind your back	Nichts geschieht hinter Ihrem Rücken	Nada ocurre a tus espaldas
+Nothing to commit, working tree clean.	Nichts zu committen, Arbeitsverzeichnis sauber.	Nada que confirmar, árbol de trabajo limpio.
+Notifications	Benachrichtigungen	Notificaciones
+Ocean	Ozean	Océano
+Old compressed logs	Alte komprimierte Protokolle	Registros comprimidos antiguos
+On	An	Activado
+Open	Öffnen	Abrir
+Open Settings	Einstellungen öffnen	Abrir Ajustes
+Open a text file	Textdatei öffnen	Abrir un archivo de texto
+Open another file	Andere Datei öffnen	Abrir otro archivo
+Open in Files	In Dateien öffnen	Abrir en Archivos
+Open in a separate window	In separatem Fenster öffnen	Abrir en una ventana aparte
+Open in browser	Im Browser öffnen	Abrir en el navegador
+Open in the browser:	Im Browser öffnen:	Abrir en el navegador:
+Open sessions	Offene Sitzungen	Sesiones abiertas
+Open terminal	Terminal öffnen	Abrir terminal
+Opens the server's localhost pages through an SSH tunnel.	Öffnet die localhost-Seiten des Servers über einen SSH-Tunnel.	Abre las páginas localhost del servidor a través de un túnel SSH.
+Open…	Öffnen…	Abrir…
+Overview	Übersicht	Resumen
+Parent folder	Übergeordneter Ordner	Carpeta superior
+Part of this log needs root.	Ein Teil dieses Protokolls benötigt root.	Parte de este registro requiere root.
+Partial	Teilweise	Parcial
+Partition	Partition	Partición
+Partitions	Partitionen	Particiones
+Passphrase (keychain)	Passphrase (Schlüsselbund)	Frase de contraseña (llavero)
+Password	Passwort	Contraseña
+Password (keychain)	Passwort (Schlüsselbund)	Contraseña (llavero)
+Password, key, SSH agent or ~/.ssh/config import. Secrets stay in the OS keychain.	Passwort, Schlüssel, SSH-Agent oder Import aus ~/.ssh/config. Geheimnisse bleiben im Schlüsselbund des Systems.	Contraseña, clave, agente SSH o importación de ~/.ssh/config. Los secretos se quedan en el llavero del sistema.
+Passwords and passphrases are never written to disk by sshOs.	Passwörter und Passphrasen werden von sshOs nie auf die Festplatte geschrieben.	sshOs nunca escribe contraseñas ni frases de contraseña en el disco.
+Path of the folder holding the git repository:	Pfad des Ordners mit dem Git-Repository:	Ruta de la carpeta que contiene el repositorio git:
+Pause	Pause	Pausa
+Paused	Pausiert	En pausa
+Per core	Pro Kern	Por núcleo
+Periodic polling (monitor, notifications, stats) is not listed. Kept in memory until sshOs quits.	Regelmäßige Abfragen (Monitor, Benachrichtigungen, Statistiken) werden nicht aufgeführt. Bleibt im Speicher, bis sshOs beendet wird.	Las consultas periódicas (monitor, notificaciones, estadísticas) no se muestran. Se conserva en memoria hasta que sshOs se cierra.
+Pick a repository.	Wählen Sie ein Repository.	Elige un repositorio.
+Pick a server and a destination folder.	Wählen Sie einen Server und einen Zielordner.	Elige un servidor y una carpeta de destino.
+Pick the active server in the selector at the top left, next to the sshOs icon. The last server used is reconnected automatically at startup.	Wählen Sie den aktiven Server im Auswahlfeld oben links neben dem sshOs-Symbol. Der zuletzt verwendete Server wird beim Start automatisch wieder verbunden.	Elige el servidor activo en el selector de arriba a la izquierda, junto al icono de sshOs. El último servidor usado se vuelve a conectar automáticamente al iniciar.
+Ping URL	URL anpingen	Hacer ping a la URL
+Pink	Rosa	Rosa
+Plain	Schlicht	Sencillo
+Preserve path	Pfad beibehalten	Conservar la ruta
+Preview	Vorschau	Vista previa
+Privacy	Datenschutz	Privacidad
+Private key	Privater Schlüssel	Clave privada
+Privileged command typed in the terminal: review it, then press Enter.	Privilegierter Befehl im Terminal eingegeben: prüfen Sie ihn, dann drücken Sie Enter.	Comando privilegiado escrito en el terminal: revísalo y pulsa Intro.
+Probe	Prüfen	Sondear
+Probes	Prüfungen	Sondeos
+Processes	Prozesse	Procesos
+Processor	Prozessor	Procesador
+Protection	Schutz	Protección
+Protocol	Protokoll	Protocolo
+Provider	Anbieter	Proveedor
+Proxy host deleted	Proxy-Host gelöscht	Proxy host eliminado
+Proxy host disabled	Proxy-Host deaktiviert	Proxy host desactivado
+Proxy host enabled	Proxy-Host aktiviert	Proxy host activado
+Proxy host saved in NPM	Proxy-Host in NPM gespeichert	Proxy host guardado en NPM
+Proxy hosts, certificates and redirections through its API	Proxy-Hosts, Zertifikate und Weiterleitungen über seine API	Proxy hosts, certificados y redirecciones a través de su API
+Publicly accessible	Öffentlich erreichbar	Accesible públicamente
+Purple	Lila	Morado
+Quick	Schnell	Rápido
+Quick change	Schnellwechsel	Cambio rápido
+Quick tour…	Kurze Tour…	Visita guiada…
+Quit	Beenden	Salir
+Quit sshOs	sshOs beenden	Salir de sshOs
+Quit sshOs?	sshOs beenden?	¿Salir de sshOs?
+Read	Lesen	Lectura
+Read with sudo in a terminal	Mit sudo in einem Terminal lesen	Leer con sudo en un terminal
+Read with sudo…	Mit sudo lesen…	Leer con sudo…
+Reading Docker…	Docker wird gelesen…	Leyendo Docker…
+Reading logs…	Protokolle werden gelesen…	Leyendo registros…
+Reading metrics…	Messwerte werden gelesen…	Leyendo métricas…
+Reads	Lesevorgänge	Lecturas
+Received	Empfangen	Recibido
+Recent	Zuletzt verwendet	Recientes
+Recent bans	Letzte Sperren	Bloqueos recientes
+Reconnect the last server	Letzten Server wieder verbinden	Reconectar el último servidor
+Red	Rot	Rojo
+Redirection	Weiterleitung	Redirección
+Redirection created	Weiterleitung erstellt	Redirección creada
+Redirection deleted	Weiterleitung gelöscht	Redirección eliminada
+Redirection updated	Weiterleitung aktualisiert	Redirección actualizada
+Redirections	Weiterleitungen	Redirecciones
+Reduce motion	Bewegung reduzieren	Reducir movimiento
+Refresh	Aktualisieren	Actualizar
+Reload	Neu laden	Recargar
+Reload the interface	Oberfläche neu laden	Recargar la interfaz
+Reloads the interface; connections stay open.	Lädt die Oberfläche neu; Verbindungen bleiben offen.	Recarga la interfaz; las conexiones siguen abiertas.
+Remember in the keychain	Im Schlüsselbund merken	Recordar en el llavero
+Remembered on this computer	Auf diesem Computer gespeichert	Recordado en este equipo
+Remove	Entfernen	Quitar
+Rename	Umbenennen	Renombrar
+Rename…	Umbenennen…	Renombrar…
+Renew	Erneuern	Renovar
+Replay	Wiederholen	Repetir
+Replay the first-launch tour.	Die Tour des ersten Starts erneut abspielen.	Volver a ver la presentación del primer inicio.
+Repositories	Repositories	Repositorios
+Repository	Repository	Repositorio
+Request	Anfordern	Solicitar
+Request a new Let's Encrypt certificate	Neues Let's-Encrypt-Zertifikat anfordern	Solicitar un nuevo certificado de Let's Encrypt
+Requesting a certificate means you agree to the Let's Encrypt terms.	Wer ein Zertifikat anfordert, akzeptiert die Bedingungen von Let's Encrypt.	Solicitar un certificado implica aceptar los términos de Let's Encrypt.
+Requesting the certificate from Let's Encrypt…	Zertifikat wird bei Let's Encrypt angefordert…	Solicitando el certificado a Let's Encrypt…
+Reset	Zurücksetzen	Restablecer
+Reset settings?	Einstellungen zurücksetzen?	¿Restablecer los ajustes?
+Restart	Neu starten	Reiniciar
+Restart all	Alle neu starten	Reiniciar todo
+Restart fail2ban	fail2ban neu starten	Reiniciar fail2ban
+Restart loop	Neustart-Schleife	Bucle de reinicios
+Restarting	Startet neu	Reiniciando
+Restart…	Neu starten…	Reiniciar…
+Resume	Fortsetzen	Reanudar
+Retry	Erneut versuchen	Reintentar
+Reverse proxy	Reverse Proxy	Proxy inverso
+Right-click	Rechtsklick	Clic derecho
+Right-click an icon: its windows, New window, Quit.	Rechtsklick auf ein Symbol: seine Fenster, Neues Fenster, Beenden.	Clic derecho en un icono: sus ventanas, Nueva ventana, Salir.
+Rotated .gz and .1 files in /var/log.	Rotierte .gz- und .1-Dateien in /var/log.	Archivos rotados .gz y .1 de /var/log.
+Run	Ausführen	Ejecutar
+Running	Läuft	En ejecución
+Rust/Tauri port inspired by 	Rust/Tauri-Portierung, inspiriert von 	Adaptación a Rust/Tauri inspirada en
+SSH agent / default keys	SSH-Agent / Standardschlüssel	Agente SSH / claves predeterminadas
+SSH attempts	SSH-Versuche	Intentos SSH
+SSH connection(s) will be closed.	SSH-Verbindung(en) werden geschlossen.	Se cerrarán las conexiones SSH.
+Safety rules	Sicherheitsregeln	Reglas de seguridad
+Save	Speichern	Guardar
+Saved	Gespeichert	Guardado
+Saved automatically	Automatisch gespeichert	Guardado automáticamente
+Saved servers and their secrets (OS keychain) are not affected.	Gespeicherte Server und ihre Geheimnisse (Schlüsselbund) sind nicht betroffen.	Los servidores guardados y sus secretos (llavero del sistema) no se ven afectados.
+Saved through nginx -t then reload	Gespeichert mit nginx -t und anschließendem Neuladen	Guardado mediante nginx -t y después recarga
+Saved through the Nginx Proxy Manager API, which regenerates and reloads nginx itself.	Gespeichert über die Nginx Proxy Manager API, die nginx selbst neu erzeugt und neu lädt.	Guardado a través de la API de Nginx Proxy Manager, que regenera y recarga nginx por sí misma.
+Saved:	Gespeichert:	Guardado:
+Saving…	Speichere…	Guardando…
+Scan for repositories	Nach Repositories suchen	Buscar repositorios
+Scheme	Schema	Esquema
+Search	Suchen	Buscar
+Search an app, a server…	App, Server suchen…	Buscar una app, un servidor…
+Searching…	Suche…	Buscando…
+Secrets are stored in the OS keychain, never in plain text.	Geheimnisse werden im Schlüsselbund des Systems gespeichert, nie im Klartext.	Los secretos se guardan en el llavero del sistema, nunca en texto plano.
+Secrets in the OS keychain	Geheimnisse im Schlüsselbund des Systems	Secretos en el llavero del sistema
+Security	Sicherheit	Seguridad
+Security · fail2ban	Sicherheit · fail2ban	Seguridad · fail2ban
+Select a connection or create one.	Wählen Sie eine Verbindung oder erstellen Sie eine.	Selecciona una conexión o crea una.
+Send the signal to process	Signal an Prozess senden	Enviar la señal al proceso
+Sent	Gesendet	Enviado
+Server	Server	Servidor
+Server alerts (full disk, failed service, stopped container…) and results of your actions.	Server-Warnungen (Festplatte voll, Dienst fehlgeschlagen, Container gestoppt…) und Ergebnisse Ihrer Aktionen.	Alertas del servidor (disco lleno, servicio fallido, contenedor detenido…) y resultados de tus acciones.
+Server browser	Server-Browser	Navegador del servidor
+Server fingerprints checked	Server-Fingerabdrücke geprüft	Huellas de los servidores comprobadas
+Server ports	Server-Ports	Puertos del servidor
+Server usage	Server-Auslastung	Uso del servidor
+Servers	Server	Servidores
+Servers disconnected after	Server getrennt nach	Servidores desconectados tras
+Service	Dienst	Servicio
+Services	Dienste	Servicios
+Settings	Einstellungen	Ajustes
+Settings, last server, Nginx choices and tour are erased, then the interface reloads. Saved servers and their secrets are not touched.	Einstellungen, letzter Server, Nginx-Auswahl und Tour werden gelöscht, dann lädt die Oberfläche neu. Gespeicherte Server und ihre Geheimnisse bleiben unberührt.	Se borran los ajustes, el último servidor, las elecciones de Nginx y la visita; después se recarga la interfaz. Los servidores guardados y sus secretos no se tocan.
+Settings…	Einstellungen…	Ajustes…
+Show all windows	Alle Fenster anzeigen	Mostrar todas las ventanas
+Show in Files	In Dateien anzeigen	Mostrar en Archivos
+Show logs	Protokolle anzeigen	Ver registros
+Show seconds	Sekunden anzeigen	Mostrar segundos
+Sign in	Anmelden	Iniciar sesión
+Sign in to Nginx Proxy Manager	Bei Nginx Proxy Manager anmelden	Iniciar sesión en Nginx Proxy Manager
+Signal sent to	Signal gesendet an	Señal enviada a
+Site / domains	Site / Domains	Sitio / dominios
+Sites	Sites	Sitios
+Size	Größe	Tamaño
+Sizes on this volume only. Without sudo, unreadable folders are not counted. Double-click to drill down.	Nur Größen auf diesem Volume. Ohne sudo werden nicht lesbare Ordner nicht gezählt. Doppelklick zum Vertiefen.	Solo los tamaños de este volumen. Sin sudo, las carpetas ilegibles no se cuentan. Doble clic para entrar.
+Skip	Überspringen	Omitir
+Small	Klein	Pequeño
+Sort by CPU	Nach CPU sortieren	Ordenar por CPU
+Sort by date	Nach Datum sortieren	Ordenar por fecha
+Sort by memory	Nach Speicher sortieren	Ordenar por memoria
+Sort by name	Nach Name sortieren	Ordenar por nombre
+Sort by size	Nach Größe sortieren	Ordenar por tamaño
+Space analysis	Speicheranalyse	Análisis del espacio
+Spotlight	Spotlight	Spotlight
+Spotlight: launch an app, switch server	Spotlight: App starten, Server wechseln	Spotlight: abrir una app, cambiar de servidor
+Start	Starten	Iniciar
+Start all	Alle starten	Iniciar todo
+Static site	Statische Site	Sitio estático
+Status	Status	Estado
+Stop	Stoppen	Detener
+Stop all	Alle stoppen	Detener todo
+Stop process	Prozess beenden	Detener el proceso
+Stopped	Gestoppt	Detenido
+Stopped containers, unused networks, dangling images and build cache.	Gestoppte Container, ungenutzte Netzwerke, verwaiste Images und Build-Cache.	Contenedores detenidos, redes sin usar, imágenes huérfanas y caché de compilación.
+Stream created	Stream erstellt	Stream creado
+Stream deleted	Stream gelöscht	Stream eliminado
+Stream updated	Stream aktualisiert	Stream actualizado
+Sunset	Sonnenuntergang	Atardecer
+Switch branch	Branch wechseln	Cambiar de rama
+Switch to	Wechseln zu	Cambiar a
+System	System	Sistema
+System journal	Systemjournal	Journal del sistema
+Target	Ziel	Destino
+Target domain	Zieldomain	Dominio de destino
+Targeted users	Betroffene Benutzer	Usuarios atacados
+Temperature	Temperatur	Temperatura
+Temporary files	Temporäre Dateien	Archivos temporales
+Terminal	Terminal	Terminal
+Terminal here	Terminal hier	Terminal aquí
+TextEdit	Texteditor	Editor de texto
+TextEdit · editor	Texteditor · Editor	Editor de texto · editor
+The Dock	Das Dock	El Dock
+The command opens pre-typed in a Terminal; you press Enter.	Der Befehl öffnet sich vorgetippt in einem Terminal; Sie drücken Enter.	El comando se abre ya escrito en un Terminal; tú pulsas Intro.
+The command will be typed in a terminal, not run: review it, then press Enter.	Der Befehl wird in ein Terminal getippt, nicht ausgeführt: prüfen Sie ihn, dann drücken Sie Enter.	El comando se escribirá en un terminal, sin ejecutarse: revísalo y pulsa Intro.
+The desktop	Der Schreibtisch	El escritorio
+The file is edited, validated with nginx -t then reloaded; the backup is restored on failure.	Die Datei wird bearbeitet, mit nginx -t geprüft und dann neu geladen; bei einem Fehler wird die Sicherung wiederhergestellt.	El archivo se edita, se valida con nginx -t y después se recarga; si falla, se restaura la copia de seguridad.
+The last server will not be reconnected.	Der letzte Server wird nicht wieder verbunden.	El último servidor no se volverá a conectar.
+The menus of the app in front, like on macOS.	Die Menüs der vordersten App, wie unter macOS.	Los menús de la app en primer plano, como en macOS.
+The server the apps work on. Click to switch, connect another one or disconnect.	Der Server, auf dem die Apps arbeiten. Klicken, um zu wechseln, einen weiteren zu verbinden oder zu trennen.	El servidor con el que trabajan las apps. Haz clic para cambiarlo, conectar otro o desconectarte.
+The service stopped with an error. Check its log for the reason.	Der Dienst wurde mit einem Fehler beendet. Den Grund finden Sie in seinem Protokoll.	El servicio se detuvo con un error. Consulta su registro para ver el motivo.
+Theme	Design	Tema
+These rules protect your servers and cannot be turned off.	Diese Regeln schützen Ihre Server und lassen sich nicht abschalten.	Estas reglas protegen tus servidores y no se pueden desactivar.
+This command needs sudo: it is typed in a terminal, you confirm it with Enter.	Dieser Befehl benötigt sudo: er wird in ein Terminal getippt, Sie bestätigen mit Enter.	Este comando necesita sudo: se escribe en un terminal y lo confirmas con Intro.
+This command will run on the server:	Dieser Befehl wird auf dem Server ausgeführt:	Este comando se ejecutará en el servidor:
+This container neither publishes nor exposes a reachable TCP port.	Dieser Container veröffentlicht oder exponiert keinen erreichbaren TCP-Port.	Este contenedor no publica ni expone ningún puerto TCP accesible.
+This server runs nginx as a service and Nginx Proxy Manager in Docker. Your choice is remembered for this server; change it later from the Source menu.	Auf diesem Server laufen nginx als Dienst und Nginx Proxy Manager in Docker. Ihre Wahl wird für diesen Server gespeichert; ändern Sie sie später über das Menü Quelle.	Este servidor ejecuta nginx como servicio y Nginx Proxy Manager en Docker. Tu elección se recuerda para este servidor; cámbiala más tarde desde el menú Origen.
+Time	Zeit	Hora
+Tip: in Files, double-click a text file to open it in the editor.	Tipp: in Dateien öffnet ein Doppelklick auf eine Textdatei sie im Editor.	Consejo: en Archivos, haz doble clic en un archivo de texto para abrirlo en el editor.
+To	Nach	A
+Today	Heute	Hoy
+Toggle theme	Design umschalten	Cambiar de tema
+Top IPs	Top-IPs	IP principales
+Total	Gesamt	Total
+Transfers	Übertragungen	Transferencias
+Transfers · upload files	Übertragungen · Dateien hochladen	Transferencias · subir archivos
+Transparency	Transparenz	Transparencia
+Trust and connect	Vertrauen und verbinden	Confiar y conectar
+Type again in a terminal (not run)	Erneut in ein Terminal tippen (nicht ausgeführt)	Volver a escribir en un terminal (sin ejecutar)
+Unban	Entsperren	Desbloquear
+Unique IPs	Eindeutige IPs	IP únicas
+Unknown NPM container: cannot read the generated config.	Unbekannter NPM-Container: die erzeugte Konfiguration kann nicht gelesen werden.	Contenedor de NPM desconocido: no se puede leer la configuración generada.
+Unknown host	Unbekannter Host	Host desconocido
+Unused	Ungenutzt	Sin usar
+Unused images	Ungenutzte Images	Imágenes sin usar
+Unused volumes	Ungenutzte Volumes	Volúmenes sin usar
+Upload	Hochladen	Subir
+Upload files from this computer to this folder (or drag them onto the window)	Dateien von diesem Computer in diesen Ordner hochladen (oder auf das Fenster ziehen)	Subir archivos de este equipo a esta carpeta (o arrastrarlos a la ventana)
+Upload files…	Dateien hochladen…	Subir archivos…
+Upload…	Hochladen…	Subir…
+Upstream URL	Upstream-URL	URL de upstream
+Uptime	Laufzeit	Tiempo activo
+Usage	Nutzung	Uso
+Use	Verwenden	Usar
+Used	Belegt	Usado
+User	Benutzer	Usuario
+Users	Benutzer	Usuarios
+View	Darstellung	Vista
+View generated nginx config	Erzeugte nginx-Konfiguration ansehen	Ver la configuración nginx generada
+Volumes	Volumes	Volúmenes
+Wallpaper	Hintergrundbild	Fondo de pantalla
+Welcome assistant…	Willkommensassistent…	Asistente de bienvenida…
+Welcome to sshOs	Willkommen bei sshOs	Bienvenido a sshOs
+Which installation should sshOs manage?	Welche Installation soll sshOs verwalten?	¿Qué instalación debe gestionar sshOs?
+Window	Fenster	Ventana
+Windows open and close instantly.	Fenster öffnen und schließen sich sofort.	Las ventanas se abren y cierran al instante.
+Write	Schreiben	Escritura
+Writes /etc/fail2ban/jail.d/zz-sshos.local, checks the configuration (fail2ban-client -t) then reloads fail2ban. If the check fails, the previous file is restored. It needs sudo: it is typed in a terminal, you confirm it with Enter.	Schreibt /etc/fail2ban/jail.d/zz-sshos.local, prüft die Konfiguration (fail2ban-client -t) und lädt fail2ban dann neu. Schlägt die Prüfung fehl, wird die vorherige Datei wiederhergestellt. Benötigt sudo: wird in ein Terminal getippt, Sie bestätigen mit Enter.	Escribe /etc/fail2ban/jail.d/zz-sshos.local, comprueba la configuración (fail2ban-client -t) y después recarga fail2ban. Si la comprobación falla, se restaura el archivo anterior. Necesita sudo: se escribe en un terminal y lo confirmas con Intro.
+Yesterday	Gestern	Ayer
+You can also drop files on a Files window: they go to the folder it shows.	Sie können Dateien auch auf ein Dateien-Fenster ziehen: sie landen in dem angezeigten Ordner.	También puedes soltar archivos en una ventana de Archivos: van a la carpeta que muestra.
+Your first server	Ihr erster Server	Tu primer servidor
+Your server, as a desktop	Ihr Server als Desktop	Tu servidor, como un escritorio
+Your user cannot access Docker. Add it to the docker group, then reconnect.	Ihr Benutzer hat keinen Zugriff auf Docker. Fügen Sie ihn der Gruppe docker hinzu und verbinden Sie sich neu.	Tu usuario no puede acceder a Docker. Añádelo al grupo docker y vuelve a conectarte.
+Zoom	Zoom	Zoom
+action	Aktion	acción
+auto-detected, e.g. 127.0.0.1:81	automatisch erkannt, z. B. 127.0.0.1:81	detectado automáticamente, p. ej. 127.0.0.1:81
+backup	Sicherung	copia de seguridad
+banned	gesperrt	bloqueadas
+binary — read-only	binär — schreibgeschützt	binario — solo lectura
+compose projects	Compose-Projekte	proyectos compose
+connecting…	verbinde…	conectando…
+cores	Kerne	núcleos
+default: first domain	Standard: erste Domain	por defecto: primer dominio
+disabled	deaktiviert	desactivado
+done	fertig	terminado
+en	de	es
+enabled	aktiviert	activado
+english	deutsch	español
+error	Fehler	error
+estimated from fail2ban.log	geschätzt aus fail2ban.log	estimado a partir de fail2ban.log
+exact state (fail2ban-client)	exakter Zustand (fail2ban-client)	estado exacto (fail2ban-client)
+failed	fehlgeschlagen	fallido
+failed on	fehlgeschlagen am	falló el
+failures	Fehlschläge	fallos
+free	frei	libre
+git command failed	Git-Befehl fehlgeschlagen	el comando git falló
+host(s) imported from ~/.ssh/config	Host(s) aus ~/.ssh/config importiert	host(s) importado(s) de ~/.ssh/config
+inherited	geerbt	heredado
+item(s)	Element(e)	elemento(s)
+items	Elemente	elementos
+latest events shown	neueste Ereignisse angezeigt	últimos eventos mostrados
+lines	Zeilen	líneas
+localhost:3000, 172.17.0.2:8080…	localhost:3000, 172.17.0.2:8080…	localhost:3000, 172.17.0.2:8080…
+nginx (service)	nginx (Dienst)	nginx (servicio)
+nginx -t and fail2ban-client -t always run before a reload.	nginx -t und fail2ban-client -t laufen immer vor einem Neuladen.	nginx -t y fail2ban-client -t siempre se ejecutan antes de recargar.
+nginx -t and fail2ban-client -t run before any reload.	nginx -t und fail2ban-client -t laufen vor jedem Neuladen.	nginx -t y fail2ban-client -t se ejecutan antes de cada recarga.
+no answer	keine Antwort	sin respuesta
+none	keine	ninguno
+now	jetzt	ahora
+of	von	de
+of inactivity	Inaktivität	de inactividad
+on	an	activado
+php-fpm socket	php-fpm-Socket	socket de php-fpm
+read	lesen	lectura
+running	läuft	en ejecución
+session ended	Sitzung beendet	sesión terminada
+sshOs hit an internal error. SSH connections are kept.	sshOs hat einen internen Fehler festgestellt. SSH-Verbindungen bleiben erhalten.	sshOs ha encontrado un error interno. Las conexiones SSH se conservan.
+sshOs local data	Lokale Daten von sshOs	Datos locales de sshOs
+sshOs manages your servers without installing anything on them: terminal, files, Docker, nginx, security… everything goes through SSH and SFTP.	sshOs verwaltet Ihre Server, ohne etwas darauf zu installieren: Terminal, Dateien, Docker, nginx, Sicherheit… alles läuft über SSH und SFTP.	sshOs gestiona tus servidores sin instalar nada en ellos: terminal, archivos, Docker, nginx, seguridad… todo pasa por SSH y SFTP.
+sshOs tour	sshOs-Tour	Presentación de sshOs
+staged	vorgemerkt	preparado
+sudo via terminal	sudo über Terminal	sudo mediante terminal
+systemd journal	systemd-Journal	journal de systemd
+terminal	Terminal	terminal
+total bans	Sperren insgesamt	bloqueos totales
+unauthenticated probes	nicht authentifizierte Prüfungen	sondeos no autenticados
+unchanged if empty	unverändert, wenn leer	sin cambios si está vacío
+up to date	aktuell	al día
+used	belegt	usado
+…	…	…
+⚠ Host key changed	⚠ Host-Schlüssel geändert	⚠ Clave del host cambiada
+Off: a regular window, with the system task bar or dock. On: full screen (F11).	Aus: normales Fenster mit Taskleiste bzw. Dock des Systems. An: Vollbild (F11).	Desactivado: ventana normal, con la barra de tareas o el dock del sistema. Activado: pantalla completa (F11).
+Add to Dock	Zum Dock hinzufügen	Añadir al Dock
+Appearance, security	Darstellung, Sicherheit	Apariencia, seguridad
+Applications	Programme	Aplicaciones
+Applications · launcher	Programme · Starter	Aplicaciones · lanzador
+Applications…	Programme…	Aplicaciones…
+CPU, memory, processes	CPU, Speicher, Prozesse	CPU, memoria, procesos
+Click an app to open it, + to add it to the Dock.	Klicken Sie auf eine App, um sie zu öffnen, auf +, um sie zum Dock hinzuzufügen.	Haz clic en una app para abrirla y en + para añadirla al Dock.
+Commands run by sshOs	Von sshOs ausgeführte Befehle	Comandos ejecutados por sshOs
+Containers, images, volumes	Container, Images, Volumes	Contenedores, imágenes, volúmenes
+Development	Entwicklung	Desarrollo
+Disk space	Speicherplatz	Espacio en disco
+Every app, sorted by category, with a search (F4). The + button of an app adds it to the Dock.	Alle Apps, nach Kategorie sortiert, mit Suche (F4). Die Schaltfläche + einer App fügt sie zum Dock hinzu.	Todas las apps, ordenadas por categoría, con un buscador (F4). El botón + de una app la añade al Dock.
+File uploads	Datei-Uploads	Subida de archivos
+Files & terminal	Dateien & Terminal	Archivos y terminal
+Keep in Dock	Im Dock behalten	Mantener en el Dock
+Monitoring	Überwachung	Supervisión
+No matching app.	Keine passende App.	Ninguna app coincide.
+Remote shell	Entfernte Shell	Shell remota
+Remove from Dock	Aus dem Dock entfernen	Quitar del Dock
+Reset the Dock	Dock zurücksetzen	Restablecer el Dock
+SFTP browser	SFTP-Browser	Explorador SFTP
+SSH attempts, fail2ban	SSH-Versuche, fail2ban	Intentos SSH, fail2ban
+Saved servers	Gespeicherte Server	Servidores guardados
+Search an app	App suchen	Buscar una app
+Security & access	Sicherheit & Zugang	Seguridad y acceso
+Server localhost pages	localhost-Seiten des Servers	Páginas localhost del servidor
+Server repositories	Repositories des Servers	Repositorios del servidor
+Sites and Nginx Proxy Manager	Sites und Nginx Proxy Manager	Sitios y Nginx Proxy Manager
+Text editor	Texteditor	Editor de texto
+Version and licence	Version und Lizenz	Versión y licencia
+Web & containers	Web & Container	Web y contenedores
+Your favourite apps; open apps appear after the separator. Right-click an icon: its windows, Keep in Dock / Remove from Dock.	Ihre Lieblings-Apps; geöffnete Apps erscheinen nach dem Trennstrich. Rechtsklick auf ein Symbol: seine Fenster, Im Dock behalten / Aus dem Dock entfernen.	Tus apps favoritas; las apps abiertas aparecen tras el separador. Clic derecho en un icono: sus ventanas, Mantener en el Dock / Quitar del Dock.
+journalctl and /var/log	journalctl und /var/log	journalctl y /var/log

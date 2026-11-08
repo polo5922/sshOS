@@ -1,0 +1,6 @@
+/target
+/node_modules
+/frontend/dist
+/frontend/public/vendor.js
+/frontend/public/xterm.css
+/src-tauri/gen

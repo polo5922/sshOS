@@ -1,0 +1,32 @@
+[package]
+name = "sshos"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "sshOs - your server as a desktop, over SSH"
+
+[lib]
+name = "sshos_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+sshos-shared = { path = "../shared" }
+tauri = { version = "2", features = [] }
+tauri-plugin-dialog = "2"
+serde.workspace = true
+serde_json.workspace = true
+tokio = { version = "1", features = ["full"] }
+russh = { version = "0.65", default-features = false, features = ["flate2", "ring", "rsa"] }
+russh-sftp = "3"
+keyring = { version = "3", features = ["windows-native", "apple-native", "sync-secret-service"] }
+reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls"] }
+thiserror = "2"
+uuid = { version = "1", features = ["v4", "serde"] }
+dirs = "6"
+ssh2-config = "0.9"
+async-trait = "0.1"
+log = "0.4"
+base64 = "0.22"

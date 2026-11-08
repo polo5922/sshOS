@@ -1,0 +1,10 @@
+[build]
+target = "index.html"
+dist = "dist"
+
+[serve]
+port = 1420
+open = false
+
+[watch]
+ignore = ["public/vendor.js"]

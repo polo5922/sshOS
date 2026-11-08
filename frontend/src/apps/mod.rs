@@ -1,0 +1,16 @@
+pub mod browser;
+pub mod connect;
+pub mod docker;
+pub mod editor;
+pub mod files;
+pub mod monitor;
+pub mod nginx;
+pub mod security;
+pub mod settings;
+pub mod terminal;
+pub mod cmdlog;
+pub mod disks;
+pub mod git;
+pub mod logs;
+pub mod textedit;
+pub mod transfers;
