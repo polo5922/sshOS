@@ -1,12 +1,11 @@
 # Builds sshOs for Windows (MSI + NSIS installer) and Linux (deb, rpm, AppImage).
-# Every push uploads the installers as workflow artifacts; a "v*" tag also publishes a GitHub release.
+# Runs only when a version tag (v0.2, v1.0.3, …) is pushed, and publishes a GitHub release with the
+# installers. It can also be started by hand from the Actions tab (artifacts only, no release).
 name: Build
 
 on:
   push:
-    branches: [main]
-    tags: ["v*"]
-  pull_request:
+    tags: ["v*.*"]
   workflow_dispatch:
 
 permissions:

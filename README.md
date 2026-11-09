@@ -93,9 +93,15 @@ Sous Linux, il faut aussi les bibliothèques de Tauri : `libwebkit2gtk-4.1-dev l
 ### Builds
 
 Le workflow [`.github/workflows/build.yml`](.github/workflows/build.yml) lance les tests puis construit les installeurs
-**Windows** (`.msi`, `.exe` NSIS) et **Linux** (`.deb`, `.rpm`, `.AppImage`) à chaque push sur `main`.
-Ils sont téléchargeables dans les artefacts de l'exécution. Un tag `v*` (par ex. `git tag v0.1.0 && git push --tags`)
-publie en plus une release GitHub avec ces fichiers.
+**Windows** (`.msi`, `.exe` NSIS) et **Linux** (`.deb`, `.rpm`, `.AppImage`) uniquement quand un tag de version
+`vX.Y` ou `vX.Y.Z` est poussé, puis publie une release GitHub avec ces fichiers :
+
+```bash
+git tag v0.2.0 && git push origin v0.2.0
+```
+
+Pensez à mettre la même version dans `src-tauri/tauri.conf.json` avant. Le workflow peut aussi être lancé à la
+main depuis l'onglet Actions (installeurs en artefacts, sans release).
 
 Serveur de test (nginx natif + Nginx Proxy Manager) : voir [`test/docker-compose.yml`](test/docker-compose.yml).
 
