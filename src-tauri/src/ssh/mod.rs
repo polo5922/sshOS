@@ -18,6 +18,9 @@ pub struct Pool {
     sftp: Mutex<HashMap<String, Arc<SftpSession>>>,
     /// Local port forwards keyed by (host id, "remote_host:port").
     forwards: Mutex<HashMap<(String, String), (u16, tokio::task::AbortHandle)>>,
+    /// Tunnels opened by the user in the Tunnels app (fixed local port, listed and closable).
+    tunnels: Mutex<Vec<(sshos_shared::TunnelInfo, tokio::task::AbortHandle)>>,
+    next_tunnel: std::sync::atomic::AtomicU32,
 }
 
 impl Pool {
@@ -53,6 +56,14 @@ impl Pool {
 
     pub async fn disconnect(&self, host_id: &str) {
         self.sftp.lock().await.remove(host_id);
+        self.tunnels.lock().await.retain(|(t, abort)| {
+            if t.host_id == host_id {
+                abort.abort();
+                false
+            } else {
+                true
+            }
+        });
         let mut fw = self.forwards.lock().await;
         fw.retain(|(h, _), (_, abort)| {
             if h == host_id {
@@ -110,32 +121,77 @@ impl Pool {
         let session = self.get(store, host_id).await?;
         let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await?;
         let port = listener.local_addr()?.port();
-        let task = tokio::spawn(async move {
-            loop {
-                let Ok((mut sock, peer)) = listener.accept().await else { break };
-                if session.is_closed() {
-                    break;
-                }
-                let session = session.clone();
-                let rhost = rhost.clone();
-                tokio::spawn(async move {
-                    match session
-                        .handle
-                        .channel_open_direct_tcpip(rhost, rport as u32, peer.ip().to_string(), peer.port() as u32)
-                        .await
-                    {
-                        Ok(ch) => {
-                            let mut stream = ch.into_stream();
-                            let _ = tokio::io::copy_bidirectional(&mut sock, &mut stream).await;
-                        }
-                        Err(e) => log::warn!("direct-tcpip failed: {e}"),
-                    }
-                });
-            }
-        });
+        let task = spawn_forward(session, listener, rhost, rport);
         self.forwards.lock().await.insert(key, (port, task.abort_handle()));
         Ok(port)
     }
+
+    /// Opens a user tunnel on `127.0.0.1:local_port` (0 = any free port).
+    pub async fn tunnel_open(&self, store: &HostStore, host_id: &str, remote: &str, local_port: u16) -> AppResult<sshos_shared::TunnelInfo> {
+        let (rhost, rport) = split_host_port(remote)?;
+        let session = self.get(store, host_id).await?;
+        let listener = tokio::net::TcpListener::bind(("127.0.0.1", local_port))
+            .await
+            .map_err(|e| AppError::msg(format!("127.0.0.1:{local_port}: {e}")))?;
+        let port = listener.local_addr()?.port();
+        let task = spawn_forward(session, listener, rhost, rport);
+        let info = sshos_shared::TunnelInfo {
+            id: self.next_tunnel.fetch_add(1, std::sync::atomic::Ordering::Relaxed) + 1,
+            host_id: host_id.to_string(),
+            local_port: port,
+            remote: remote.trim().to_string(),
+            active: true,
+        };
+        self.tunnels.lock().await.push((info.clone(), task.abort_handle()));
+        Ok(info)
+    }
+
+    pub async fn tunnel_list(&self) -> Vec<sshos_shared::TunnelInfo> {
+        self.tunnels
+            .lock()
+            .await
+            .iter()
+            .map(|(t, a)| sshos_shared::TunnelInfo { active: !a.is_finished(), ..t.clone() })
+            .collect()
+    }
+
+    pub async fn tunnel_close(&self, id: u32) {
+        self.tunnels.lock().await.retain(|(t, a)| {
+            if t.id == id {
+                a.abort();
+                false
+            } else {
+                true
+            }
+        });
+    }
+}
+
+/// Accepts local connections and pipes each one through a `direct-tcpip` channel.
+fn spawn_forward(session: Arc<Session>, listener: tokio::net::TcpListener, rhost: String, rport: u16) -> tokio::task::JoinHandle<()> {
+    tokio::spawn(async move {
+        loop {
+            let Ok((mut sock, peer)) = listener.accept().await else { break };
+            if session.is_closed() {
+                break;
+            }
+            let session = session.clone();
+            let rhost = rhost.clone();
+            tokio::spawn(async move {
+                match session
+                    .handle
+                    .channel_open_direct_tcpip(rhost, rport as u32, peer.ip().to_string(), peer.port() as u32)
+                    .await
+                {
+                    Ok(ch) => {
+                        let mut stream = ch.into_stream();
+                        let _ = tokio::io::copy_bidirectional(&mut sock, &mut stream).await;
+                    }
+                    Err(e) => log::warn!("direct-tcpip failed: {e}"),
+                }
+            });
+        }
+    })
 }
 
 pub fn split_host_port(s: &str) -> AppResult<(String, u16)> {

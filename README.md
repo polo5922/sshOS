@@ -36,9 +36,20 @@ Rust — backend [Tauri v2](https://tauri.app) + [russh](https://github.com/Euge
 | **Nginx** | Sites nginx natifs **et** Nginx Proxy Manager dans une seule liste |
 | **Docker** | Conteneurs groupés par projet compose, CPU/RAM en direct, logs, **shell intégré** (panneau en bas de l'app, un onglet par conteneur), inspect, start/stop/restart, ouverture dans le Navigateur, images et volumes (inutilisés compris) |
 | **Navigateur** | Pages web **du serveur** à travers un tunnel SSH : `localhost:3000`, `9443` ou l'IP d'un conteneur. Puces des ports en écoute (`ss -ltn`), **Ping** (`curl` exécuté sur le serveur : code HTTP et temps), historique, ouverture dans une fenêtre séparée pour les sites qui refusent l'affichage intégré |
-| **Sécurité** | Tentatives de connexion SSH (échecs, utilisateurs inconnus, scans), IP les plus actives, graphique horaire, sessions ouvertes, **fail2ban** (jails, IP bannies, ban/déban) et **éditeur visuel** des jails (maxretry, findtime, bantime, port, ignoreip) |
+| **Sécurité** | Tentatives de connexion SSH (échecs, utilisateurs inconnus, scans), IP les plus actives, graphique horaire, sessions ouvertes, **fail2ban** (jails, IP bannies, ban/déban) et **éditeur visuel** des jails (maxretry, findtime, bantime, port, ignoreip), **pare-feu** (onglet Pare-feu : règles ufw, ouvrir/bloquer un port avec aperçu de la commande, ports en écoute croisés avec les règles ; garde-fou qui autorise le port SSH avant d'activer ufw ; repli en lecture sur nftables) |
+| **Services** | Services systemd (en cours, en échec, arrêtés, lancés au démarrage) : start/stop/restart, activer au démarrage, statut et journal |
+| **Mises à jour** | Paquets à mettre à jour (apt, dnf, yum), mises à jour de sécurité mises en avant, redémarrage requis ; mise à jour lancée dans un Terminal |
+| **Certificats** | Certificats TLS (Let's Encrypt, nginx, domaines ajoutés à la main) avec date d'expiration ; **notification** quand un certificat expire dans 15 jours ou moins ; test et renouvellement `certbot` dans un Terminal |
+| **Tâches planifiées** | crontab utilisateur (éditeur avec raccourcis de planification et description lisible), `/etc/crontab`, `/etc/cron.d` et timers systemd |
+| **Utilisateurs et clés** | Comptes, groupes et administrateurs (groupe sudo / wheel), `authorized_keys` (ajout/retrait, empreintes), dernières connexions |
+| **Réseau** | Interfaces et adresses, routes, DNS, ports en écoute (ouvrir dans le Navigateur ou créer un tunnel), connexions actives, outils (ping, traceroute, dig, curl) |
+| **Tunnels** | Redirections de ports SSH locales (`127.0.0.1:port` → `hôte:port` vu du serveur), suggestions depuis les ports en écoute, fermeture |
+| **Sauvegardes** | Archive `tar.gz` d'un dossier (téléchargeable), dépôts **restic** / **borg** (init, sauvegarde, liste, vérification) dans un Terminal, la phrase de passe n'est jamais vue par sshOs |
+| **Bases de données** | Conteneurs PostgreSQL, MySQL/MariaDB, Redis, MongoDB détectés via Docker : requêtes rapides en lecture, requête libre confirmée avec la commande affichée, shell client dans un Terminal |
+| **Multi-serveurs** | Une carte par serveur : charge, mémoire, disque, uptime, services en échec, mises à jour en attente, redémarrage requis ; connexion de tous les serveurs |
+| **Scripts** | Bibliothèque de commandes réutilisables, exécutées sur un ou plusieurs serveurs avec la sortie de chacun ; les scripts `sudo` s'ouvrent dans un Terminal par serveur |
 
-La barre de menu affiche une cloche de **notifications** (services systemd en échec sur chaque serveur connecté, avec accès aux logs et redémarrage) et, en continu, le CPU, la RAM, le disque `/` et le débit réseau du serveur actif.
+La barre de menu affiche une cloche de **notifications** (services systemd en échec sur chaque serveur connecté, avec accès aux logs et redémarrage ; certificats TLS qui expirent dans 15 jours ou moins) et, en continu, le CPU, la RAM, le disque `/` et le débit réseau du serveur actif.
 ### Bureau
 
 - L'app s'ouvre **en fenêtre maximisée** (plein écran fenêtré) : barre de titre, barre des tâches Windows et Dock natif (macOS/Linux) restent accessibles. **F11** (ou Réglages → plein écran) passe en vrai plein écran.

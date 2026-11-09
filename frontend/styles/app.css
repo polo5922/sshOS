@@ -1410,3 +1410,66 @@ button.git-file:hover:not(:disabled), div.git-file:hover { background: var(--hov
 .lp-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: 12px; }
 .lp-foot .muted { color: rgba(255, 255, 255, .7); }
 .lp-foot button { background: rgba(255, 255, 255, .14); color: #fff; border-color: rgba(255, 255, 255, .2); }
+
+/* ---------------------------------------------------------- admin apps (services, cron, firewall…) */
+.section-title { font-size: 11.5px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin-top: 4px; }
+.hint { margin: 0; line-height: 1.45; }
+.fw { display: flex; flex-direction: column; gap: 14px; }
+.fw-form { display: flex; flex-direction: column; gap: 10px; }
+.card.fw-form { margin: 0; }
+.fw-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: flex-end; }
+.fw-row > label { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.fw-row > label.grow, .fw-row > input.grow { flex: 1 1 220px; }
+.fw-row select { height: 30px; }
+.fw-port { width: 130px; }
+.code-preview, .fw-nft, .net-pre, .sheet-log { margin: 0; white-space: pre-wrap; word-break: break-all; font-size: 12px; }
+.code-preview {
+  padding: 8px 11px; border-radius: 8px; border: 1px dashed var(--border-strong);
+  background: var(--surface-2); color: var(--text);
+}
+.fw-nft, .net-pre { max-height: 320px; overflow: auto; }
+.sheet-log { flex: 1 1 auto; min-height: 0; overflow: auto; }
+.logview.err { border-color: rgba(255, 105, 97, .45); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip {
+  height: 26px; padding: 0 10px; border-radius: 13px; font-size: 12px;
+  background: var(--surface-2); border: 1px solid var(--border); color: var(--text);
+}
+.chip:hover:not(:disabled) { border-color: var(--accent); }
+.chip.on { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); font-weight: 600; }
+button.pill { border: 0; height: auto; cursor: pointer; }
+
+.cron-editor { display: flex; flex-direction: column; gap: 10px; }
+.cron-add { display: flex; flex-direction: column; gap: 8px; padding: 12px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-2); }
+.cron-sched { width: 170px; }
+.cron-text, .db-query { width: 100%; resize: vertical; font-size: 12.5px; line-height: 1.5; min-height: 90px; }
+
+.net-card .row, .net-card { gap: 6px; }
+.key-add { display: flex; flex-direction: column; gap: 6px; font-size: 12px; color: var(--muted); }
+.key-add textarea { width: 100%; min-height: 70px; resize: vertical; color: var(--text); }
+
+.cards > .card.backup-card { gap: 10px; }
+.backups-app .fw-row > label > span, .tunnels-app .fw-row > label > span { font-size: 11.5px; }
+
+.fleet-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 12px; }
+.card.fleet-card { margin: 0; display: flex; flex-direction: column; gap: 10px; }
+.fleet-card.offline { opacity: .75; }
+.fleet-card .state-dot { margin-right: 2px; }
+.fleet-body { display: flex; flex-direction: column; gap: 8px; }
+.fleet-meter { display: flex; flex-direction: column; gap: 4px; }
+.fleet-meter .bar.ok > div { background: var(--ok); }
+.fleet-body .form-actions { justify-content: flex-start; }
+
+.script-name { font-size: 15px; font-weight: 600; border-color: transparent; background: transparent; height: 30px; }
+.script-name:hover, .script-name:focus { border-color: var(--border); background: var(--surface-2); }
+.card.script-result { margin: 0; display: flex; flex-direction: column; gap: 8px; }
+.script-result .logview { max-height: 260px; overflow: auto; margin: 0; }
+.databases-app .side-count.ok { color: var(--ok); }
+.databases-app .logview { max-height: none; margin: 0; }
+
+@media (max-width: 900px) {
+  .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* Apps without a sidebar: keep the title clear of the floating traffic lights. */
+.split-app > .main:first-child > .main-head { padding-left: 86px; }

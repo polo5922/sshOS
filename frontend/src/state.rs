@@ -106,11 +106,22 @@ pub enum AppKind {
     CmdLog,
     Settings,
     About,
+    Services,
+    Updates,
+    Cron,
+    Certs,
+    Users,
+    Network,
+    Tunnels,
+    Backups,
+    Databases,
+    Fleet,
+    Scripts,
 }
 
 impl AppKind {
     pub fn needs_host(&self) -> bool {
-        !matches!(self, AppKind::Connect | AppKind::About | AppKind::Settings | AppKind::CmdLog | AppKind::Transfers)
+        !matches!(self, AppKind::Connect | AppKind::About | AppKind::Settings | AppKind::CmdLog | AppKind::Transfers | AppKind::Fleet | AppKind::Scripts)
     }
     pub fn icon(&self) -> &'static str {
         match self {
@@ -131,6 +142,17 @@ impl AppKind {
             AppKind::CmdLog => "list",
             AppKind::Settings => "sliders",
             AppKind::About => "info",
+            AppKind::Services => "cog",
+            AppKind::Updates => "package",
+            AppKind::Cron => "clock",
+            AppKind::Certs => "cert",
+            AppKind::Users => "key",
+            AppKind::Network => "network",
+            AppKind::Tunnels => "tunnel",
+            AppKind::Backups => "archive",
+            AppKind::Databases => "database",
+            AppKind::Fleet => "servers",
+            AppKind::Scripts => "code",
         }
     }
     pub fn label(&self) -> &'static str {
@@ -152,6 +174,17 @@ impl AppKind {
             AppKind::CmdLog => tr("Historique", "Command log"),
             AppKind::Settings => tr("Réglages", "Settings"),
             AppKind::About => tr("À propos", "About"),
+            AppKind::Services => tr("Services", "Services"),
+            AppKind::Updates => tr("Mises à jour", "Updates"),
+            AppKind::Cron => tr("Tâches planifiées", "Scheduled tasks"),
+            AppKind::Certs => tr("Certificats", "Certificates"),
+            AppKind::Users => tr("Utilisateurs et clés", "Users & keys"),
+            AppKind::Network => tr("Réseau", "Network"),
+            AppKind::Tunnels => tr("Tunnels", "Tunnels"),
+            AppKind::Backups => tr("Sauvegardes", "Backups"),
+            AppKind::Databases => tr("Bases de données", "Databases"),
+            AppKind::Fleet => tr("Multi-serveurs", "All servers"),
+            AppKind::Scripts => tr("Scripts", "Scripts"),
         }
     }
     /// Apps that exist at most once per host.
@@ -170,6 +203,7 @@ impl AppKind {
                 | AppKind::CmdLog
                 | AppKind::Settings
                 | AppKind::About
+                | AppKind::Services | AppKind::Updates | AppKind::Cron | AppKind::Certs | AppKind::Users | AppKind::Network | AppKind::Tunnels | AppKind::Backups | AppKind::Databases | AppKind::Fleet | AppKind::Scripts
         )
     }
     /// Apps drawn edge to edge: no title bar, the traffic lights sit on their sidebar.
@@ -186,6 +220,7 @@ impl AppKind {
                 | AppKind::Git
                 | AppKind::CmdLog
                 | AppKind::Transfers
+                | AppKind::Services | AppKind::Updates | AppKind::Cron | AppKind::Certs | AppKind::Users | AppKind::Network | AppKind::Tunnels | AppKind::Backups | AppKind::Databases | AppKind::Fleet | AppKind::Scripts
         )
     }
     fn default_size(&self) -> (f64, f64) {
@@ -207,6 +242,17 @@ impl AppKind {
             AppKind::CmdLog => (960.0, 600.0),
             AppKind::Settings => (900.0, 620.0),
             AppKind::About => (520.0, 360.0),
+            AppKind::Services => (1000.0, 660.0),
+            AppKind::Updates => (980.0, 640.0),
+            AppKind::Cron => (1040.0, 660.0),
+            AppKind::Certs => (980.0, 620.0),
+            AppKind::Users => (1040.0, 660.0),
+            AppKind::Network => (1040.0, 680.0),
+            AppKind::Tunnels => (860.0, 560.0),
+            AppKind::Backups => (940.0, 620.0),
+            AppKind::Databases => (1100.0, 700.0),
+            AppKind::Fleet => (1100.0, 700.0),
+            AppKind::Scripts => (1040.0, 680.0),
         }
     }
 }

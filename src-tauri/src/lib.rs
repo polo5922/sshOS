@@ -350,6 +350,24 @@ async fn browser_open(store: S<'_, HostStore>, pool: S<'_, Pool>, host_id: Strin
     Ok(format!("{}://127.0.0.1:{port}{}", if u.https { "https" } else { "http" }, u.path))
 }
 
+// ---------------------------------------------------------------- tunnels
+
+#[tauri::command]
+async fn tunnel_open(store: S<'_, HostStore>, pool: S<'_, Pool>, host_id: String, remote: String, local_port: u16) -> AppResult<sshos_shared::TunnelInfo> {
+    pool.tunnel_open(&store, &host_id, &remote, local_port).await
+}
+
+#[tauri::command]
+async fn tunnel_list(pool: S<'_, Pool>) -> AppResult<Vec<sshos_shared::TunnelInfo>> {
+    Ok(pool.tunnel_list().await)
+}
+
+#[tauri::command]
+async fn tunnel_close(pool: S<'_, Pool>, id: u32) -> AppResult<()> {
+    pool.tunnel_close(id).await;
+    Ok(())
+}
+
 // ---------------------------------------------------------------- docker
 
 #[tauri::command]
@@ -709,6 +727,9 @@ pub fn run() {
             browser_ports,
             browser_ping,
             browser_open,
+            tunnel_open,
+            tunnel_list,
+            tunnel_close,
             docker_overview,
             docker_stats,
             docker_preview,

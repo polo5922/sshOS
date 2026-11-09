@@ -840,6 +840,17 @@ fn Window(win: Win) -> impl IntoView {
         AppKind::Logs => view! { <apps::logs::Logs host=host /> }.into_any(),
         AppKind::Git => view! { <apps::git::Git host=host /> }.into_any(),
         AppKind::CmdLog => view! { <apps::cmdlog::CmdLog /> }.into_any(),
+        AppKind::Services => view! { <apps::services::Services host=host /> }.into_any(),
+        AppKind::Updates => view! { <apps::updates::Updates host=host /> }.into_any(),
+        AppKind::Cron => view! { <apps::cron::Cron host=host /> }.into_any(),
+        AppKind::Certs => view! { <apps::certs::Certs host=host /> }.into_any(),
+        AppKind::Users => view! { <apps::users::Users host=host /> }.into_any(),
+        AppKind::Network => view! { <apps::network::Network host=host /> }.into_any(),
+        AppKind::Tunnels => view! { <apps::tunnels::Tunnels host=host /> }.into_any(),
+        AppKind::Backups => view! { <apps::backups::Backups host=host /> }.into_any(),
+        AppKind::Databases => view! { <apps::databases::Databases host=host /> }.into_any(),
+        AppKind::Fleet => view! { <apps::fleet::Fleet /> }.into_any(),
+        AppKind::Scripts => view! { <apps::scripts::Scripts /> }.into_any(),
     };
     let chromeless = win.app.chromeless();
     let traffic = move || {
@@ -1140,13 +1151,24 @@ fn Spotlight() -> impl IntoView {
             (tr("Moniteur", "Monitor"), || AppKind::Monitor),
             ("Nginx", || AppKind::Nginx),
             ("Docker", || AppKind::Docker),
-            (tr("Sécurité · fail2ban", "Security · fail2ban"), || AppKind::Security),
+            (tr("Sécurité · fail2ban, pare-feu", "Security · fail2ban, firewall"), || AppKind::Security),
             (tr("Navigateur", "Browser"), || AppKind::Browser { url: None }),
             (tr("Disques · espace disque", "Disks · disk space"), || AppKind::Disks),
             (tr("Texte · éditeur", "TextEdit · editor"), || AppKind::TextEdit { path: None }),
             (tr("Transferts · envoyer des fichiers", "Transfers · upload files"), || AppKind::Transfers),
             (tr("Journaux · logs", "Logs · journal"), || AppKind::Logs),
             ("Git", || AppKind::Git),
+            (tr("Services · systemd", "Services · systemd"), || AppKind::Services),
+            (tr("Mises à jour · paquets", "Updates · packages"), || AppKind::Updates),
+            (tr("Tâches planifiées · cron", "Scheduled tasks · cron"), || AppKind::Cron),
+            (tr("Certificats · expiration", "Certificates · expiry"), || AppKind::Certs),
+            (tr("Utilisateurs et clés SSH", "Users & SSH keys"), || AppKind::Users),
+            (tr("Réseau · ports, ping", "Network · ports, ping"), || AppKind::Network),
+            (tr("Tunnels SSH", "SSH tunnels"), || AppKind::Tunnels),
+            (tr("Sauvegardes · archives", "Backups · archives"), || AppKind::Backups),
+            (tr("Bases de données", "Databases"), || AppKind::Databases),
+            (tr("Multi-serveurs · vue d'ensemble", "All servers · overview"), || AppKind::Fleet),
+            (tr("Scripts · commandes enregistrées", "Scripts · saved commands"), || AppKind::Scripts),
             (tr("Historique des commandes", "Command log"), || AppKind::CmdLog),
             (tr("Connexions", "Connections"), || AppKind::Connect),
             (tr("Réglages", "Settings"), || AppKind::Settings),
@@ -1391,15 +1413,53 @@ fn Notifications() -> impl IntoView {
                     );
                 }
             }
-            dismissed.update(|d| d.retain(|k| keys.contains(k)));
+            dismissed.update(|d| d.retain(|k| k.starts_with("cert:") || keys.contains(k)));
             alerts.set(all);
+        });
+    };
+    // Certificates expiring within certs::WARN_DAYS days: checked on connect, then hourly.
+    let certs_alerts = RwSignal::new(Vec::<(String, String, i64)>::new());
+    let certs_busy = StoredValue::new(false);
+    let poll_certs = move || {
+        if certs_busy.get_value() {
+            return;
+        }
+        let hosts: Vec<String> = c.sessions.with_untracked(|s| s.iter().map(|(h, _)| h.clone()).collect());
+        certs_busy.set_value(true);
+        spawn_local(async move {
+            use crate::apps::certs;
+            let now = certs::now_secs();
+            let mut all = Vec::new();
+            for h in hosts {
+                if let Ok(r) = crate::tauri::exec(&h, &certs::script(&certs::manual_domains(&h)), true).await {
+                    for cert in certs::parse(&r.stdout).certs {
+                        if let Some(d) = cert.days_left(now).filter(|d| *d <= certs::WARN_DAYS) {
+                            if !all.iter().any(|(x, n, _): &(String, String, i64)| *x == h && *n == cert.name) {
+                                all.push((h.clone(), cert.name, d));
+                            }
+                        }
+                    }
+                }
+            }
+            let _ = certs_busy.try_set_value(false);
+            let Some(prev) = certs_alerts.try_get_untracked() else { return };
+            for (h, n, d) in all.iter().filter(|a| !prev.iter().any(|p| p.0 == a.0 && p.1 == a.1)) {
+                if !dismissed.get_untracked().contains(&format!("cert:{h}:{n}")) {
+                    c.toast(ToastKind::Error, cert_title(n, &c.host_name(h), *d));
+                }
+            }
+            certs_alerts.set(all);
         });
     };
     Effect::new(move |_| {
         let _ = c.sessions.with(|s| s.len());
         poll();
+        poll_certs();
     });
     if let Ok(h) = set_interval_with_handle(poll, std::time::Duration::from_secs(30)) {
+        on_cleanup(move || h.clear());
+    }
+    if let Ok(h) = set_interval_with_handle(poll_certs, std::time::Duration::from_secs(3600)) {
         on_cleanup(move || h.clear());
     }
 
@@ -1432,7 +1492,11 @@ fn Notifications() -> impl IntoView {
         let d = dismissed.get();
         alerts.get().into_iter().filter(|a| !d.contains(&a.key())).collect::<Vec<_>>()
     };
-    let count = move || visible().len();
+    let visible_certs = move || {
+        let d = dismissed.get();
+        certs_alerts.get().into_iter().filter(|(h, n, _)| !d.contains(&format!("cert:{h}:{n}"))).collect::<Vec<_>>()
+    };
+    let count = move || visible().len() + visible_certs().len();
 
     view! {
         <button
@@ -1452,7 +1516,45 @@ fn Notifications() -> impl IntoView {
                     <button class="link small" on:click=move |_| poll()>{tr("Actualiser", "Refresh")}</button>
                 </div>
                 {move || {
+                    visible_certs()
+                        .into_iter()
+                        .map(|(h, name, days)| {
+                            let key = format!("cert:{h}:{name}");
+                            let title = cert_title(&name, &c.host_name(&h), days);
+                            view! {
+                                <div class="notif-item">
+                                    <span class="notif-icon"><Icon name="cert" size=16 /></span>
+                                    <div class="notif-text">
+                                        <div class="notif-title">{title}</div>
+                                        <div class="notif-body muted">
+                                            {tr(
+                                                "Renouvelez-le avant l'expiration pour éviter une erreur de sécurité dans les navigateurs.",
+                                                "Renew it before it expires to avoid security errors in browsers.",
+                                            )}
+                                        </div>
+                                        <div class="notif-actions">
+                                            <button class="link" on:click=move |_| {
+                                                open.set(false);
+                                                c.open(AppKind::Certs, Some(h.clone()));
+                                            }>{tr("Ouvrir Certificats", "Open Certificates")}</button>
+                                        </div>
+                                    </div>
+                                    <button class="icon-btn notif-x" title=tr("Ignorer", "Dismiss") on:click=move |_| {
+                                        let k = key.clone();
+                                        dismissed.update(|d| d.push(k));
+                                    }>
+                                        <Icon name="x" size=12 />
+                                    </button>
+                                </div>
+                            }
+                        })
+                        .collect_view()
+                }}
+                {move || {
                     let v = visible();
+                    if v.is_empty() && !visible_certs().is_empty() {
+                        return ().into_any();
+                    }
                     if v.is_empty() {
                         return view! {
                             <div class="notif-empty"><Icon name="check" size=16 />{tr("Aucune alerte", "No alerts")}</div>
@@ -1513,6 +1615,14 @@ fn Notifications() -> impl IntoView {
                 }}
             </div>
         </Show>
+    }
+}
+
+fn cert_title(name: &str, host: &str, days: i64) -> String {
+    if days < 0 {
+        format!("{} {name} ({host}) {}", tr("Le certificat", "Certificate"), tr("a expiré", "has expired"))
+    } else {
+        format!("{} {name} ({host}) {} {days} {}", tr("Le certificat", "Certificate"), tr("expire dans", "expires in"), tr("jour(s)", "day(s)"))
     }
 }
 

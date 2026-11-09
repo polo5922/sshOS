@@ -697,3 +697,315 @@ Version and licence	Version und Lizenz	Versión y licencia
 Web & containers	Web & Container	Web y contenedores
 Your favourite apps; open apps appear after the separator. Right-click an icon: its windows, Keep in Dock / Remove from Dock.	Ihre Lieblings-Apps; geöffnete Apps erscheinen nach dem Trennstrich. Rechtsklick auf ein Symbol: seine Fenster, Im Dock behalten / Aus dem Dock entfernen.	Tus apps favoritas; las apps abiertas aparecen tras el separador. Clic derecho en un icono: sus ventanas, Mantener en el Dock / Quitar del Dock.
 journalctl and /var/log	journalctl und /var/log	journalctl y /var/log
+(no output)	(keine Ausgabe)	(sin salida)
+A port on this computer (127.0.0.1 only) is linked to an address seen from the server, like ssh -L. Tunnels close on disconnect.	Ein Port dieses Computers (nur 127.0.0.1) wird mit einer vom Server aus gesehenen Adresse verbunden, wie ssh -L. Tunnel werden beim Trennen geschlossen.	Un puerto de este equipo (solo 127.0.0.1) se enlaza con una dirección vista desde el servidor, como ssh -L. Los túneles se cierran al desconectar.
+A reboot is required to finish updates.	Ein Neustart ist erforderlich, um die Updates abzuschließen.	Se requiere un reinicio para terminar las actualizaciones.
+Absolute path expected (e.g. /var/www).	Absoluter Pfad erwartet (z. B. /var/www).	Se espera una ruta absoluta (p. ej. /var/www).
+Absolute path expected.	Absoluter Pfad erwartet.	Se espera una ruta absoluta.
+Access	Zugriff	Acceso
+Accounts	Konten	Cuentas
+Accounts and authorized SSH keys	Konten und autorisierte SSH-Schlüssel	Cuentas y claves SSH autorizadas
+Action	Aktion	Acción
+Activates	Aktiviert	Activa
+Add SSH key	SSH-Schlüssel hinzufügen	Añadir clave SSH
+Add a public key	Öffentlichen Schlüssel hinzufügen	Añadir una clave pública
+Add a server…	Server hinzufügen…	Añadir un servidor…
+Add key…	Schlüssel hinzufügen…	Añadir clave…
+Address	Adresse	Dirección
+Address copied.	Adresse kopiert.	Dirección copiada.
+All servers	Alle Server	Todos los servidores
+All servers · overview	Alle Server · Übersicht	Todos los servidores · resumen
+All services	Alle Dienste	Todos los servicios
+Allow	Erlauben	Permitir
+Allowed	Erlaubt	Permitido
+Archive	Archiv	Archivo
+Archive downloaded.	Archiv heruntergeladen.	Archivo descargado.
+Archives, restic and borg	Archive, restic und borg	Archivos, restic y borg
+Archive…	Archivieren…	Archivar…
+At boot	Beim Systemstart	Al arrancar
+At server startup	Beim Serverstart	Al iniciar el servidor
+Authorized SSH keys	Autorisierte SSH-Schlüssel	Claves SSH autorizadas
+Available updates	Verfügbare Updates	Actualizaciones disponibles
+Back up now	Jetzt sichern	Hacer copia ahora
+Backups	Sicherungen	Copias de seguridad
+Backups · archives	Sicherungen · Archive	Copias de seguridad · archivos
+Blocked	Blockiert	Bloqueado
+Careful: this rule allows the SSH port. Without another rule you will lose access.	Vorsicht: Diese Regel erlaubt den SSH-Port. Ohne eine andere Regel verlieren Sie den Zugriff.	Cuidado: esta regla permite el puerto SSH. Sin otra regla perderá el acceso.
+Certificates · expiry	Zertifikate · Ablauf	Certificados · caducidad
+Check repositories for updates…	Paketquellen auf Updates prüfen…	Buscar actualizaciones en los repositorios…
+Check repository	Repository prüfen	Comprobar repositorio
+Check…	Prüfen…	Comprobar…
+Clients	Clients	Clientes
+Close all tunnels	Alle Tunnel schließen	Cerrar todos los túneles
+Close tunnel	Tunnel schließen	Cerrar túnel
+Collections	Collections	Colecciones
+Command, e.g. /home/me/backup.sh	Befehl, z. B. /home/ich/backup.sh	Comando, p. ej. /home/yo/backup.sh
+Commands on several servers	Befehle auf mehreren Servern	Comandos en varios servidores
+Commands open in a Terminal: you type the repository passphrase, never sshOs.	Befehle öffnen sich in einem Terminal: Sie geben die Passphrase des Repositorys ein, nie sshOs.	Los comandos se abren en un Terminal: usted escribe la frase de paso del repositorio, nunca sshOs.
+Comment	Kommentar	Comentario
+Connect all servers	Alle Server verbinden	Conectar todos los servidores
+Connect…	Verbinden…	Conectar…
+Copy address	Adresse kopieren	Copiar dirección
+Create a tunnel	Tunnel erstellen	Crear un túnel
+Create an archive	Archiv erstellen	Crear un archivo
+Create an archive…	Archiv erstellen…	Crear un archivo…
+Ctrl+Enter to run · credentials read from the container environment	Strg+Enter zum Ausführen · Zugangsdaten aus der Container-Umgebung	Ctrl+Intro para ejecutar · credenciales leídas del entorno del contenedor
+Custom schedule	Eigener Zeitplan	Programación personalizada
+DNS servers	DNS-Server	Servidores DNS
+Databases	Datenbanken	Bases de datos
+Databases and sizes	Datenbanken und Größen	Bases de datos y tamaños
+Date	Datum	Fecha
+Delete archive	Archiv löschen	Eliminar archivo
+Delete rule	Regel löschen	Eliminar regla
+Deny	Verweigern	Denegar
+Destination (from the server)	Ziel (vom Server aus)	Destino (desde el servidor)
+Diagnostic tools	Diagnosewerkzeuge	Herramientas de diagnóstico
+Disable the firewall	Firewall deaktivieren	Desactivar el cortafuegos
+Disable…	Deaktivieren…	Desactivar…
+Discard changes	Änderungen verwerfen	Descartar cambios
+Disk /	Datenträger /	Disco /
+Docker containers	Docker-Container	Contenedores Docker
+Domain	Domain	Dominio
+Don't remove the key sshOs uses to connect.	Entfernen Sie nicht den Schlüssel, mit dem sich sshOs verbindet.	No elimine la clave que sshOs usa para conectarse.
+Downloading…	Wird heruntergeladen…	Descargando…
+Enable the firewall	Firewall aktivieren	Activar el cortafuegos
+Enable…	Aktivieren…	Activar…
+Enter a valid port.	Geben Sie einen gültigen Port ein.	Introduzca un puerto válido.
+Enter a valid target.	Geben Sie ein gültiges Ziel ein.	Introduzca un destino válido.
+Established connections	Bestehende Verbindungen	Conexiones establecidas
+Every	Alle	Cada
+Every January 1st at midnight	Jeden 1. Januar um Mitternacht	Cada 1 de enero a medianoche
+Every Sunday at midnight	Jeden Sonntag um Mitternacht	Cada domingo a medianoche
+Every day at	Täglich um	Cada día a las
+Every day at midnight	Täglich um Mitternacht	Cada día a medianoche
+Every hour	Stündlich	Cada hora
+Every hour at	Stündlich um Minute	Cada hora en el minuto
+Every minute	Jede Minute	Cada minuto
+Every server at a glance	Alle Server auf einen Blick	Todos los servidores de un vistazo
+Expires	Läuft ab	Caduca
+Exposure	Erreichbarkeit	Exposición
+Failed services	Fehlgeschlagene Dienste	Servicios con error
+Fingerprint	Fingerabdruck	Huella
+Firewall	Firewall	Cortafuegos
+Firewall rule	Firewall-Regel	Regla del cortafuegos
+Fix…	Beheben…	Corregir…
+Fleet	Serverflotte	Flota
+Folder to back up	Zu sichernder Ordner	Carpeta a respaldar
+For folders only root can read	Für Ordner, die nur root lesen kann	Para carpetas que solo root puede leer
+Friday	Freitag	Viernes
+From	Von	Desde
+From (IP or network, optional)	Von (IP oder Netz, optional)	Desde (IP o red, opcional)
+From the Internet	Aus dem Internet	Desde Internet
+Grant sudo rights…	sudo-Rechte gewähren…	Conceder derechos sudo…
+Groups	Gruppen	Grupos
+Host or IP (e.g. 1.1.1.1, example.com)	Host oder IP (z. B. 1.1.1.1, example.com)	Host o IP (p. ej. 1.1.1.1, example.com)
+Initialize repository	Repository initialisieren	Inicializar repositorio
+Install ufw	ufw installieren	Instalar ufw
+Install ufw…	ufw installieren…	Instalar ufw…
+Installed	Installiert	Instalado
+Install…	Installieren…	Instalar…
+Interactive console	Interaktive Konsole	Consola interactiva
+Interfaces, ports, ping, DNS	Schnittstellen, Ports, Ping, DNS	Interfaces, puertos, ping, DNS
+Invalid day of month (1-31)	Ungültiger Tag (1-31)	Día del mes no válido (1-31)
+Invalid destination: host:port (e.g. localhost:5432).	Ungültiges Ziel: host:port (z. B. localhost:5432).	Destino no válido: host:puerto (p. ej. localhost:5432).
+Invalid domain (e.g. example.com or example.com:8443)	Ungültige Domain (z. B. example.com oder example.com:8443)	Dominio no válido (p. ej. example.com o example.com:8443)
+Invalid hour (0-23)	Ungültige Stunde (0-23)	Hora no válida (0-23)
+Invalid minute (0-59)	Ungültige Minute (0-59)	Minuto no válido (0-59)
+Invalid month (1-12 or jan-dec)	Ungültiger Monat (1-12 oder jan-dec)	Mes no válido (1-12 o jan-dec)
+Invalid name: lowercase, digits, - and _.	Ungültiger Name: Kleinbuchstaben, Ziffern, - und _.	Nombre no válido: minúsculas, dígitos, - y _.
+Invalid public key (ssh-ed25519 AAAA… comment).	Ungültiger öffentlicher Schlüssel (ssh-ed25519 AAAA… Kommentar).	Clave pública no válida (ssh-ed25519 AAAA… comentario).
+Invalid weekday (0-7 or sun-sat)	Ungültiger Wochentag (0-7 oder sun-sat)	Día de la semana no válido (0-7 o sun-sat)
+Issuer	Aussteller	Emisor
+Jobs	Aufgaben	Tareas
+Keys per database	Schlüssel pro Datenbank	Claves por base de datos
+Largest folders in /var	Größte Ordner in /var	Carpetas más grandes de /var
+Last logins	Letzte Anmeldungen	Últimos inicios de sesión
+Last run	Letzte Ausführung	Última ejecución
+Left	Verbleibend	Restante
+Let's Encrypt certificates (/etc/letsencrypt) are only readable by root.	Let's-Encrypt-Zertifikate (/etc/letsencrypt) sind nur für root lesbar.	Los certificados de Let's Encrypt (/etc/letsencrypt) solo los puede leer root.
+Library	Bibliothek	Biblioteca
+Limit (anti brute-force)	Begrenzen (gegen Brute-Force)	Limitar (anti fuerza bruta)
+Line	Zeile	Línea
+List archives	Archive auflisten	Listar archivos
+List snapshots	Snapshots auflisten	Listar instantáneas
+List with certbot…	Mit certbot auflisten…	Listar con certbot…
+List with sudo…	Mit sudo auflisten…	Listar con sudo…
+Load	Last	Carga
+Load and uptime	Last und Laufzeit	Carga y tiempo activo
+Local only	Nur lokal	Solo local
+Local port (empty = auto)	Lokaler Port (leer = automatisch)	Puerto local (vacío = auto)
+Local ports	Lokale Ports	Puertos locales
+Logins	Anmeldungen	Inicios de sesión
+Missing command	Befehl fehlt	Falta el comando
+Monday	Montag	Lunes
+Monday to Friday at	Montag bis Freitag um	De lunes a viernes a las
+My crontab	Meine crontab	Mi crontab
+Needs 5 fields (minute hour day month weekday) then the command	Benötigt 5 Felder (Minute Stunde Tag Monat Wochentag), dann den Befehl	Necesita 5 campos (minuto hora día mes día-semana) y luego el comando
+Network · ports, ping	Netzwerk · Ports, Ping	Red · puertos, ping
+New script	Neues Skript	Nuevo script
+New server…	Neuer Server…	Nuevo servidor…
+New version	Neue Version	Nueva versión
+Next run	Nächste Ausführung	Próxima ejecución
+No PostgreSQL, MySQL/MariaDB, Redis or MongoDB container running.	Kein PostgreSQL-, MySQL/MariaDB-, Redis- oder MongoDB-Container läuft.	No hay ningún contenedor PostgreSQL, MySQL/MariaDB, Redis o MongoDB en ejecución.
+No address	Keine Adresse	Sin dirección
+No archives in /tmp.	Keine Archive in /tmp.	No hay archivos en /tmp.
+No authorized keys.	Keine autorisierten Schlüssel.	No hay claves autorizadas.
+No certificates found. Add a domain below.	Keine Zertifikate gefunden. Fügen Sie unten eine Domain hinzu.	No se encontraron certificados. Añada un dominio abajo.
+No connected server.	Kein Server verbunden.	Ningún servidor conectado.
+No database found.	Keine Datenbank gefunden.	No se encontró ninguna base de datos.
+No established connections.	Keine bestehenden Verbindungen.	No hay conexiones establecidas.
+No jobs. Format: minute hour day month weekday command	Keine Aufgaben. Format: Minute Stunde Tag Monat Wochentag Befehl	Sin tareas. Formato: minuto hora día mes día-semana comando
+No listening ports.	Keine lauschenden Ports.	No hay puertos a la escucha.
+No open tunnels.	Keine offenen Tunnel.	No hay túneles abiertos.
+No recorded logins (wtmp).	Keine aufgezeichneten Anmeldungen (wtmp).	No hay inicios de sesión registrados (wtmp).
+No rules: all incoming traffic is blocked.	Keine Regeln: Der gesamte eingehende Verkehr wird blockiert.	Sin reglas: todo el tráfico entrante está bloqueado.
+No saved servers.	Keine gespeicherten Server.	No hay servidores guardados.
+No security updates.	Keine Sicherheitsupdates.	No hay actualizaciones de seguridad.
+No services	Keine Dienste	Sin servicios
+No supported package manager (apt, dnf, yum).	Kein unterstützter Paketmanager (apt, dnf, yum).	Ningún gestor de paquetes compatible (apt, dnf, yum).
+No system jobs.	Keine Systemaufgaben.	No hay tareas del sistema.
+No systemd timers.	Keine systemd-Timer.	No hay temporizadores systemd.
+Not connected	Nicht verbunden	No conectado
+On day	Am Tag	El día
+On the 1st of every month at midnight	Am 1. jedes Monats um Mitternacht	El día 1 de cada mes a medianoche
+On this computer	Auf diesem Computer	En este equipo
+Open (firewall off)	Offen (Firewall aus)	Abierto (cortafuegos desactivado)
+Open Certificates	Zertifikate öffnen	Abrir Certificados
+Open in Browser	Im Browser öffnen	Abrir en el Navegador
+Open interactive console	Interaktive Konsole öffnen	Abrir consola interactiva
+Open or block a port	Port öffnen oder sperren	Abrir o bloquear un puerto
+Package	Paket	Paquete
+Packages	Pakete	Paquetes
+Pending package updates	Ausstehende Paketupdates	Actualizaciones de paquetes pendientes
+Port	Port	Puerto
+Port (80, 8000:8100)	Port (80, 8000:8100)	Puerto (80, 8000:8100)
+Postgres, MySQL, Redis in Docker	Postgres, MySQL, Redis in Docker	Postgres, MySQL, Redis en Docker
+Process	Prozess	Proceso
+Proto	Proto	Proto
+Quick archive (tar.gz)	Schnellarchiv (tar.gz)	Archivo rápido (tar.gz)
+Reading the firewall rules needs root.	Das Lesen der Firewall-Regeln erfordert root.	Leer las reglas del cortafuegos requiere root.
+Reboot the server…	Server neu starten…	Reiniciar el servidor…
+Reboot…	Neu starten…	Reiniciar…
+Refresh list	Liste aktualisieren	Actualizar lista
+Reload systemd configuration…	systemd-Konfiguration neu laden…	Recargar la configuración de systemd…
+Remote address	Entfernte Adresse	Dirección remota
+Remove SSH key	SSH-Schlüssel entfernen	Eliminar clave SSH
+Remove key…	Schlüssel entfernen…	Eliminar clave…
+Remove sudo rights…	sudo-Rechte entziehen…	Quitar derechos sudo…
+Renew certificates…	Zertifikate erneuern…	Renovar certificados…
+Renew it before it expires to avoid security errors in browsers.	Erneuern Sie es vor dem Ablauf, um Sicherheitsfehler in Browsern zu vermeiden.	Renuévelo antes de que caduque para evitar errores de seguridad en los navegadores.
+Renew…	Erneuern…	Renovar…
+Reset failed units…	Fehlgeschlagene Units zurücksetzen…	Restablecer unidades con error…
+Restore examples	Beispiele wiederherstellen	Restaurar ejemplos
+Routes	Routen	Rutas
+Run query	Abfrage ausführen	Ejecutar consulta
+Run script	Skript ausführen	Ejecutar script
+Running…	Wird ausgeführt…	Ejecutando…
+Run…	Ausführen…	Ejecutar…
+SSH attempts, fail2ban, firewall	SSH-Versuche, fail2ban, Firewall	Intentos SSH, fail2ban, cortafuegos
+SSH keys	SSH-Schlüssel	Claves SSH
+SSH port forwards	SSH-Portweiterleitungen	Redirecciones de puertos SSH
+SSH tunnels	SSH-Tunnel	Túneles SSH
+Saturday	Samstag	Sábado
+Save crontab	crontab speichern	Guardar crontab
+Save crontab…	crontab speichern…	Guardar crontab…
+Save…	Speichern…	Guardar…
+Schedule	Zeitplan	Programación
+Scheduled tasks	Geplante Aufgaben	Tareas programadas
+Scheduled tasks · cron	Geplante Aufgaben · cron	Tareas programadas · cron
+Scheduling	Planung	Planificación
+Script	Skript	Script
+Script name	Skriptname	Nombre del script
+Script saved.	Skript gespeichert.	Script guardado.
+Scripts	Skripte	Scripts
+Scripts · saved commands	Skripte · gespeicherte Befehle	Scripts · comandos guardados
+Security only…	Nur Sicherheit…	Solo seguridad…
+Security updates	Sicherheitsupdates	Actualizaciones de seguridad
+Security updates only…	Nur Sicherheitsupdates…	Solo actualizaciones de seguridad…
+Security · fail2ban, firewall	Sicherheit · fail2ban, Firewall	Seguridad · fail2ban, cortafuegos
+Services · systemd	Dienste · systemd	Servicios · systemd
+Shell	Shell	Shell
+Show system accounts	Systemkonten anzeigen	Mostrar cuentas del sistema
+Source	Quelle	Origen
+Start at boot	Beim Systemstart starten	Iniciar al arrancar
+Started at boot	Beim Systemstart gestartet	Se inicia al arrancar
+Start…	Starten…	Iniciar…
+State	Status	Estado
+Status and journal	Status und Journal	Estado y registro
+Stop…	Stoppen…	Detener…
+Sunday	Sonntag	Domingo
+System accounts	Systemkonten	Cuentas del sistema
+System administration	Systemverwaltung	Administración del sistema
+System jobs	Systemaufgaben	Tareas del sistema
+TCP + UDP	TCP + UDP	TCP + UDP
+TCP port	TCP-Port	Puerto TCP
+TLS certificate expiry	Ablauf der TLS-Zertifikate	Caducidad de los certificados TLS
+TLS certificates	TLS-Zertifikate	Certificados TLS
+Tables	Tabellen	Tablas
+Target servers	Zielserver	Servidores de destino
+Test renewal (dry-run)…	Erneuerung testen (dry-run)…	Probar la renovación (dry-run)…
+Test renewal…	Erneuerung testen…	Probar la renovación…
+The command cannot contain SSHOS_EOF	Der Befehl darf SSHOS_EOF nicht enthalten	El comando no puede contener SSHOS_EOF
+The notification bell warns when a certificate expires within 15 days.	Die Benachrichtigungsglocke warnt, wenn ein Zertifikat innerhalb von 15 Tagen abläuft.	La campana de notificaciones avisa cuando un certificado caduca en menos de 15 días.
+The system is up to date.	Das System ist auf dem neuesten Stand.	El sistema está actualizado.
+This command will run on:	Dieser Befehl wird ausgeführt auf:	Este comando se ejecutará en:
+This script uses sudo: it is typed in one Terminal per server, for you to confirm with Enter.	Dieses Skript verwendet sudo: Es wird pro Server in ein Terminal eingegeben, das Sie selbst mit Enter bestätigen.	Este script usa sudo: se escribe en un Terminal por servidor, para que usted lo confirme con Intro.
+Thursday	Donnerstag	Jueves
+Timer	Timer	Temporizador
+To (from the server)	Nach (vom Server aus)	Hacia (desde el servidor)
+Tools	Werkzeuge	Herramientas
+Tuesday	Dienstag	Martes
+Tunnel open:	Tunnel geöffnet:	Túnel abierto:
+Tunnels	Tunnel	Túneles
+Type	Typ	Tipo
+Unknown shortcut (@reboot, @hourly, @daily, @weekly, @monthly, @yearly)	Unbekanntes Kürzel (@reboot, @hourly, @daily, @weekly, @monthly, @yearly)	Atajo desconocido (@reboot, @hourly, @daily, @weekly, @monthly, @yearly)
+Updates	Updates	Actualizaciones
+Updates · packages	Updates · Pakete	Actualizaciones · paquetes
+Upgrade everything…	Alles aktualisieren…	Actualizar todo…
+Upgrade packages (apt)	Pakete aktualisieren (apt)	Actualizar paquetes (apt)
+Upgrade this package…	Dieses Paket aktualisieren…	Actualizar este paquete…
+Upgrades run in a Terminal: read the command, then press Enter.	Updates laufen in einem Terminal: Lesen Sie den Befehl und drücken Sie dann Enter.	Las actualizaciones se ejecutan en un Terminal: lea el comando y pulse Intro.
+Users & SSH keys	Benutzer & SSH-Schlüssel	Usuarios y claves SSH
+Users & keys	Benutzer & Schlüssel	Usuarios y claves
+Version	Version	Versión
+Watch a domain: example.com or example.com:8443	Domain überwachen: example.com oder example.com:8443	Vigilar un dominio: example.com o example.com:8443
+Web, network & containers	Web, Netzwerk & Container	Web, red y contenedores
+Wednesday	Mittwoch	Miércoles
+When	Wann	Cuándo
+With sudo…	Mit sudo…	Con sudo…
+active	aktiv	activo
+added	hinzugefügt	añadido
+admin group	Admin-Gruppe	grupo de administración
+all good	alles in Ordnung	todo bien
+all interfaces	alle Schnittstellen	todas las interfaces
+at	um	a las
+closed	geschlossen	cerrado
+crontab and systemd timers	crontab und systemd-Timer	crontab y temporizadores systemd
+d	T	d
+day(s)	Tag(e)	día(s)
+exit	Exit	salida
+expired	abgelaufen	caducado
+expires in	läuft ab in	caduca en
+failed service(s)	fehlgeschlagene(r) Dienst(e)	servicio(s) con error
+has expired	ist abgelaufen	ha caducado
+local	lokal	local
+new user	neuer Benutzer	nuevo usuario
+no login	keine Anmeldung	sin inicio de sesión
+not installed	nicht installiert	no instalado
+of every month at	jedes Monats um	de cada mes a las
+online	online	en línea
+openssl is not installed on the server.	openssl ist auf dem Server nicht installiert.	openssl no está instalado en el servidor.
+reboot required	Neustart erforderlich	reinicio necesario
+restic / borg repositories	restic-/borg-Repositorys	Repositorios restic / borg
+rules	Regeln	reglas
+running…	läuft…	ejecutando…
+security	Sicherheit	seguridad
+server(s) selected	Server ausgewählt	servidor(es) seleccionado(s)
+systemd services	systemd-Dienste	servicios systemd
+systemd timers	systemd-Timer	temporizadores systemd
+ufw firewall active	ufw-Firewall aktiv	cortafuegos ufw activo
+ufw firewall inactive: every listening port is reachable.	ufw-Firewall inaktiv: Jeder lauschende Port ist erreichbar.	cortafuegos ufw inactivo: todos los puertos a la escucha son accesibles.
+ufw is not installed. The nftables rules are shown read-only.	ufw ist nicht installiert. Die nftables-Regeln werden schreibgeschützt angezeigt.	ufw no está instalado. Las reglas nftables se muestran en solo lectura.
+unreachable	nicht erreichbar	inaccesible
+up	läuft seit	activo desde
+update(s)	Update(s)	actualización(es)

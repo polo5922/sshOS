@@ -16,6 +16,7 @@ enum View {
     Attempts,
     Ips,
     Fail2ban,
+    Firewall,
     Sessions,
 }
 
@@ -26,6 +27,7 @@ impl View {
             View::Attempts => tr("Tentatives SSH", "SSH attempts"),
             View::Ips => tr("Adresses IP", "IP addresses"),
             View::Fail2ban => "Fail2ban",
+            View::Firewall => tr("Pare-feu", "Firewall"),
             View::Sessions => tr("Sessions ouvertes", "Open sessions"),
         }
     }
@@ -433,6 +435,7 @@ pub fn Security(host: String) -> impl IntoView {
             {side_item(View::Sessions, "users", Some(Box::new(num(|r| r.sessions.len()))))}
             <div class="side-title">{tr("Protection", "Protection")}</div>
             {side_item(View::Fail2ban, "shield-check", Some(Box::new(num(|r| r.fail2ban.jails.iter().map(|j| j.banned.len()).sum()))))}
+            {side_item(View::Firewall, "firewall", None)}
             <div class="grow"></div>
             <div class="side-foot muted small">{move || s.report.with(|r| r.as_ref().map(|r| r.source.clone()).unwrap_or_default())}</div>
         </aside>
@@ -801,6 +804,7 @@ pub fn Security(host: String) -> impl IntoView {
                 MenuItem::new(View::Ips.title(), move || view_sig.set(View::Ips)).checked(move || view_sig.get() == View::Ips),
                 MenuItem::new(View::Sessions.title(), move || view_sig.set(View::Sessions)).checked(move || view_sig.get() == View::Sessions),
                 MenuItem::new(View::Fail2ban.title(), move || view_sig.set(View::Fail2ban)).checked(move || view_sig.get() == View::Fail2ban),
+                MenuItem::new(View::Firewall.title(), move || view_sig.set(View::Firewall)).checked(move || view_sig.get() == View::Firewall),
             ],
         ),
     ]);
@@ -852,6 +856,7 @@ pub fn Security(host: String) -> impl IntoView {
                         View::Ips => ips().into_any(),
                         View::Fail2ban if s.editing.get() => f2b_editor(s).into_any(),
                         View::Fail2ban => fail2ban().into_any(),
+                        View::Firewall => view! { <crate::apps::firewall::Firewall host=s.h() /> }.into_any(),
                         View::Sessions => sessions().into_any(),
                     }}
                 </div>

@@ -11,6 +11,7 @@ use crate::state::*;
 pub enum Category {
     Files,
     Monitoring,
+    Admin,
     Services,
     Security,
     Dev,
@@ -18,14 +19,22 @@ pub enum Category {
 }
 
 impl Category {
-    pub const ALL: [Category; 6] =
-        [Category::Files, Category::Monitoring, Category::Services, Category::Security, Category::Dev, Category::System];
+    pub const ALL: [Category; 7] = [
+        Category::Files,
+        Category::Monitoring,
+        Category::Admin,
+        Category::Services,
+        Category::Security,
+        Category::Dev,
+        Category::System,
+    ];
 
     pub fn label(self) -> &'static str {
         match self {
             Category::Files => tr("Fichiers et terminal", "Files & terminal"),
             Category::Monitoring => tr("Surveillance", "Monitoring"),
-            Category::Services => tr("Web et conteneurs", "Web & containers"),
+            Category::Admin => tr("Administration système", "System administration"),
+            Category::Services => tr("Web, réseau et conteneurs", "Web, network & containers"),
             Category::Security => tr("Sécurité et accès", "Security & access"),
             Category::Dev => tr("Développement", "Development"),
             Category::System => "sshOs",
@@ -50,11 +59,22 @@ pub const APPS: &[AppEntry] = &[
     AppEntry { id: "monitor", make: || AppKind::Monitor, cat: Category::Monitoring, desc: || tr("CPU, mémoire, processus", "CPU, memory, processes") },
     AppEntry { id: "disks", make: || AppKind::Disks, cat: Category::Monitoring, desc: || tr("Espace disque", "Disk space") },
     AppEntry { id: "logs", make: || AppKind::Logs, cat: Category::Monitoring, desc: || tr("journalctl et /var/log", "journalctl and /var/log") },
+    AppEntry { id: "fleet", make: || AppKind::Fleet, cat: Category::Monitoring, desc: || tr("Tous les serveurs d'un coup d'œil", "Every server at a glance") },
+    AppEntry { id: "services", make: || AppKind::Services, cat: Category::Admin, desc: || tr("Services systemd", "systemd services") },
+    AppEntry { id: "updates", make: || AppKind::Updates, cat: Category::Admin, desc: || tr("Paquets à mettre à jour", "Pending package updates") },
+    AppEntry { id: "cron", make: || AppKind::Cron, cat: Category::Admin, desc: || tr("crontab et timers systemd", "crontab and systemd timers") },
+    AppEntry { id: "backups", make: || AppKind::Backups, cat: Category::Admin, desc: || tr("Archives, restic et borg", "Archives, restic and borg") },
+    AppEntry { id: "scripts", make: || AppKind::Scripts, cat: Category::Admin, desc: || tr("Commandes sur plusieurs serveurs", "Commands on several servers") },
     AppEntry { id: "cmdlog", make: || AppKind::CmdLog, cat: Category::Monitoring, desc: || tr("Commandes lancées par sshOs", "Commands run by sshOs") },
     AppEntry { id: "docker", make: || AppKind::Docker, cat: Category::Services, desc: || tr("Conteneurs, images, volumes", "Containers, images, volumes") },
     AppEntry { id: "nginx", make: || AppKind::Nginx, cat: Category::Services, desc: || tr("Sites et Nginx Proxy Manager", "Sites and Nginx Proxy Manager") },
     AppEntry { id: "browser", make: || AppKind::Browser { url: None }, cat: Category::Services, desc: || tr("Pages localhost du serveur", "Server localhost pages") },
-    AppEntry { id: "security", make: || AppKind::Security, cat: Category::Security, desc: || tr("Tentatives SSH, fail2ban", "SSH attempts, fail2ban") },
+    AppEntry { id: "network", make: || AppKind::Network, cat: Category::Services, desc: || tr("Interfaces, ports, ping, DNS", "Interfaces, ports, ping, DNS") },
+    AppEntry { id: "tunnels", make: || AppKind::Tunnels, cat: Category::Services, desc: || tr("Redirections de ports SSH", "SSH port forwards") },
+    AppEntry { id: "databases", make: || AppKind::Databases, cat: Category::Services, desc: || tr("Postgres, MySQL, Redis en Docker", "Postgres, MySQL, Redis in Docker") },
+    AppEntry { id: "security", make: || AppKind::Security, cat: Category::Security, desc: || tr("Tentatives SSH, fail2ban, pare-feu", "SSH attempts, fail2ban, firewall") },
+    AppEntry { id: "certs", make: || AppKind::Certs, cat: Category::Security, desc: || tr("Expiration des certificats TLS", "TLS certificate expiry") },
+    AppEntry { id: "users", make: || AppKind::Users, cat: Category::Security, desc: || tr("Comptes et clés SSH autorisées", "Accounts and authorized SSH keys") },
     AppEntry { id: "connect", make: || AppKind::Connect, cat: Category::Security, desc: || tr("Serveurs enregistrés", "Saved servers") },
     AppEntry { id: "git", make: || AppKind::Git, cat: Category::Dev, desc: || tr("Dépôts du serveur", "Server repositories") },
     AppEntry { id: "settings", make: || AppKind::Settings, cat: Category::System, desc: || tr("Apparence, sécurité", "Appearance, security") },

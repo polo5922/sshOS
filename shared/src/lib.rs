@@ -818,3 +818,15 @@ pub struct PingResult {
     pub ms: f64,
     pub error: Option<String>,
 }
+
+/// A user-defined SSH local port forward (Tunnels app): `127.0.0.1:local` → `remote` seen from the server.
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub struct TunnelInfo {
+    pub id: u32,
+    pub host_id: String,
+    pub local_port: u16,
+    /// `host:port` as seen from the server (`localhost:5432`, `10.0.0.5:80`…).
+    pub remote: String,
+    pub active: bool,
+}
