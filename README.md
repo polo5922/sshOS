@@ -45,7 +45,7 @@ Rust — backend [Tauri v2](https://tauri.app) + [russh](https://github.com/Euge
 | **Réseau** | Interfaces et adresses, routes, DNS, ports en écoute (ouvrir dans le Navigateur ou créer un tunnel), connexions actives, outils (ping, traceroute, dig, curl) |
 | **Tunnels** | Redirections de ports SSH locales (`127.0.0.1:port` → `hôte:port` vu du serveur), suggestions depuis les ports en écoute, fermeture |
 | **Sauvegardes** | Archive `tar.gz` d'un dossier (téléchargeable), dépôts **restic** / **borg** (init, sauvegarde, liste, vérification) dans un Terminal, la phrase de passe n'est jamais vue par sshOs |
-| **Bases de données** | Conteneurs PostgreSQL, MySQL/MariaDB, Redis, MongoDB détectés via Docker : requêtes rapides en lecture, requête libre confirmée avec la commande affichée, shell client dans un Terminal |
+| **Bases de données** | Conteneurs PostgreSQL, MySQL/MariaDB, Redis, MongoDB détectés via Docker (image, ou variables d'environnement et ports exposés pour les images perso) : connexion MySQL/MariaDB avec les identifiants de la config Docker (`MYSQL_*` / `MARIADB_*`, secrets `*_PASSWORD_FILE`, utilisateur applicatif si le mot de passe root est aléatoire), le mot de passe n'est jamais affiché ni stocké ; requêtes rapides en lecture, requête libre confirmée avec la commande affichée, shell client dans un Terminal |
 | **Multi-serveurs** | Une carte par serveur : charge, mémoire, disque, uptime, services en échec, mises à jour en attente, redémarrage requis ; connexion de tous les serveurs |
 | **Scripts** | Bibliothèque de commandes réutilisables, exécutées sur un ou plusieurs serveurs avec la sortie de chacun ; les scripts `sudo` s'ouvrent dans un Terminal par serveur |
 

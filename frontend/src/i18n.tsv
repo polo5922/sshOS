@@ -1009,3 +1009,7 @@ ufw is not installed. The nftables rules are shown read-only.	ufw ist nicht inst
 unreachable	nicht erreichbar	inaccesible
 up	läuft seit	activo desde
 update(s)	Update(s)	actualización(es)
+Login:	Anmeldung:	Conexión:
+database	Datenbank	base de datos
+no password	ohne Passwort	sin contraseña
+password read from the Docker config	Passwort aus der Docker-Konfiguration gelesen	contraseña leída de la configuración de Docker

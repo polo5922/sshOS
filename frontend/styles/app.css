@@ -1473,3 +1473,4 @@ button.pill { border: 0; height: auto; cursor: pointer; }
 
 /* Apps without a sidebar: keep the title clear of the floating traffic lights. */
 .split-app > .main:first-child > .main-head { padding-left: 86px; }
+.db-login { margin: 0 0 10px; }
