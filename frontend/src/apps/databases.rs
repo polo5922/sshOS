@@ -6,7 +6,8 @@ use leptos::prelude::*;
 use leptos::task::spawn_local;
 
 use crate::apps::files::shell_quote;
-use crate::apps::dbbrowser::MysqlBrowser;
+use crate::apps::dbbrowser::SqlBrowser;
+use crate::apps::mongobrowser::MongoBrowser;
 use crate::apps::kit;
 use crate::icons::Icon;
 use crate::state::*;
@@ -80,6 +81,11 @@ impl Engine {
         }
     }
     /// Read-only quick queries: (label, query).
+    /// Engines with a table / document explorer (Redis has only the console).
+    pub fn has_explorer(self) -> bool {
+        self != Engine::Redis
+    }
+
     fn quick(self) -> Vec<(&'static str, &'static str)> {
         match self {
             Engine::Postgres => vec![
@@ -138,7 +144,7 @@ impl Container {
         keys.iter().find_map(|k| self.env(k))
     }
     pub fn default_db(&self) -> Option<String> {
-        self.any(&["MYSQL_DATABASE", "MARIADB_DATABASE"]).map(String::from)
+        self.any(&["MYSQL_DATABASE", "MARIADB_DATABASE", "POSTGRES_DB", "POSTGRES_USER", "MONGO_INITDB_DATABASE"]).map(String::from)
     }
     /// Who sshOs logs in as, mirroring `MYSQL_LOGIN`: (user, database, password source).
     pub fn mysql_login(&self) -> (String, Option<String>, &'static str) {
@@ -184,10 +190,19 @@ pub fn query_command(c: &Container, query: &str) -> String {
     format!("docker exec -i {} sh -c {} <<'SSHOS_SQL'\n{q}\nSSHOS_SQL", shell_quote(&c.name), shell_quote(&c.engine.client()))
 }
 
-/// MySQL / MariaDB with XML output (`mysql -X`), for the explorer: exact values, NULL included.
-pub fn xml_command(c: &Container, sql: &str) -> String {
-    let client = format!("{MYSQL_LOGIN} -X --default-character-set=utf8mb4");
-    format!("docker exec -i {} sh -c {} <<'SSHOS_SQL'\n{}\nSSHOS_SQL", shell_quote(&c.name), shell_quote(&client), sql.trim_end())
+/// For the explorers, with machine-readable output: `mysql -X` (XML); `psql` unaligned with
+/// control-character separators and NULL marker (see `dbbrowser::parse_psql`), connected to `db`;
+/// `mongosh --eval` with the script read from stdin. Same logins as the SQL console.
+pub fn explorer_command(c: &Container, db: Option<&str>, script: &str) -> String {
+    let client = match c.engine {
+        Engine::Postgres => format!(
+            r#"exec psql -X -q -A -v ON_ERROR_STOP=1 -P pager=off -P footer=off -P null="$(printf '\032')" -F "$(printf '\037')" -R "$(printf '\036')" -U "${{POSTGRES_USER:-postgres}}" -d {}"#,
+            db.map(shell_quote).unwrap_or_else(|| r#""${POSTGRES_DB:-${POSTGRES_USER:-postgres}}""#.into())
+        ),
+        Engine::Mongo => r#"B=$(command -v mongosh) || { echo "mongosh not found in the container" >&2; exit 127; }; exec "$B" --quiet ${MONGO_INITDB_ROOT_USERNAME:+-u "$MONGO_INITDB_ROOT_USERNAME" -p "$MONGO_INITDB_ROOT_PASSWORD" --authenticationDatabase admin} --eval "$(cat)""#.into(),
+        _ => format!("{MYSQL_LOGIN} -X --default-character-set=utf8mb4"),
+    };
+    format!("docker exec -i {} sh -c {} <<'SSHOS_SQL'\n{}\nSSHOS_SQL", shell_quote(&c.name), shell_quote(&client), script.trim_end())
 }
 
 pub fn shell_command(c: &Container) -> String {
@@ -204,7 +219,7 @@ pub fn Databases(host: String) -> impl IntoView {
     let output = RwSignal::new(None::<(String, bool)>);
     let running = RwSignal::new(false);
     let loading = RwSignal::new(false);
-    // MySQL: explorer (phpMyAdmin-like) or SQL console.
+    // MySQL, PostgreSQL, MongoDB: explorer (phpMyAdmin-like) or console.
     let explorer = RwSignal::new(true);
     let h = move || host.get_value();
 
@@ -313,7 +328,7 @@ pub fn Databases(host: String) -> impl IntoView {
             <section class="main">
                 <header class="main-head drag-region">
                     <h2 class="grow ellipsis">{move || current().map(|c| format!("{} · {}", c.name, c.engine.label())).unwrap_or_else(|| tr("Bases de données", "Databases").to_string())}</h2>
-                    <Show when=move || current().is_some_and(|c| c.engine == Engine::Mysql)>
+                    <Show when=move || current().is_some_and(|c| c.engine.has_explorer())>
                         <div class="seg no-drag">
                             <button class:on=move || explorer.get() on:click=move |_| explorer.set(true)>{tr("Explorateur", "Explorer")}</button>
                             <button class:on=move || !explorer.get() on:click=move |_| explorer.set(false)>"SQL"</button>
@@ -361,18 +376,23 @@ pub fn Databases(host: String) -> impl IntoView {
                                 }
                                 _ => None,
                             };
-                            let is_mysql = c.engine == Engine::Mysql;
-                            let browser = is_mysql.then(|| {
+                            let has_explorer = c.engine.has_explorer();
+                            let browser = has_explorer.then(|| {
+                                let inner = if c.engine == Engine::Mongo {
+                                    view! { <MongoBrowser host=h() container=c.clone() /> }.into_any()
+                                } else {
+                                    view! { <SqlBrowser host=h() container=c.clone() /> }.into_any()
+                                };
                                 view! {
                                     <div class="dbx-wrap" style:display=move || if explorer.get() { "" } else { "none" }>
-                                        <MysqlBrowser host=h() container=c.clone() />
+                                        {inner}
                                     </div>
                                 }
                             });
                             view! {
                                 {login.map(|l| view! { <p class="muted small db-login">{l}</p> })}
                                 {browser}
-                                <div class="db-sql" style:display=move || if is_mysql && explorer.get() { "none" } else { "" }>
+                                <div class="db-sql" style:display=move || if has_explorer && explorer.get() { "none" } else { "" }>
                                 <div class="chips">
                                     {c.engine
                                         .quick()

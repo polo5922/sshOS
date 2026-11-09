@@ -26,5 +26,6 @@ pub mod tunnels;
 pub mod backups;
 pub mod databases;
 pub mod dbbrowser;
+pub mod mongobrowser;
 pub mod fleet;
 pub mod scripts;

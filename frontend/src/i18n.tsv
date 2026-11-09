@@ -1040,3 +1040,18 @@ view	Ansicht	vista
 yes	ja	sí
 All columns	Alle Spalten	Todas las columnas
 required	erforderlich	obligatorio
+Delete document	Dokument löschen	Eliminar documento
+Documents	Dokumente	Documentos
+Documents affected:	Betroffene Dokumente:	Documentos afectados:
+Edit document	Dokument bearbeiten	Editar documento
+Extended JSON (EJSON): {"$oid": …}, {"$date": …}, {"$numberLong": …}. The whole document is replaced.	Extended JSON (EJSON): {"$oid": …}, {"$date": …}, {"$numberLong": …}. Das ganze Dokument wird ersetzt.	JSON extendido (EJSON): {"$oid": …}, {"$date": …}, {"$numberLong": …}. Se reemplaza el documento completo.
+Indexes	Indizes	Índices
+Insert document	Dokument einfügen	Insertar documento
+Invalid JSON:	Ungültiges JSON:	JSON no válido:
+No collection.	Keine Collection.	Ninguna colección.
+No document changed (it may have changed).	Kein Dokument geändert (es hat sich vielleicht geändert).	Ningún documento modificado (quizá haya cambiado).
+Pick a collection.	Wählen Sie eine Collection.	Elija una colección.
+Replace document	Dokument ersetzen	Reemplazar documento
+Text, or { field: value } filter	Text oder Filter { feld: wert }	Texto, o filtro { campo: valor }
+Unexpected answer from the database server.	Unerwartete Antwort des Datenbankservers.	Respuesta inesperada del servidor de base de datos.
+Unique	Eindeutig	Único
