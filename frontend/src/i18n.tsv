@@ -1013,3 +1013,30 @@ Login:	Anmeldung:	Conexión:
 database	Datenbank	base de datos
 no password	ohne Passwort	sin contraseña
 password read from the Docker config	Passwort aus der Docker-Konfiguration gelesen	contraseña leída de la configuración de Docker
+Column	Spalte	Columna
+Contains…	Enthält…	Contiene…
+Data	Daten	Datos
+Default	Standard	Predeterminado
+Delete row	Zeile löschen	Eliminar fila
+Empty fields take the column default.	Leere Felder erhalten den Standardwert der Spalte.	Los campos vacíos toman el valor predeterminado de la columna.
+Explorer	Explorer	Explorador
+Insert	Einfügen	Insertar
+Insert row	Zeile einfügen	Insertar fila
+Key	Schlüssel	Clave
+Next page	Nächste Seite	Página siguiente
+No primary key: a row is identified by all its values.	Kein Primärschlüssel: Eine Zeile wird über alle ihre Werte identifiziert.	Sin clave primaria: una fila se identifica por todos sus valores.
+No row changed (the row may have changed).	Keine Zeile geändert (die Zeile hat sich vielleicht geändert).	Ninguna fila modificada (puede que la fila haya cambiado).
+No table.	Keine Tabelle.	Ninguna tabla.
+Only changed columns are sent.	Nur geänderte Spalten werden gesendet.	Solo se envían las columnas modificadas.
+Pick a table.	Wählen Sie eine Tabelle.	Elija una tabla.
+Previous page	Vorherige Seite	Página anterior
+Rows affected:	Betroffene Zeilen:	Filas afectadas:
+Structure	Struktur	Estructura
+Unexpected answer from the MySQL server.	Unerwartete Antwort des MySQL-Servers.	Respuesta inesperada del servidor MySQL.
+Update row	Zeile ändern	Modificar fila
+default:	Standard:	predeterminado:
+no	nein	no
+view	Ansicht	vista
+yes	ja	sí
+All columns	Alle Spalten	Todas las columnas
+required	erforderlich	obligatorio

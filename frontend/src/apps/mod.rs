@@ -25,5 +25,6 @@ pub mod network;
 pub mod tunnels;
 pub mod backups;
 pub mod databases;
+pub mod dbbrowser;
 pub mod fleet;
 pub mod scripts;

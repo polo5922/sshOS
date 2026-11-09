@@ -1474,3 +1474,40 @@ button.pill { border: 0; height: auto; cursor: pointer; }
 /* Apps without a sidebar: keep the title clear of the floating traffic lights. */
 .split-app > .main:first-child > .main-head { padding-left: 86px; }
 .db-login { margin: 0 0 10px; }
+
+/* Databases: MySQL explorer */
+.db-sql { display: flex; flex-direction: column; gap: 14px; }
+.main-body > .dbx-wrap { flex: 1 1 auto; display: flex; min-height: 0; }
+.dbx { flex: 1 1 auto; display: grid; grid-template-columns: 210px minmax(0, 1fr); gap: 14px; min-height: 0; }
+.dbx-side { display: flex; flex-direction: column; gap: 8px; min-height: 0; }
+.dbx-side select { width: 100%; }
+.dbx-tables { display: flex; flex-direction: column; gap: 1px; overflow: auto; min-height: 0; }
+.dbx-table { display: flex; align-items: center; gap: 7px; border: 0; background: transparent; padding: 5px 8px; border-radius: 6px; text-align: left; font-size: 12.5px; color: var(--text); }
+.dbx-table:hover { background: var(--hover); filter: none; }
+.dbx-table.active { background: var(--accent); color: #fff; }
+.dbx-table.active .muted { color: rgba(255, 255, 255, .8); }
+.dbx-main { display: flex; flex-direction: column; gap: 10px; min-width: 0; min-height: 0; }
+.dbx-main > * { flex: none; }
+.dbx-bar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.dbx-bar h3 { margin: 0; font-size: 15px; max-width: 30%; }
+.dbx-bar .search-field { width: 160px; }
+.db-search-col { width: 160px; }
+.db-grid { overflow: auto; flex: 0 1 auto !important; min-height: 0; }
+.db-grid.loading { opacity: .6; }
+.db-grid td { max-width: 280px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--mono, ui-monospace, monospace); font-size: 12px; }
+.db-grid td.null { color: var(--muted); font-style: italic; }
+.db-grid th.sortable { cursor: pointer; user-select: none; white-space: nowrap; }
+.db-grid th.sortable:hover { color: var(--accent); }
+.db-grid th .icon { vertical-align: -1px; margin-right: 3px; color: var(--warn); }
+.db-grid tbody tr { cursor: default; }
+.db-actions { width: 1px; white-space: nowrap; }
+.db-actions .icon-btn { width: 24px; height: 24px; }
+.dbx-pager { display: flex; align-items: center; gap: 8px; }
+.dbx-pager .seg { margin-left: auto; }
+.db-error { margin: 0; white-space: pre-wrap; font-size: 12px; }
+.db-edit { max-height: 65vh; overflow: auto; }
+.db-field { display: flex; flex-direction: column; gap: 4px; }
+.db-field-head { display: flex; align-items: center; gap: 8px; }
+.db-field-head label { display: inline-flex; align-items: center; gap: 4px; }
+.db-field textarea { width: 100%; resize: vertical; min-height: 30px; }
+.db-field textarea:disabled { opacity: .45; }

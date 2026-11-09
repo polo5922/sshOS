@@ -6,6 +6,7 @@ use leptos::prelude::*;
 use leptos::task::spawn_local;
 
 use crate::apps::files::shell_quote;
+use crate::apps::dbbrowser::MysqlBrowser;
 use crate::apps::kit;
 use crate::icons::Icon;
 use crate::state::*;
@@ -136,6 +137,9 @@ impl Container {
     fn any(&self, keys: &[&str]) -> Option<&str> {
         keys.iter().find_map(|k| self.env(k))
     }
+    pub fn default_db(&self) -> Option<String> {
+        self.any(&["MYSQL_DATABASE", "MARIADB_DATABASE"]).map(String::from)
+    }
     /// Who sshOs logs in as, mirroring `MYSQL_LOGIN`: (user, database, password source).
     pub fn mysql_login(&self) -> (String, Option<String>, &'static str) {
         let root_pw = self.any(&["MYSQL_ROOT_PASSWORD", "MARIADB_ROOT_PASSWORD", "MYSQL_ROOT_PASSWORD_FILE", "MARIADB_ROOT_PASSWORD_FILE"]).is_some();
@@ -180,6 +184,12 @@ pub fn query_command(c: &Container, query: &str) -> String {
     format!("docker exec -i {} sh -c {} <<'SSHOS_SQL'\n{q}\nSSHOS_SQL", shell_quote(&c.name), shell_quote(&c.engine.client()))
 }
 
+/// MySQL / MariaDB with XML output (`mysql -X`), for the explorer: exact values, NULL included.
+pub fn xml_command(c: &Container, sql: &str) -> String {
+    let client = format!("{MYSQL_LOGIN} -X --default-character-set=utf8mb4");
+    format!("docker exec -i {} sh -c {} <<'SSHOS_SQL'\n{}\nSSHOS_SQL", shell_quote(&c.name), shell_quote(&client), sql.trim_end())
+}
+
 pub fn shell_command(c: &Container) -> String {
     format!("docker exec -it {} sh -c {}", shell_quote(&c.name), shell_quote(&c.engine.shell()))
 }
@@ -194,6 +204,8 @@ pub fn Databases(host: String) -> impl IntoView {
     let output = RwSignal::new(None::<(String, bool)>);
     let running = RwSignal::new(false);
     let loading = RwSignal::new(false);
+    // MySQL: explorer (phpMyAdmin-like) or SQL console.
+    let explorer = RwSignal::new(true);
     let h = move || host.get_value();
 
     let load = move || {
@@ -212,10 +224,12 @@ pub fn Databases(host: String) -> impl IntoView {
     };
     load();
 
-    let current = move || {
+    // Memo: a refresh that changes nothing keeps the explorer (and its state) alive.
+    let current = Memo::new(move |_| {
         let s = selected.get()?;
         containers.get()?.into_iter().find(|c| c.name == s)
-    };
+    });
+    let current = move || current.get();
     let run = move |q: String| {
         let Some(c) = current() else { return };
         let cmd = query_command(&c, &q);
@@ -299,6 +313,12 @@ pub fn Databases(host: String) -> impl IntoView {
             <section class="main">
                 <header class="main-head drag-region">
                     <h2 class="grow ellipsis">{move || current().map(|c| format!("{} · {}", c.name, c.engine.label())).unwrap_or_else(|| tr("Bases de données", "Databases").to_string())}</h2>
+                    <Show when=move || current().is_some_and(|c| c.engine == Engine::Mysql)>
+                        <div class="seg no-drag">
+                            <button class:on=move || explorer.get() on:click=move |_| explorer.set(true)>{tr("Explorateur", "Explorer")}</button>
+                            <button class:on=move || !explorer.get() on:click=move |_| explorer.set(false)>"SQL"</button>
+                        </div>
+                    </Show>
                     <button class="icon-btn" disabled=move || current().is_none() title=tr("Console interactive", "Interactive console") on:click=move |_| open_shell()>
                         <Icon name="terminal" size=15 />
                     </button>
@@ -341,8 +361,18 @@ pub fn Databases(host: String) -> impl IntoView {
                                 }
                                 _ => None,
                             };
+                            let is_mysql = c.engine == Engine::Mysql;
+                            let browser = is_mysql.then(|| {
+                                view! {
+                                    <div class="dbx-wrap" style:display=move || if explorer.get() { "" } else { "none" }>
+                                        <MysqlBrowser host=h() container=c.clone() />
+                                    </div>
+                                }
+                            });
                             view! {
                                 {login.map(|l| view! { <p class="muted small db-login">{l}</p> })}
+                                {browser}
+                                <div class="db-sql" style:display=move || if is_mysql && explorer.get() { "none" } else { "" }>
                                 <div class="chips">
                                     {c.engine
                                         .quick()
@@ -370,6 +400,7 @@ pub fn Databases(host: String) -> impl IntoView {
                                     </button>
                                 </div>
                                 {move || output.get().map(|(text, ok)| view! { <pre class="logview" class:err=!ok>{text}</pre> })}
+                                </div>
                             }
                             .into_any()
                         }
