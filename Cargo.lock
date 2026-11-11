@@ -5066,7 +5066,7 @@ dependencies = [
 
 [[package]]
 name = "sshos"
-version = "0.4.0"
+version = "0.5.0"
 dependencies = [
  "async-trait",
  "base64 0.22.1",
@@ -5090,7 +5090,7 @@ dependencies = [
 
 [[package]]
 name = "sshos-shared"
-version = "0.4.0"
+version = "0.5.0"
 dependencies = [
  "serde",
  "serde_json",
@@ -5098,7 +5098,7 @@ dependencies = [
 
 [[package]]
 name = "sshos-ui"
-version = "0.4.0"
+version = "0.5.0"
 dependencies = [
  "console_error_panic_hook",
  "js-sys",
