@@ -12,11 +12,17 @@ app — [Tauri v2](https://tauri.app) + [russh](https://github.com/Eugeny/russh)
 
 ![The sshOs desktop: Files (SFTP) and Monitor open, Dock at the bottom](docs/screenshots/desktop.png)
 
-| App launcher (F4) | Docker (dark theme) |
-|---|---|
-| ![Launcher: every app by category, + / ✓ for the Dock](docs/screenshots/launcher.png) | ![Docker: containers grouped by compose project](docs/screenshots/docker.png) |
+**Homelab**: the server drawn as a map, with hardware, disks, Docker networks, open ports, proxy routes and services by category.
 
-![Security: SSH attempts, most active IPs and targeted users](docs/screenshots/security.png)
+![Homelab: the server as a map, with hardware, disks, networks, ports and services by category](docs/screenshots/homelab.png)
+
+| App launcher (F4) | Docker, with current visitors per service |
+|---|---|
+| ![Launcher: every app by category, + / ✓ for the Dock](docs/screenshots/launcher.png) | ![Docker: containers grouped by compose project, with a Visitors column](docs/screenshots/docker.png) |
+
+| Databases explorer (PostgreSQL, MySQL, MongoDB, Redis) | Security |
+|---|---|
+| ![Databases: tables and rows of a PostgreSQL container, with edit and insert](docs/screenshots/databases.png) | ![Security: SSH attempts, most active IPs and targeted users](docs/screenshots/security.png) |
 
 <sub>Screenshots taken with mock data (no real server).</sub>
 

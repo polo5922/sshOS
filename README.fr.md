@@ -12,11 +12,17 @@ Rust — backend [Tauri v2](https://tauri.app) + [russh](https://github.com/Euge
 
 ![Le bureau sshOs : Fichiers (SFTP) et Moniteur ouverts, Dock en bas](docs/screenshots/desktop.png)
 
-| Lanceur d'applications (F4) | Docker (thème sombre) |
-|---|---|
-| ![Lanceur : toutes les apps par catégorie, + / ✓ pour le Dock](docs/screenshots/launcher.png) | ![Docker : conteneurs regroupés par projet compose](docs/screenshots/docker.png) |
+**Homelab** : le serveur dessiné comme un schéma, avec le matériel, les disques, les réseaux Docker, les ports ouverts, les routes du proxy et les services par catégorie.
 
-![Sécurité : tentatives SSH, IP les plus actives et utilisateurs visés](docs/screenshots/security.png)
+![Homelab : le serveur en schéma, avec matériel, disques, réseaux, ports et services par catégorie](docs/screenshots/homelab.png)
+
+| Lanceur d'applications (F4) | Docker, avec les visiteurs actuels par service |
+|---|---|
+| ![Lanceur : toutes les apps par catégorie, + / ✓ pour le Dock](docs/screenshots/launcher.png) | ![Docker : conteneurs regroupés par projet compose, avec la colonne Visiteurs](docs/screenshots/docker.png) |
+
+| Explorateur de bases de données (PostgreSQL, MySQL, MongoDB, Redis) | Sécurité |
+|---|---|
+| ![Bases de données : tables et lignes d'un conteneur PostgreSQL, avec modification et insertion](docs/screenshots/databases.png) | ![Sécurité : tentatives SSH, IP les plus actives et utilisateurs visés](docs/screenshots/security.png) |
 
 <sub>Captures prises avec des données fictives (aucun vrai serveur).</sub>
 
