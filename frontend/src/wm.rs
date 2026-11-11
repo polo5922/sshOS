@@ -851,6 +851,7 @@ fn Window(win: Win) -> impl IntoView {
         AppKind::Databases => view! { <apps::databases::Databases host=host /> }.into_any(),
         AppKind::Fleet => view! { <apps::fleet::Fleet /> }.into_any(),
         AppKind::Scripts => view! { <apps::scripts::Scripts /> }.into_any(),
+        AppKind::Homelab => view! { <apps::homelab::Homelab host=host /> }.into_any(),
     };
     let chromeless = win.app.chromeless();
     let traffic = move || {
@@ -1169,6 +1170,7 @@ fn Spotlight() -> impl IntoView {
             (tr("Bases de données", "Databases"), || AppKind::Databases),
             (tr("Multi-serveurs · vue d'ensemble", "All servers · overview"), || AppKind::Fleet),
             (tr("Scripts · commandes enregistrées", "Scripts · saved commands"), || AppKind::Scripts),
+            (tr("Homelab · schéma du serveur", "Homelab · server diagram"), || AppKind::Homelab),
             (tr("Historique des commandes", "Command log"), || AppKind::CmdLog),
             (tr("Connexions", "Connections"), || AppKind::Connect),
             (tr("Réglages", "Settings"), || AppKind::Settings),

@@ -848,3 +848,108 @@ pub struct TunnelInfo {
     pub remote: String,
     pub active: bool,
 }
+
+// ---------- Homelab diagram ----------
+
+/// Everything the homelab diagram shows, collected read-only in one pass.
+#[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
+pub struct HomelabSnapshot {
+    pub hostname: String,
+    pub os: String,
+    pub kernel: String,
+    pub cpu: String,
+    pub cores: u32,
+    /// Bytes.
+    pub mem_total: u64,
+    pub ips: Vec<String>,
+    /// Server date, YYYY-MM-DD.
+    pub date: String,
+    /// Empty when docker is missing or not readable by this user.
+    pub docker_version: String,
+    pub docker_root: String,
+    pub disks: Vec<HomelabDisk>,
+    pub networks: Vec<HomelabNetwork>,
+    pub containers: Vec<HomelabContainer>,
+    pub proxies: Vec<HomelabProxy>,
+    pub open_ports: Vec<HomelabPort>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
+pub struct HomelabDisk {
+    /// Device name (sda, nvme0n1, vda), or the filesystem source when it has no block device (ZFS, NFS…).
+    pub name: String,
+    pub model: String,
+    /// "NVMe", "SSD", "HDD" or "" when unknown.
+    pub kind: String,
+    pub size: u64,
+    pub filesystems: Vec<HomelabFs>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
+pub struct HomelabFs {
+    pub source: String,
+    pub mount: String,
+    pub fstype: String,
+    pub size: u64,
+    pub used: u64,
+    /// Containers whose volumes or bind mounts live here.
+    pub containers: Vec<String>,
+    /// Docker's own data (images, layers) lives here.
+    pub docker_root: bool,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
+pub struct HomelabNetwork {
+    pub name: String,
+    pub driver: String,
+    pub subnet: String,
+    pub containers: Vec<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
+pub struct HomelabContainer {
+    pub name: String,
+    pub image: String,
+    pub state: String,
+    /// Compose project, empty for standalone containers.
+    pub project: String,
+    /// (network, ip)
+    pub networks: Vec<(String, String)>,
+    /// "8080→80/tcp", or "80/tcp" when not published.
+    pub ports: Vec<String>,
+    pub mounts: Vec<HomelabMount>,
+    /// Domains routed here by nginx or Nginx Proxy Manager.
+    pub domains: Vec<String>,
+    /// Reachable from outside the host (published on a non-loopback address, or behind the proxy).
+    pub public: bool,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
+pub struct HomelabMount {
+    /// "volume" or "bind".
+    pub kind: String,
+    /// Volume name, or host path for a bind mount.
+    pub source: String,
+    pub destination: String,
+    /// Mount point of the host filesystem holding it.
+    pub fs: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
+pub struct HomelabProxy {
+    pub domains: Vec<String>,
+    /// Upstream as written in the config (http://127.0.0.1:8080, app:3000…).
+    pub target: String,
+    pub container: Option<String>,
+    pub ssl: bool,
+    /// "npm" or "nginx".
+    pub source: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
+pub struct HomelabPort {
+    pub port: u16,
+    /// "tcp" or "udp".
+    pub proto: String,
+    pub service: String,
+}

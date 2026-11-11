@@ -1062,3 +1062,51 @@ connected directly	direkt verbunden	conectados directamente
 through Nginx Proxy Manager (last 5 minutes)	über Nginx Proxy Manager (letzte 5 Minuten)	a través de Nginx Proxy Manager (últimos 5 minutos)
 Web ports:	Web-Ports:	Puertos web:
 Sites:	Websites:	Sitios:
+Actual size	Originalgröße	Tamaño real
+Categories	Kategorien	Categorías
+Compose projects	Compose-Projekte	Proyectos compose
+DISK	FESTPLATTE	DISCO
+Docker is missing or not readable by this user (add it to the docker group). Disks, ports and nginx routes are still shown.	Docker fehlt oder ist für diesen Benutzer nicht lesbar (zur Gruppe docker hinzufügen). Festplatten, Ports und nginx-Routen werden trotzdem angezeigt.	Docker no está o este usuario no puede leerlo (añádalo al grupo docker). Los discos, puertos y rutas nginx se siguen mostrando.
+Docker network color	Farbe des Docker-Netzwerks	Color de la red Docker
+Docker networks	Docker-Netzwerke	Redes Docker
+Domain copied	Domain kopiert	Dominio copiado
+Edge & security	Edge & Sicherheit	Borde y seguridad
+Filter services	Dienste filtern	Filtrar servicios
+Gaming	Spiele	Juegos
+Group by category	Nach Kategorie gruppieren	Agrupar por categoría
+Group by compose project	Nach Compose-Projekt gruppieren	Agrupar por proyecto compose
+Home automation	Hausautomation	Domótica
+Homelab · server diagram	Homelab · Serverdiagramm	Homelab · diagrama del servidor
+Hover anything to see what it is linked to; click a container for details.	Fahren Sie über ein Element, um seine Verbindungen zu sehen; klicken Sie auf einen Container für Details.	Pase el ratón sobre un elemento para ver lo que está vinculado; haga clic en un contenedor para ver detalles.
+Interactive server diagram	Interaktives Serverdiagramm	Diagrama interactivo del servidor
+Legend	Legende	Leyenda
+Media & photos	Medien & Fotos	Medios y fotos
+My Homelab	Mein Homelab	Mi homelab
+Networks	Netzwerke	Redes
+No container.	Kein Container.	Ningún contenedor.
+No port found.	Kein Port gefunden.	No se encontró ningún puerto.
+No readable route.	Keine lesbare Route.	Ninguna ruta legible.
+No user network.	Kein Benutzernetzwerk.	Ninguna red de usuario.
+Open Docker	Docker öffnen	Abrir Docker
+Open to the network	Im Netzwerk offen	Abierto a la red
+Other	Andere	Otros
+Productivity	Produktivität	Productividad
+Proxy routes	Proxy-Routen	Rutas del proxy
+Reading the server…	Server wird gelesen…	Leyendo el servidor…
+Show stopped containers	Gestoppte Container anzeigen	Mostrar contenedores detenidos
+Standalone containers	Eigenständige Container	Contenedores independientes
+Storage used by Docker	Von Docker genutzter Speicher	Almacenamiento usado por Docker
+Zoom in	Vergrößern	Acercar
+Zoom out	Verkleinern	Alejar
+disk holding Docker images and layers	Festplatte mit Docker-Images und -Layern	disco con las imágenes y capas de Docker
+domain routed by nginx / NPM	von nginx / NPM geroutete Domain	dominio enrutado por nginx / NPM
+nginx (enabled sites) and Nginx Proxy Manager	nginx (aktivierte Sites) und Nginx Proxy Manager	nginx (sitios activos) y Nginx Proxy Manager
+no volume	kein Volume	ningún volumen
+not exposed outside	nicht nach außen freigegeben	no expuesto al exterior
+ports listening outside loopback (ss)	außerhalb von Loopback lauschende Ports (ss)	puertos a la escucha fuera de loopback (ss)
+published port or behind the proxy	veröffentlichter Port oder hinter dem Proxy	puerto publicado o detrás del proxy
+running container	laufender Container	contenedor en ejecución
+running containers	laufende Container	contenedores en ejecución
+running · stopped	läuft · gestoppt	en ejecución · detenido
+server	Server	servidor
+Diagram	Diagramm	Diagrama

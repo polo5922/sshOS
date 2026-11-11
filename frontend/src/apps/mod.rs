@@ -29,3 +29,4 @@ pub mod dbbrowser;
 pub mod mongobrowser;
 pub mod fleet;
 pub mod scripts;
+pub mod homelab;

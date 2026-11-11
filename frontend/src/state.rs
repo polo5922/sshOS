@@ -117,6 +117,7 @@ pub enum AppKind {
     Databases,
     Fleet,
     Scripts,
+    Homelab,
 }
 
 impl AppKind {
@@ -153,6 +154,7 @@ impl AppKind {
             AppKind::Databases => "database",
             AppKind::Fleet => "servers",
             AppKind::Scripts => "code",
+            AppKind::Homelab => "layers",
         }
     }
     pub fn label(&self) -> &'static str {
@@ -185,6 +187,7 @@ impl AppKind {
             AppKind::Databases => tr("Bases de données", "Databases"),
             AppKind::Fleet => tr("Multi-serveurs", "All servers"),
             AppKind::Scripts => tr("Scripts", "Scripts"),
+            AppKind::Homelab => "Homelab",
         }
     }
     /// Apps that exist at most once per host.
@@ -203,7 +206,7 @@ impl AppKind {
                 | AppKind::CmdLog
                 | AppKind::Settings
                 | AppKind::About
-                | AppKind::Services | AppKind::Updates | AppKind::Cron | AppKind::Certs | AppKind::Users | AppKind::Network | AppKind::Tunnels | AppKind::Backups | AppKind::Databases | AppKind::Fleet | AppKind::Scripts
+                | AppKind::Services | AppKind::Updates | AppKind::Cron | AppKind::Certs | AppKind::Users | AppKind::Network | AppKind::Tunnels | AppKind::Backups | AppKind::Databases | AppKind::Fleet | AppKind::Scripts | AppKind::Homelab
         )
     }
     /// Apps drawn edge to edge: no title bar, the traffic lights sit on their sidebar.
@@ -220,7 +223,7 @@ impl AppKind {
                 | AppKind::Git
                 | AppKind::CmdLog
                 | AppKind::Transfers
-                | AppKind::Services | AppKind::Updates | AppKind::Cron | AppKind::Certs | AppKind::Users | AppKind::Network | AppKind::Tunnels | AppKind::Backups | AppKind::Databases | AppKind::Fleet | AppKind::Scripts
+                | AppKind::Services | AppKind::Updates | AppKind::Cron | AppKind::Certs | AppKind::Users | AppKind::Network | AppKind::Tunnels | AppKind::Backups | AppKind::Databases | AppKind::Fleet | AppKind::Scripts | AppKind::Homelab
         )
     }
     fn default_size(&self) -> (f64, f64) {
@@ -253,6 +256,7 @@ impl AppKind {
             AppKind::Databases => (1100.0, 700.0),
             AppKind::Fleet => (1100.0, 700.0),
             AppKind::Scripts => (1040.0, 680.0),
+            AppKind::Homelab => (1400.0, 860.0),
         }
     }
 }

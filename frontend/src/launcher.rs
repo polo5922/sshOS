@@ -71,6 +71,7 @@ pub const APPS: &[AppEntry] = &[
     AppEntry { id: "browser", make: || AppKind::Browser { url: None }, cat: Category::Services, desc: || tr("Pages localhost du serveur", "Server localhost pages") },
     AppEntry { id: "network", make: || AppKind::Network, cat: Category::Services, desc: || tr("Interfaces, ports, ping, DNS", "Interfaces, ports, ping, DNS") },
     AppEntry { id: "tunnels", make: || AppKind::Tunnels, cat: Category::Services, desc: || tr("Redirections de ports SSH", "SSH port forwards") },
+    AppEntry { id: "homelab", make: || AppKind::Homelab, cat: Category::Services, desc: || tr("Schéma interactif du serveur", "Interactive server diagram") },
     AppEntry { id: "databases", make: || AppKind::Databases, cat: Category::Services, desc: || tr("Postgres, MySQL, Redis en Docker", "Postgres, MySQL, Redis in Docker") },
     AppEntry { id: "security", make: || AppKind::Security, cat: Category::Security, desc: || tr("Tentatives SSH, fail2ban, pare-feu", "SSH attempts, fail2ban, firewall") },
     AppEntry { id: "certs", make: || AppKind::Certs, cat: Category::Security, desc: || tr("Expiration des certificats TLS", "TLS certificate expiry") },

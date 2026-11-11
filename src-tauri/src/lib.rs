@@ -4,6 +4,7 @@ mod browser;
 mod cmdlog;
 mod docker;
 mod error;
+mod homelab;
 mod hosts;
 mod monitor;
 mod nginx;
@@ -389,6 +390,12 @@ async fn docker_visitors(store: S<'_, HostStore>, pool: S<'_, Pool>, host_id: St
 }
 
 #[tauri::command]
+async fn homelab_snapshot(store: S<'_, HostStore>, pool: S<'_, Pool>, host_id: String) -> AppResult<HomelabSnapshot> {
+    let s = session(&store, &pool, &host_id).await?;
+    homelab::snapshot(&s).await
+}
+
+#[tauri::command]
 fn docker_preview(req: DockerRequest) -> AppResult<String> {
     docker::command(&req)
 }
@@ -739,6 +746,7 @@ pub fn run() {
             docker_overview,
             docker_stats,
             docker_visitors,
+            homelab_snapshot,
             docker_preview,
             docker_run,
             docker_logs,
