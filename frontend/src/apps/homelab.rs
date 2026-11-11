@@ -150,25 +150,62 @@ pub fn category(c: &HomelabContainer) -> &'static str {
     if has(&["grafana", "prometheus", "loki", "promtail", "alloy", "uptime-kuma", "uptime", "netdata", "exporter", "cadvisor", "portainer", "dozzle", "glances", "influx", "alertmanager", "beszel", "speedtest", "scrutiny", "gotify", "ntfy", "watchtower", "diun"]) {
         return tr("Surveillance", "Monitoring");
     }
-    if has(&["jellyfin", "plex", "emby", "sonarr", "radarr", "prowlarr", "lidarr", "bazarr", "readarr", "seerr", "qbittorrent", "transmission", "deluge", "sabnzbd", "immich", "photoprism", "navidrome", "tautulli", "metube", "audiobookshelf", "kavita", "komga"]) {
+    if has(&["jellyfin", "plex", "emby", "jdownloader", "pyload", "calibre", "sonarr", "radarr", "prowlarr", "lidarr", "bazarr", "readarr", "seerr", "qbittorrent", "transmission", "deluge", "sabnzbd", "immich", "photoprism", "navidrome", "tautulli", "metube", "audiobookshelf", "kavita", "komga"]) {
         return tr("Médias et photos", "Media & photos");
     }
     if has(&["gitea", "forgejo", "gitlab", "jenkins", "drone", "woodpecker", "code-server", "registry", "sonarqube", "runner", "act_runner", "harbor", "verdaccio", "nexus"]) {
         return "Dev";
     }
-    if has(&["matrix", "synapse", "element", "mattermost", "rocket", "mautrix", "conduit", "dendrite", "zulip", "revolt"]) {
-        return "Chat";
+    if has(&["matrix", "synapse", "element", "mattermost", "rocket", "mautrix", "conduit", "dendrite", "zulip", "revolt", "mailserver", "postfix", "dovecot", "mailu", "stalwart", "roundcube", "snappymail", "mail"]) {
+        return "Communication";
     }
-    if has(&["minecraft", "pelican", "pterodactyl", "wings", "valheim", "factorio", "satisfactory", "steam", "palworld", "terraria"]) {
+    if has(&["minecraft", "pelican", "pterodactyl", "pufferpanel", "crafty", "wings", "valheim", "factorio", "satisfactory", "steam", "palworld", "terraria"]) {
         return tr("Jeux", "Gaming");
     }
     if has(&["homeassistant", "home-assistant", "zigbee", "mosquitto", "mqtt", "node-red", "esphome", "frigate", "scrypted"]) {
         return tr("Domotique", "Home automation");
     }
-    if has(&["nextcloud", "paperless", "bookstack", "wiki", "outline", "vikunja", "actual", "firefly", "stirling", "mealie", "tandoor", "homepage", "heimdall", "homarr", "dashy", "n8n", "linkwarden", "freshrss", "joplin", "onlyoffice", "collabora", "penpot", "open-webui", "ollama", "seafile", "syncthing", "filebrowser", "wordpress", "ghost"]) {
+    if has(&["nextcloud", "paperless", "bookstack", "wiki", "outline", "vikunja", "actual", "firefly", "stirling", "mealie", "tandoor", "homepage", "heimdall", "homarr", "dashy", "n8n", "linkwarden", "freshrss", "joplin", "onlyoffice", "collabora", "penpot", "open-webui", "ollama", "seafile", "syncthing", "filebrowser", "wordpress", "ghost", "wallos", "omni-tools", "it-tools", "planka", "plane"]) {
         return tr("Productivité", "Productivity");
     }
+    if has(&["frontend", "backend", "-web", "web-", "_web", "-api", "api-", "_api", "-app", "app-", "_app", "mcp", "static", "next", "node:", "express"]) {
+        return tr("Applications web", "Web apps");
+    }
     tr("Autres", "Other")
+}
+
+/// Column order of the categories, as on a hand-drawn map (edge first, leftovers last).
+fn cat_rank(k: &str) -> usize {
+    [
+        tr("Proxy et sécurité", "Edge & security"),
+        tr("Applications web", "Web apps"),
+        tr("Bases de données", "Databases"),
+        tr("Médias et photos", "Media & photos"),
+        tr("Productivité", "Productivity"),
+        tr("Surveillance", "Monitoring"),
+        "Dev",
+        "Communication",
+        tr("Jeux", "Gaming"),
+        tr("Domotique", "Home automation"),
+    ]
+    .iter()
+    .position(|c| *c == k)
+    .unwrap_or(99)
+}
+
+/// Orthogonal cable (horizontal → vertical channel near the target → horizontal), rounded corners.
+fn ortho(a: (f64, f64), b: (f64, f64), lane: f64) -> String {
+    let cx = (b.0 - 8.0 - lane).max(a.0 + 8.0);
+    let dy = b.1 - a.1;
+    if dy.abs() < 1.0 {
+        return format!("M{:.1},{:.1} H{:.1}", a.0, a.1, b.0);
+    }
+    let r = 7.0_f64.min(dy.abs() / 2.0).min((cx - a.0).abs()).min((b.0 - cx).abs().max(0.0));
+    let sy = dy.signum();
+    format!(
+        "M{:.1},{:.1} H{:.1} Q{:.1},{:.1} {:.1},{:.1} V{:.1} Q{:.1},{:.1} {:.1},{:.1} H{:.1}",
+        a.0, a.1, cx - r, cx, a.1, cx, a.1 + sy * r, b.1 - sy * r, cx, b.1, cx + r, b.1, b.0
+    )
 }
 
 /// Colors of networks (like VLAN colors on a homelab map).
@@ -231,7 +268,8 @@ pub fn Homelab(host: String) -> impl IntoView {
     let query = RwSignal::new(String::new());
     let zoom = RwSignal::new(1.0_f64);
     let title = RwSignal::new(tr("Mon homelab", "My Homelab").to_string());
-    let show_wires = RwSignal::new(true);
+    let show_wires = RwSignal::new(false);
+    let all_nets = RwSignal::new(false);
     let cables = RwSignal::new(Vec::<Cable>::new());
     let board = NodeRef::<leptos::html::Div>::new();
     let scroller = NodeRef::<leptos::html::Div>::new();
@@ -269,7 +307,7 @@ pub fn Homelab(host: String) -> impl IntoView {
             MenuItem::new(tr("Grouper par projet compose", "Group by compose project"), move || group.set(Group::Project)).checked(move || group.get() == Group::Project),
             None,
             MenuItem::new(tr("Afficher les conteneurs arrêtés", "Show stopped containers"), move || show_stopped.update(|v| *v = !*v)).checked(move || show_stopped.get()),
-            MenuItem::new(tr("Afficher les câbles", "Show cables"), move || show_wires.update(|v| *v = !*v)).checked(move || show_wires.get()),
+            MenuItem::new(tr("Afficher tous les câbles", "Show all cables"), move || show_wires.update(|v| *v = !*v)).checked(move || show_wires.get()),
             None,
             MenuItem::new(tr("Zoom avant", "Zoom in"), move || set_zoom(zoom.get_untracked() + 0.1)).key("Ctrl+molette"),
             MenuItem::new(tr("Zoom arrière", "Zoom out"), move || set_zoom(zoom.get_untracked() - 0.1)),
@@ -304,15 +342,20 @@ pub fn Homelab(host: String) -> impl IntoView {
 
     // ---------- Side panels ----------
     let networks_panel = move || {
-        let nets = snap.with(|s| s.as_ref().map(|s| s.networks.clone()).unwrap_or_default());
+        let mut nets: Vec<(usize, sshos_shared::HomelabNetwork)> = snap.with(|s| s.as_ref().map(|s| s.networks.clone()).unwrap_or_default()).into_iter().enumerate().collect();
+        nets.sort_by(|a, b| b.1.containers.len().cmp(&a.1.containers.len()).then(a.1.name.cmp(&b.1.name)));
+        let total = nets.len();
+        let folded = !all_nets.get() && total > 10;
+        if folded {
+            nets.truncate(8);
+        }
         view! {
             <div class="hl-panel">
-                <h3>{tr("Réseaux Docker", "Docker networks")}</h3>
+                <h3>{format!("{} · {total}", tr("Réseaux Docker", "Docker networks"))}</h3>
                 {if nets.is_empty() {
                     view! { <div class="hl-muted">{tr("Aucun réseau utilisateur.", "No user network.")}</div> }.into_any()
                 } else {
                     nets.into_iter()
-                        .enumerate()
                         .map(|(i, n)| {
                             let color = NET_COLORS[i % NET_COLORS.len()];
                             let (n1, n2) = (n.name.clone(), n.name.clone());
@@ -327,13 +370,11 @@ pub fn Homelab(host: String) -> impl IntoView {
                                     on:mouseleave=move |_| leave()
                                 >
                                     <div class="hl-net-top">
-                                        <span class="hl-net-tag">{n.driver.clone()}</span>
-                                        <b class="ellipsis">{n.name.clone()}</b>
+                                        <b class="ellipsis" title=n.name.clone()>{n.name.trim_end_matches("_default").to_string()}</b>
+                                        {(n.driver != "bridge").then(|| view! { <span class="hl-net-tag">{n.driver.clone()}</span> })}
                                         <span class="grow"></span>
                                         <span class="mono">{n.subnet.clone()}</span>
-                                    </div>
-                                    <div class="hl-sub">
-                                        {format!("{count} {}", if count > 1 { tr("conteneurs actifs", "running containers") } else { tr("conteneur actif", "running container") })}
+                                        <span class="hl-count" title=tr("conteneurs actifs", "running containers")>{count}</span>
                                     </div>
                                 </div>
                             }
@@ -341,6 +382,11 @@ pub fn Homelab(host: String) -> impl IntoView {
                         .collect_view()
                         .into_any()
                 }}
+                {(total > 10).then(|| view! {
+                    <button class="hl-more" on:click=move |_| all_nets.update(|v| *v = !*v)>
+                        {move || if all_nets.get() { tr("Réduire", "Collapse").to_string() } else { format!("{} ({})", tr("Tout afficher", "Show all"), total) }}
+                    </button>
+                })}
             </div>
         }
     };
@@ -354,6 +400,7 @@ pub fn Homelab(host: String) -> impl IntoView {
                 <div><span class="hl-pill pub">"PUBLIC"</span><span>{tr("port publié ou derrière le proxy", "published port or behind the proxy")}</span></div>
                 <div><span class="hl-dot run"></span><span>{tr("en cours · arrêté", "running · stopped")}<span class="hl-dot off" style="margin-left:6px"></span></span></div>
                 <div><span class="hl-netbar"></span><span>{tr("couleur du réseau Docker", "Docker network color")}</span></div>
+                <div><span class="hl-cable"></span><span>{tr("câble : survolez un élément", "cable: hover an element")}</span></div>
                 <div><span class="hl-pill docker">"docker"</span><span>{tr("disque des images et couches Docker", "disk holding Docker images and layers")}</span></div>
                 <p class="hl-muted">{tr("Survolez un élément pour voir ce qui y est relié ; cliquez un conteneur pour ses détails.", "Hover anything to see what it is linked to; click a container for details.")}</p>
             </div>
@@ -508,7 +555,8 @@ pub fn Homelab(host: String) -> impl IntoView {
                                     let p = pct(fs.used, fs.size);
                                     let level = if p >= 90.0 { "crit" } else if p >= 75.0 { "warn" } else { "" };
                                     let (m1, m2) = (fs.mount.clone(), fs.mount.clone());
-                                    let users = fs.containers.clone();
+                                    let more = fs.containers.len().saturating_sub(10);
+                                    let users: Vec<String> = fs.containers.iter().take(10).cloned().collect();
                                     view! {
                                         <div
                                             class="hl-fs"
@@ -551,6 +599,7 @@ pub fn Homelab(host: String) -> impl IntoView {
                                                             }
                                                         })
                                                         .collect_view()}
+                                                    {(more > 0).then(|| view! { <span class="hl-user more">{format!("+{more}")}</span> })}
                                                 </div>
                                             })}
                                         </div>
@@ -574,7 +623,7 @@ pub fn Homelab(host: String) -> impl IntoView {
         let ports: Vec<String> = ct.ports.iter().filter(|p| p.contains('→')).take(3).cloned().collect();
         view! {
             <div
-                class="hl-svc"
+                class="hl-card hl-svc"
                 data-k=format!("ct:{}", ct.name)
                 class:stopped=!running
                 class:sel=move || selected.with(|s| s.as_deref() == Some(n4.as_str()))
@@ -612,6 +661,80 @@ pub fn Homelab(host: String) -> impl IntoView {
                 </div>
             </div>
         }
+    };
+
+    // A container as a row of a stack card.
+    let row = move |ct: HomelabContainer| {
+        let (letters, color) = chip(&ct);
+        let running = ct.state == "running";
+        let ip = ct.networks.iter().map(|(_, ip)| last_octet(ip)).find(|s| !s.is_empty()).unwrap_or_default();
+        let (n1, n2, n3, n4) = (ct.name.clone(), ct.name.clone(), ct.name.clone(), ct.name.clone());
+        let second = match ct.domains.first() {
+            Some(d) => view! { <div class="hl-domain ellipsis">{d.clone()}</div> }.into_any(),
+            None => view! { <div class="hl-sub ellipsis" title=ct.image.clone()>{short_image(&ct.image)}</div> }.into_any(),
+        };
+        view! {
+            <div
+                class="hl-row"
+                data-k=format!("ct:{}", ct.name)
+                class:stopped=!running
+                class:sel=move || selected.with(|s| s.as_deref() == Some(n4.as_str()))
+                class:dim=move || dimmed(lights, {
+                    let n = n2.clone();
+                    move |l: &Lit| l.cts.contains(&n)
+                })
+                on:mouseenter=move |_| enter(Focus::Ct(n1.clone()))
+                on:mouseleave=move |_| leave()
+                on:click=move |_| {
+                    if clicked() {
+                        selected.update(|s| *s = if s.as_deref() == Some(n3.as_str()) { None } else { Some(n3.clone()) })
+                    }
+                }
+            >
+                <span class="hl-ico sm" style=format!("background:{color}")>{letters}</span>
+                <div class="hl-svc-main">
+                    <div class="hl-svc-name">
+                        <b class="ellipsis">{ct.name.clone()}</b>
+                        {(!ct.public).then(|| view! { <span class="hl-pill lan">"LAN"</span> })}
+                    </div>
+                    {second}
+                </div>
+                <span class="mono hl-sub">{ip}</span>
+                <span class="hl-dot" class:off=!running title=ct.state.clone()></span>
+            </div>
+        }
+    };
+
+    // A compose stack (several containers) as one card, like "Edge stack" on a homelab map.
+    let stack = move |title: String, cts: Vec<HomelabContainer>| {
+        if cts.len() == 1 && !title.is_empty() {
+            return cts.into_iter().map(service).collect_view().into_any();
+        }
+        let mut nets: Vec<String> = Vec::new();
+        for (n, _) in cts.iter().flat_map(|c| &c.networks) {
+            if !nets.contains(n) {
+                nets.push(n.clone());
+            }
+        }
+        let names: Vec<String> = cts.iter().map(|c| c.name.clone()).collect();
+        let count = cts.len();
+        view! {
+            <div class="hl-card hl-stack">
+                {(!title.is_empty()).then(|| view! {
+                    <div class="hl-stack-head" class:dim=move || dimmed(lights, |l| names.iter().any(|n| l.cts.contains(n)))>
+                        <Icon name="layers" size=13 />
+                        <b class="ellipsis">{title.clone()}</b>
+                        <span class="hl-sub">{format!("· {count}")}</span>
+                        <span class="grow"></span>
+                        <span class="hl-tags">
+                            {nets.iter().map(|n| view! { <span class="hl-nettag" style=format!("background:{}", net_color(n)) title=n.clone()></span> }).collect_view()}
+                        </span>
+                    </div>
+                })}
+                {cts.into_iter().map(row).collect_view()}
+            </div>
+        }
+        .into_any()
     };
 
     let services = move || {
@@ -653,16 +776,43 @@ pub fn Homelab(host: String) -> impl IntoView {
         if groups.is_empty() {
             return view! { <div class="hl-muted">{tr("Aucun conteneur.", "No container.")}</div> }.into_any();
         }
-        // Biggest groups first; "Other" / standalone last.
-        let last = [tr("Autres", "Other"), tr("Conteneurs autonomes", "Standalone containers")];
-        groups.sort_by(|a, b| last.contains(&a.0.as_str()).cmp(&last.contains(&b.0.as_str())).then(b.1.len().cmp(&a.1.len())));
+        // Categories in a fixed order; compose projects by size, standalone last.
+        let standalone = tr("Conteneurs autonomes", "Standalone containers");
+        match by {
+            Group::Category => groups.sort_by_key(|(k, _)| cat_rank(k)),
+            Group::Project => groups.sort_by(|a, b| (a.0 == standalone).cmp(&(b.0 == standalone)).then(b.1.len().cmp(&a.1.len())).then(a.0.cmp(&b.0))),
+        }
         groups
             .into_iter()
             .map(|(k, v)| {
+                let n = v.len();
+                // Cards: one per compose project inside a category; a project is a single card.
+                let mut cards: Vec<(String, Vec<HomelabContainer>)> = Vec::new();
+                for ct in v {
+                    let key = match by {
+                        Group::Project if k == standalone => String::from("\u{0}"),
+                        Group::Project => String::new(),
+                        Group::Category if ct.project.is_empty() => format!("\u{0}{}", ct.name),
+                        Group::Category => ct.project.clone(),
+                    };
+                    match cards.iter_mut().find(|(t, _)| *t == key && !key.starts_with('\u{0}')) {
+                        Some((_, list)) => list.push(ct),
+                        None => cards.push((key, vec![ct])),
+                    }
+                }
                 view! {
                     <div class="hl-group">
-                        <div class="hl-col-title">{format!("{k} · {}", v.len())}</div>
-                        {v.into_iter().map(service).collect_view()}
+                        <div class="hl-col-title">{format!("{k} · {n}")}</div>
+                        {cards
+                            .into_iter()
+                            .map(|(t, list)| {
+                                if t.starts_with('\u{0}') {
+                                    list.into_iter().map(service).collect_view().into_any()
+                                } else {
+                                    stack(t, list)
+                                }
+                            })
+                            .collect_view()}
                     </div>
                 }
             })
@@ -829,8 +979,14 @@ pub fn Homelab(host: String) -> impl IntoView {
             let Some(el) = nodes.item(i).and_then(|n| n.dyn_into::<web_sys::Element>().ok()) else { continue };
             let (Some(k), r) = (el.get_attribute("data-k"), el.get_bounding_client_rect()) else { continue };
             if r.width() > 0.0 {
+                // Cables plug into the edge of the card, even for a row of a stack.
+                let left = if k.starts_with("ct:") {
+                    el.closest(".hl-card").ok().flatten().map(|c| c.get_bounding_client_rect().left()).unwrap_or(r.left())
+                } else {
+                    r.left()
+                };
                 let f = |v: f64, o: f64| (v - o) / scale;
-                pos.insert(k, (f(r.left(), br.left()), f(r.top(), br.top()), f(r.right(), br.left()), f(r.bottom(), br.top())));
+                pos.insert(k, (f(left, br.left()), f(r.top(), br.top()), f(r.right(), br.left()), f(r.bottom(), br.top())));
             }
         }
         let out: Vec<Cable> = snap.with_untracked(|s| {
@@ -841,7 +997,12 @@ pub fn Homelab(host: String) -> impl IntoView {
                     let (pa, pb) = (pos.get(&from)?, pos.get(&to)?);
                     let a = (pa.2, (pa.1 + pa.3) / 2.0);
                     let b = (pb.0, (pb.1 + pb.3) / 2.0);
-                    let dx = ((b.0 - a.0) * 0.45).max(36.0);
+                    let lane = match kind {
+                        "proxy" => 0.0,
+                        "port" => 3.0,
+                        "net" => 6.0,
+                        _ => 9.0,
+                    };
                     let color = match kind {
                         "proxy" => "#56d364",
                         "port" => "#5eb1ff",
@@ -852,7 +1013,7 @@ pub fn Homelab(host: String) -> impl IntoView {
                             .map(|i| NET_COLORS[i % NET_COLORS.len()])
                             .unwrap_or("#6e7b91"),
                     };
-                    let d = format!("M{:.1},{:.1} C{:.1},{:.1} {:.1},{:.1} {:.1},{:.1}", a.0, a.1, a.0 + dx, a.1, b.0 - dx, b.1, b.0, b.1);
+                    let d = ortho(a, b, lane);
                     Some(Cable { from, to, color, d, a, b })
                 })
                 .collect()
@@ -1062,5 +1223,9 @@ mod tests {
         assert_eq!(category(&s.containers[1]), "Bases de données");
         assert_eq!(chip(&s.containers[1]).0, "PO");
         assert_eq!(last_octet("172.20.0.2"), ".2");
+        let web = HomelabContainer { name: "shop-frontend-1".into(), image: "shop-frontend".into(), ..Default::default() };
+        assert_eq!(category(&web), "Applications web");
+        assert!(cat_rank("Proxy et sécurité") < cat_rank("Bases de données") && cat_rank("Autres") == 99);
+        assert!(ortho((0.0, 0.0), (100.0, 50.0), 0.0).starts_with("M0.0,0.0 H"));
     }
 }
