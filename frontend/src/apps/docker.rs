@@ -8,7 +8,7 @@ use wasm_bindgen::JsCast;
 use leptos::prelude::*;
 use leptos::task::spawn_local;
 use serde_json::json;
-use sshos_shared::{DockerAction, DockerContainer, DockerOverview, DockerRequest, DockerStat, ErrorPayload};
+use sshos_shared::{DockerAction, DockerContainer, DockerOverview, DockerRequest, DockerStat, DockerVisitors, ErrorPayload};
 
 use crate::icons::Icon;
 use crate::state::*;
@@ -70,6 +70,8 @@ struct D {
     host: StoredValue<String>,
     data: RwSignal<Option<DockerOverview>>,
     stats: RwSignal<Vec<DockerStat>>,
+    /// Current visitors of the containers that serve the web.
+    visitors: RwSignal<Vec<DockerVisitors>>,
     error: RwSignal<Option<String>>,
     fix: RwSignal<Option<String>>,
     view: RwSignal<View>,
@@ -90,6 +92,33 @@ fn stat_of<'a>(stats: &'a [DockerStat], id: &str) -> Option<&'a DockerStat> {
         return None;
     }
     stats.iter().find(|s| s.id.starts_with(id) || id.starts_with(&s.id))
+}
+
+/// Visitors cell: distinct client IPs right now; "—" for containers that do not serve the web.
+fn visitors_cell(v: Option<&DockerVisitors>) -> AnyView {
+    let Some(v) = v else { return view! { <span class="muted">"—"</span> }.into_any() };
+    let mut tip = format!(
+        "{} {} · {} {} · {} {}",
+        v.visitors,
+        tr("visiteurs (adresses IP distinctes)", "visitors (distinct IP addresses)"),
+        v.direct,
+        tr("connectés directement", "connected directly"),
+        v.proxied,
+        tr("via Nginx Proxy Manager (5 dernières minutes)", "through Nginx Proxy Manager (last 5 minutes)"),
+    );
+    if !v.ports.is_empty() {
+        tip += &format!("\n{} {}", tr("Ports web :", "Web ports:"), v.ports.iter().map(u16::to_string).collect::<Vec<_>>().join(", "));
+    }
+    if !v.sites.is_empty() {
+        tip += &format!("\n{} {}", tr("Sites :", "Sites:"), v.sites.join(", "));
+    }
+    view! {
+        <span class="visitors" class:active={v.visitors > 0} title=tip>
+            <Icon name="users" size=12 />
+            {v.visitors}
+        </span>
+    }
+    .into_any()
 }
 
 /// Published TCP ports as (host, container): "0.0.0.0:8080->80/tcp, [::]:8080->80/tcp" -> [(8080, 80)].
@@ -246,6 +275,9 @@ impl D {
                     let _ = self.error.try_set(Some(e.message()));
                 }
             }
+            if let Ok(v) = invoke::<Vec<DockerVisitors>>("docker_visitors", json!({ "hostId": h })).await {
+                let _ = self.visitors.try_set(v);
+            }
             if let Ok(s) = invoke::<Vec<DockerStat>>("docker_stats", json!({ "hostId": h })).await {
                 let _ = self.stats.try_set(s);
             }
@@ -369,6 +401,7 @@ pub fn Docker(host: String) -> impl IntoView {
         host: StoredValue::new(host),
         data: RwSignal::new(None),
         stats: RwSignal::new(Vec::new()),
+        visitors: RwSignal::new(Vec::new()),
         error: RwSignal::new(None),
         fix: RwSignal::new(None),
         view: RwSignal::new(View::All),
@@ -478,6 +511,7 @@ pub fn Docker(host: String) -> impl IntoView {
 
     let container_row = move |ct: DockerContainer, nested: bool| {
         let st = d.stats.with(|s| stat_of(s, &ct.id).cloned());
+        let vis = d.visitors.with(|v| v.iter().find(|v| !ct.id.is_empty() && (v.id.starts_with(&ct.id) || ct.id.starts_with(&v.id))).cloned());
         let running = ct.state == "running";
         let (ct1, ct2) = (ct.clone(), ct.clone());
         let label = if nested { ct.service.clone().unwrap_or_else(|| ct.name.clone()) } else { ct.name.clone() };
@@ -491,6 +525,7 @@ pub fn Docker(host: String) -> impl IntoView {
                 <td class="mono muted">{short_id}</td>
                 <td class="ellipsis image-cell" title=ct.image.clone()>{ct.image.clone()}</td>
                 <td class="mono small ports-cell" title=ct.ports.clone()>{port_cell(d, &ct.ports, running)}</td>
+                <td class="num">{if running { visitors_cell(vis.as_ref()) } else { visitors_cell(None) }}</td>
                 <td class="num">{st.as_ref().map(|s| format!("{:.1}%", s.cpu)).unwrap_or_else(|| "—".into())}</td>
                 <td class="num">{st.as_ref().map(|s| human_bytes(s.mem as f64)).unwrap_or_else(|| "—".into())}</td>
                 <td>
@@ -556,6 +591,7 @@ pub fn Docker(host: String) -> impl IntoView {
         }
         let empty = groups.is_empty() && single.is_empty();
         let stats = d.stats.get();
+        let visitors = d.visitors.get();
         let rows = groups
             .into_iter()
             .map(|(p, cts)| {
@@ -563,6 +599,20 @@ pub fn Docker(host: String) -> impl IntoView {
                 let run = cts.iter().filter(|c| c.state == "running").count();
                 let cpu: f32 = cts.iter().filter_map(|c| stat_of(&stats, &c.id)).map(|s| s.cpu).sum();
                 let mem: u64 = cts.iter().filter_map(|c| stat_of(&stats, &c.id)).map(|s| s.mem).sum();
+                // Sum over the project's web services ("—" when none serves the web).
+                let group_vis = cts
+                    .iter()
+                    .filter(|c| c.state == "running" && !c.id.is_empty())
+                    .filter_map(|c| visitors.iter().find(|v| v.id.starts_with(&c.id) || c.id.starts_with(&v.id)))
+                    .fold(None::<DockerVisitors>, |acc, v| {
+                        let mut a = acc.unwrap_or_default();
+                        a.visitors += v.visitors;
+                        a.direct += v.direct;
+                        a.proxied += v.proxied;
+                        a.ports.extend(&v.ports);
+                        a.sites.extend(v.sites.iter().cloned());
+                        Some(a)
+                    });
                 let (cls, word) = if run == cts.len() {
                     ("ok", tr("En cours", "Running"))
                 } else if run == 0 {
@@ -583,6 +633,7 @@ pub fn Docker(host: String) -> impl IntoView {
                             <span class="ellipsis strong">{p.clone()}</span>
                         </div></td>
                         <td colspan="3" class="muted small">{format!("compose · {run}/{total} {}", tr("en cours", "running"))}</td>
+                        <td class="num">{visitors_cell(group_vis.as_ref())}</td>
                         <td class="num">{format!("{cpu:.1}%")}</td>
                         <td class="num">{human_bytes(mem as f64)}</td>
                         <td><span class=format!("pill {cls}")>{word}</span></td>
@@ -604,6 +655,7 @@ pub fn Docker(host: String) -> impl IntoView {
                         <th>"ID"</th>
                         <th>"Image"</th>
                         <th>"Ports"</th>
+                        <th class="num" title=tr("Visiteurs actuels des services web : adresses IP distinctes connectées, ou vues par Nginx Proxy Manager ces 5 dernières minutes", "Current visitors of web services: distinct IP addresses connected, or seen by Nginx Proxy Manager in the last 5 minutes")>{tr("Visiteurs", "Visitors")}</th>
                         <th class="num">"CPU"</th>
                         <th class="num">"RAM"</th>
                         <th>{tr("État", "Status")}</th>

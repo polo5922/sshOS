@@ -1,10 +1,11 @@
 //! Docker over SSH: containers (grouped by compose project), images, volumes, live usage.
 //! Everything goes through the `docker` CLI on the server; no API socket is exposed.
 
-use std::collections::HashSet;
+use std::collections::{BTreeMap, BTreeSet, HashSet};
+use std::net::{IpAddr, Ipv4Addr, Ipv6Addr};
 
 use serde_json::Value;
-use sshos_shared::{DockerAction, DockerContainer, DockerImage, DockerOverview, DockerRequest, DockerStat, DockerVolume};
+use sshos_shared::{DockerAction, DockerContainer, DockerImage, DockerOverview, DockerRequest, DockerStat, DockerVisitors, DockerVolume};
 
 use crate::error::{AppError, AppResult};
 use crate::ssh::{sh_quote, Session};
@@ -234,6 +235,224 @@ pub async fn inspect(session: &Session, id: &str) -> AppResult<String> {
     }
 }
 
+// ---------------------------------------------------------------- visitors
+
+/// Read-only. Running containers (pid, networks, published ports), the TCP table of each one
+/// (from /proc on the host, or `docker exec` when it is not readable), and, when Nginx Proxy
+/// Manager runs in Docker, its proxy hosts and the distinct client IPs of the last 5 minutes
+/// of each access log (only the IPs leave the server, not the log lines).
+const VISITORS: &str = r###"ids=$(docker ps -q --no-trunc 2>/dev/null); [ -n "$ids" ] || exit 0
+echo '@@inspect'
+docker inspect --format '{{.Id}}{{"\t"}}{{.State.Pid}}{{"\t"}}{{.Name}}{{"\t"}}{{.HostConfig.NetworkMode}}{{"\t"}}{{index .Config.Labels "com.docker.compose.service"}}{{"\t"}}{{range $k, $v := .NetworkSettings.Networks}}{{$v.IPAddress}}|{{$v.Gateway}}|{{join $v.Aliases ","}} {{end}}{{"\t"}}{{range $p, $b := .NetworkSettings.Ports}}{{range $b}}{{$p}}={{.HostPort}} {{end}}{{end}}' $ids 2>/dev/null
+for l in $(docker inspect --format '{{.Id}}:{{.State.Pid}}' $ids 2>/dev/null); do
+  id=${l%%:*}; pid=${l##*:}
+  echo "@@tcp $id"
+  if [ -r /proc/$pid/net/tcp ]; then cat /proc/$pid/net/tcp /proc/$pid/net/tcp6 2>/dev/null; else docker exec $id cat /proc/net/tcp /proc/net/tcp6 2>/dev/null; fi
+done
+npm=$(docker ps --no-trunc --format '{{.ID}} {{.Image}}' 2>/dev/null | awk '$2 ~ /nginx-proxy-manager/ { print $1; exit }')
+[ -n "$npm" ] || exit 0
+echo "@@npm $npm"
+docker exec -e LC_ALL=C $npm sh -c 'cd /data/nginx/proxy_host 2>/dev/null && for f in *.conf; do echo "## conf ${f%.conf}"; grep -hE "^[[:space:]]*(server_name|set .server|set .port)[[:space:]]" "$f"; done
+n=$(date +%s); p=""; for i in 0 1 2 3 4; do p="$p -e $(date -d @$((n - 60 * i)) +%d/%b/%Y:%H:%M)"; done
+cd /data/logs 2>/dev/null && for f in proxy-host-*_access.log; do h=${f#proxy-host-}; echo "## log ${h%_access.log}"; tail -n 20000 "$f" | grep -F $p | sed -n "s/.*\[Client \([^]]*\)\].*/\1/p" | sort -u; done' 2>/dev/null
+true"###;
+
+/// Usual HTTP ports; any port published on the host or targeted by the proxy counts too.
+const WEB_PORTS: &[u16] = &[80, 443, 81, 3000, 3001, 4000, 5000, 5173, 8000, 8008, 8080, 8081, 8443, 8888, 9000, 9443];
+/// Never web: databases, mail, DNS, SSH, brokers, the Docker API.
+const NOT_WEB: &[u16] = &[
+    21, 22, 25, 53, 110, 143, 389, 465, 587, 636, 993, 995, 1433, 1521, 1883, 2375, 2376, 3306, 5432, 5672, 6379, 8883, 9042,
+    11211, 27017, 27018,
+];
+
+struct Ct {
+    id: String,
+    name: String,
+    service: String,
+    host_net: bool,
+    ips: Vec<IpAddr>,
+    gateways: Vec<IpAddr>,
+    aliases: Vec<String>,
+    /// (container port, host port)
+    published: Vec<(u16, u16)>,
+}
+
+fn parse_inspect_line(l: &str) -> Option<Ct> {
+    let f: Vec<&str> = l.split('\t').collect();
+    if f.len() < 7 {
+        return None;
+    }
+    let (mut ips, mut gateways, mut aliases) = (Vec::new(), Vec::new(), Vec::new());
+    for net in f[5].split_whitespace() {
+        let mut p = net.split('|');
+        if let Some(ip) = p.next().and_then(|s| s.parse().ok()) {
+            ips.push(ip);
+        }
+        if let Some(gw) = p.next().and_then(|s| s.parse().ok()) {
+            gateways.push(gw);
+        }
+        aliases.extend(p.next().unwrap_or("").split(',').filter(|a| !a.is_empty()).map(str::to_lowercase));
+    }
+    let published = f[6]
+        .split_whitespace()
+        .filter_map(|e| {
+            let (cp, hp) = e.split_once('=')?;
+            Some((cp.strip_suffix("/tcp")?.parse().ok()?, hp.parse().ok()?))
+        })
+        .collect();
+    Some(Ct {
+        id: f[0].to_string(),
+        name: f[2].trim_start_matches('/').to_lowercase(),
+        service: f[4].to_lowercase(),
+        host_net: f[3] == "host",
+        ips,
+        gateways,
+        aliases,
+        published,
+    })
+}
+
+/// "0100007F" (IPv4, little-endian) or 32 hex digits (IPv6, four little-endian words).
+fn hex_ip(h: &str) -> Option<IpAddr> {
+    match h.len() {
+        8 => Some(IpAddr::V4(Ipv4Addr::from(u32::from_str_radix(h, 16).ok()?.to_le_bytes()))),
+        32 => {
+            let mut b = [0u8; 16];
+            for i in 0..4 {
+                b[i * 4..i * 4 + 4].copy_from_slice(&u32::from_str_radix(&h[i * 8..i * 8 + 8], 16).ok()?.to_le_bytes());
+            }
+            let v6 = Ipv6Addr::from(b);
+            Some(v6.to_ipv4_mapped().map(IpAddr::V4).unwrap_or(IpAddr::V6(v6)))
+        }
+        _ => None,
+    }
+}
+
+/// /proc/net/tcp{,6}: ports listening on a non-loopback address, and established connections
+/// as (local port, remote IP).
+fn parse_tcp(lines: &[&str]) -> (BTreeSet<u16>, Vec<(u16, IpAddr)>) {
+    let (mut listen, mut est) = (BTreeSet::new(), Vec::new());
+    for l in lines {
+        let f: Vec<&str> = l.split_whitespace().collect();
+        if f.len() < 4 || f[0] == "sl" {
+            continue;
+        }
+        let addr = |s: &str| -> Option<(IpAddr, u16)> {
+            let (ip, port) = s.split_once(':')?;
+            Some((hex_ip(ip)?, u16::from_str_radix(port, 16).ok()?))
+        };
+        let (Some((lip, lport)), Some((rip, _))) = (addr(f[1]), addr(f[2])) else { continue };
+        match f[3] {
+            "0A" if !lip.is_loopback() => {
+                listen.insert(lport);
+            }
+            "01" => est.push((lport, rip)),
+            _ => {}
+        }
+    }
+    (listen, est)
+}
+
+/// A proxy host of Nginx Proxy Manager: domains, forward host and port, recent client IPs.
+#[derive(Default)]
+struct ProxyHost {
+    names: Vec<String>,
+    server: String,
+    port: u16,
+    clients: Vec<IpAddr>,
+}
+
+fn parse_npm(lines: &[&str]) -> BTreeMap<String, ProxyHost> {
+    let mut hosts: BTreeMap<String, ProxyHost> = BTreeMap::new();
+    let mut cur: Option<(bool, String)> = None;
+    for l in lines {
+        if let Some(rest) = l.strip_prefix("## ") {
+            cur = rest.split_once(' ').map(|(k, id)| (k == "log", id.trim().to_string()));
+            continue;
+        }
+        let Some((is_log, id)) = &cur else { continue };
+        let h = hosts.entry(id.clone()).or_default();
+        let t = l.trim().trim_end_matches(';');
+        if *is_log {
+            if let Ok(ip) = t.parse::<IpAddr>() {
+                h.clients.push(ip);
+            }
+        } else if let Some(v) = t.strip_prefix("server_name") {
+            h.names.extend(v.split_whitespace().filter(|n| *n != "_").map(String::from));
+        } else if let Some(v) = t.strip_prefix("set $server") {
+            h.server = v.trim().trim_matches('"').to_lowercase();
+        } else if let Some(v) = t.strip_prefix("set $port") {
+            h.port = v.trim().parse().unwrap_or(0);
+        }
+    }
+    hosts
+}
+
+pub fn parse_visitors(out: &str) -> Vec<DockerVisitors> {
+    let sec = sections(out);
+    let cts: Vec<Ct> = sec.get("inspect").map(|v| v.iter().filter_map(|l| parse_inspect_line(l)).collect()).unwrap_or_default();
+    let npm = sec.iter().find(|(k, _)| k.starts_with("npm")).map(|(k, v)| (k[3..].trim().to_string(), parse_npm(v)));
+    // Connections from another container or from the Docker host are not visitors (a proxy, an app calling an API).
+    let internal: HashSet<IpAddr> = cts.iter().flat_map(|c| c.ips.iter().chain(&c.gateways).copied()).collect();
+
+    // Proxy hosts → (container index, container port).
+    let mut targets: Vec<(usize, u16, &ProxyHost)> = Vec::new();
+    if let Some((_, hosts)) = &npm {
+        for h in hosts.values().filter(|h| !h.server.is_empty()) {
+            let by_name = cts.iter().position(|c| {
+                c.name == h.server || c.service == h.server || c.aliases.contains(&h.server) || c.ips.iter().any(|ip| ip.to_string() == h.server)
+            });
+            match by_name {
+                Some(i) => targets.push((i, h.port, h)),
+                // Forwarded to the host (its IP, a gateway, host.docker.internal…): the container publishing that port.
+                None => {
+                    if let Some((i, cp)) = cts.iter().enumerate().find_map(|(i, c)| c.published.iter().find(|(_, hp)| *hp == h.port).map(|(cp, _)| (i, *cp))) {
+                        targets.push((i, cp, h));
+                    }
+                }
+            }
+        }
+    }
+
+    let mut out = Vec::new();
+    for (i, c) in cts.iter().enumerate() {
+        let lines = sec.get(format!("tcp {}", c.id).as_str()).cloned().unwrap_or_default();
+        let (listen, est) = if c.host_net { (BTreeSet::new(), Vec::new()) } else { parse_tcp(&lines) };
+        let mine: Vec<&(usize, u16, &ProxyHost)> = targets.iter().filter(|t| t.0 == i).collect();
+        let ports: Vec<u16> = listen
+            .iter()
+            .copied()
+            .filter(|p| !NOT_WEB.contains(p))
+            .filter(|p| WEB_PORTS.contains(p) || c.published.iter().any(|(cp, _)| cp == p) || mine.iter().any(|t| t.1 == *p))
+            .collect();
+        if ports.is_empty() && mine.is_empty() {
+            continue;
+        }
+        let direct: BTreeSet<IpAddr> = est
+            .iter()
+            .filter(|(lp, ip)| ports.contains(lp) && !ip.is_loopback() && !internal.contains(ip))
+            .map(|(_, ip)| *ip)
+            .collect();
+        let proxied: BTreeSet<IpAddr> = mine.iter().flat_map(|t| t.2.clients.iter().copied()).collect();
+        let mut sites: Vec<String> = mine.iter().flat_map(|t| t.2.names.iter().cloned()).collect();
+        sites.sort();
+        sites.dedup();
+        out.push(DockerVisitors {
+            id: c.id.clone(),
+            visitors: direct.union(&proxied).count() as u32,
+            direct: direct.len() as u32,
+            proxied: proxied.len() as u32,
+            ports,
+            sites,
+        });
+    }
+    out
+}
+
+pub async fn visitors(session: &Session) -> AppResult<Vec<DockerVisitors>> {
+    Ok(parse_visitors(&session.exec_quiet(VISITORS).await?.stdout))
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -293,5 +512,55 @@ junk
         assert!(command(&bad).is_err());
         let opt = DockerRequest { action: DockerAction::Remove, targets: vec!["--all".into()] };
         assert!(command(&opt).is_err());
+    }
+
+    #[test]
+    fn visitors() {
+        // web: published 8080->80, two outside clients (one twice), one from the proxy container.
+        // npm: proxy host 3 -> "app" (service name of web), proxy host 4 -> host port 8080.
+        // db: listens on 5432 only.
+        let out = "@@inspect\n\
+web1\t100\t/shop-web-1\tshop_default\tapp\t172.18.0.5|172.18.0.1|shop-web-1,app \t80/tcp=8080 80/tcp=8080 \n\
+npm1\t200\t/npm\tbridge\t\t172.18.0.9|172.18.0.1| \t80/tcp=80 443/tcp=443 81/tcp=81 \n\
+db1\t300\t/shop-db-1\tshop_default\tdb\t172.18.0.6|172.18.0.1|db \t\n\
+@@tcp web1\n\
+  sl  local_address rem_address   st tx_queue rx_queue tr tm->when retrnsmt   uid  timeout inode\n\
+   0: 00000000:0050 00000000:0000 0A 00000000:00000000 00:00000000 00000000     0        0 1\n\
+   1: 0100007F:1F90 00000000:0000 0A 00000000:00000000 00:00000000 00000000     0        0 2\n\
+   2: 050012AC:0050 0A01A8C0:D431 01 00000000:00000000 00:00000000 00000000     0        0 3\n\
+   3: 050012AC:0050 0A01A8C0:D432 01 00000000:00000000 00:00000000 00000000     0        0 4\n\
+   4: 050012AC:0050 090012AC:A000 01 00000000:00000000 00:00000000 00000000     0        0 5\n\
+   5: 050012AC:9C40 060012AC:1538 01 00000000:00000000 00:00000000 00000000     0        0 6\n\
+   0: 00000000000000000000000000000000:0050 00000000000000000000000000000000:0000 0A 0 0 0 0 0 7\n\
+   1: 0000000000000000FFFF0000050012AC:0050 0000000000000000FFFF00000B01A8C0:D433 01 0 0 0 0 0 8\n\
+@@tcp db1\n\
+   0: 00000000:1538 00000000:0000 0A 00000000:00000000 00:00000000 00000000     0        0 9\n\
+   1: 060012AC:1538 050012AC:9C40 01 00000000:00000000 00:00000000 00000000     0        0 10\n\
+@@npm npm1\n\
+## conf 3\n\
+  server_name shop.example.com www.shop.example.com;\n\
+  set $server         \"app\";\n\
+  set $port           80;\n\
+## conf 4\n\
+  server_name old.example.com;\n\
+  set $server         \"192.168.1.20\";\n\
+  set $port           8080;\n\
+## log 3\n\
+203.0.113.7\n\
+198.51.100.2\n\
+## log 4\n\
+203.0.113.7\n\
+2001:db8::1\n";
+        let v = parse_visitors(out);
+        assert_eq!(v.len(), 1, "npm has no TCP table here, db is not web");
+        let w = &v[0];
+        assert_eq!(w.id, "web1");
+        assert_eq!(w.ports, vec![80]);
+        // 192.168.1.10, .11 directly (172.18.0.9 is the proxy; :40000 is outgoing to the db)
+        assert_eq!(w.direct, 2);
+        assert_eq!(w.proxied, 3);
+        assert_eq!(w.visitors, 5);
+        assert_eq!(w.sites, vec!["old.example.com", "shop.example.com", "www.shop.example.com"]);
+        assert_eq!(hex_ip("0100007F"), Some("127.0.0.1".parse().unwrap()));
     }
 }

@@ -1055,3 +1055,10 @@ Replace document	Dokument ersetzen	Reemplazar documento
 Text, or { field: value } filter	Text oder Filter { feld: wert }	Texto, o filtro { campo: valor }
 Unexpected answer from the database server.	Unerwartete Antwort des Datenbankservers.	Respuesta inesperada del servidor de base de datos.
 Unique	Eindeutig	Único
+Current visitors of web services: distinct IP addresses connected, or seen by Nginx Proxy Manager in the last 5 minutes	Aktuelle Besucher der Webdienste: verbundene oder in den letzten 5 Minuten von Nginx Proxy Manager gesehene, unterschiedliche IP-Adressen	Visitantes actuales de los servicios web: direcciones IP distintas conectadas o vistas por Nginx Proxy Manager en los últimos 5 minutos
+Visitors	Besucher	Visitantes
+visitors (distinct IP addresses)	Besucher (unterschiedliche IP-Adressen)	visitantes (direcciones IP distintas)
+connected directly	direkt verbunden	conectados directamente
+through Nginx Proxy Manager (last 5 minutes)	über Nginx Proxy Manager (letzte 5 Minuten)	a través de Nginx Proxy Manager (últimos 5 minutos)
+Web ports:	Web-Ports:	Puertos web:
+Sites:	Websites:	Sitios:

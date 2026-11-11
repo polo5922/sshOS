@@ -614,6 +614,24 @@ pub struct DockerStat {
     pub mem: u64,
 }
 
+/// Current visitors of a container that serves the web: distinct client IPs with an open
+/// connection to one of its web ports, or seen by Nginx Proxy Manager in the last minutes.
+#[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
+pub struct DockerVisitors {
+    /// Full container id.
+    pub id: String,
+    /// Distinct client IPs, both sources together.
+    pub visitors: u32,
+    /// Distinct IPs connected right now to a web port of the container.
+    pub direct: u32,
+    /// Distinct IPs in the proxy's access logs for the sites pointing to it (last 5 minutes).
+    pub proxied: u32,
+    /// Web ports the container listens on (inside the container).
+    pub ports: Vec<u16>,
+    /// Proxy host domains that point to the container.
+    pub sites: Vec<String>,
+}
+
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "snake_case")]
 pub enum DockerAction {

@@ -383,6 +383,12 @@ async fn docker_stats(store: S<'_, HostStore>, pool: S<'_, Pool>, host_id: Strin
 }
 
 #[tauri::command]
+async fn docker_visitors(store: S<'_, HostStore>, pool: S<'_, Pool>, host_id: String) -> AppResult<Vec<DockerVisitors>> {
+    let s = session(&store, &pool, &host_id).await?;
+    docker::visitors(&s).await
+}
+
+#[tauri::command]
 fn docker_preview(req: DockerRequest) -> AppResult<String> {
     docker::command(&req)
 }
@@ -732,6 +738,7 @@ pub fn run() {
             tunnel_close,
             docker_overview,
             docker_stats,
+            docker_visitors,
             docker_preview,
             docker_run,
             docker_logs,

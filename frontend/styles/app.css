@@ -1513,3 +1513,7 @@ button.pill { border: 0; height: auto; cursor: pointer; }
 .db-field textarea:disabled { opacity: .45; }
 .db-filter { width: 260px; }
 .db-doc { min-height: 320px; resize: vertical; }
+
+/* Docker: current visitors of web services */
+.visitors { display: inline-flex; align-items: center; gap: 4px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.visitors.active { color: var(--accent); font-weight: 600; }
