@@ -1,155 +1,163 @@
 # sshOs
 
-Bureau de gestion de serveurs **sans agent** : tout passe par SSH/SFTP. Application desktop
-Rust — backend [Tauri v2](https://tauri.app) + [russh](https://github.com/Eugeny/russh), interface
-[Leptos](https://leptos.dev) compilée en WebAssembly.
+*English · [Français](README.fr.md)*
 
-> sshOs est un portage en Rust de **[Davish](https://github.com/2hjaito/davish)** (Go + Wails + Svelte),
-> dont il reprend le concept et les règles de sécurité. Merci à ses auteurs. sshOs est un projet
-> indépendant et n'utilise ni le nom ni le logo de Davish.
+An **agentless** server management desktop: everything goes through SSH/SFTP. A Rust desktop
+app — [Tauri v2](https://tauri.app) + [russh](https://github.com/Eugeny/russh) backend, UI written in
+[Leptos](https://leptos.dev) and compiled to WebAssembly.
 
-![Le bureau sshOs : Fichiers (SFTP) et Moniteur ouverts, Dock en bas](docs/screenshots/desktop.png)
+> sshOs is a Rust port of **[Davish](https://github.com/2hjaito/davish)** (Go + Wails + Svelte),
+> and keeps its concept and safety rules. Thanks to its authors. sshOs is an independent project
+> and uses neither the name nor the logo of Davish.
 
-| Lanceur d'applications (F4) | Docker (thème sombre) |
+![The sshOs desktop: Files (SFTP) and Monitor open, Dock at the bottom](docs/screenshots/desktop.png)
+
+| App launcher (F4) | Docker (dark theme) |
 |---|---|
-| ![Lanceur : toutes les apps par catégorie, + / ✓ pour le Dock](docs/screenshots/launcher.png) | ![Docker : conteneurs regroupés par projet compose](docs/screenshots/docker.png) |
+| ![Launcher: every app by category, + / ✓ for the Dock](docs/screenshots/launcher.png) | ![Docker: containers grouped by compose project](docs/screenshots/docker.png) |
 
-![Sécurité : tentatives SSH, IP les plus actives et utilisateurs visés](docs/screenshots/security.png)
+![Security: SSH attempts, most active IPs and targeted users](docs/screenshots/security.png)
 
-<sub>Captures prises avec des données fictives (aucun vrai serveur).</sub>
+<sub>Screenshots taken with mock data (no real server).</sub>
 
-## Applications (MVP)
+## Apps (MVP)
 
-| App | Ce qu'elle fait |
+| App | What it does |
 |---|---|
-| **Connexions** | Hôtes SSH (mot de passe, clé, agent ou clés `~/.ssh/id_*` par défaut), saut ProxyJump, import `~/.ssh/config`, secrets dans le trousseau de l'OS, vérification des empreintes (TOFU) |
-| **Terminal** | PTY distant dans xterm.js |
-| **Fichiers** | Navigateur SFTP façon Finder (favoris, précédent/suivant, tri par nom/taille/date, fil d'Ariane, menu contextuel), envoi/téléchargement (y compris glisser-déposer), opérations avec la commande affichée avant exécution |
-| **Éditeur** | CodeMirror 6, écriture atomique, sauvegarde `.bak` sous `/etc` |
-| **Moniteur** | Façon Moniteur d'activité : onglets CPU / Mémoire / Disque / Réseau / GPU, graphes d'historique, CPU par cœur, pression mémoire, débits disque et réseau, processus triables (TERM/KILL) |
-| **Disques** | Partitions (`df`), analyse de l'espace par dossier (`du`, double-clic pour descendre), nettoyage guidé (journaux, archives de logs, cache APT, Docker) avec la commande affichée avant |
-| **Texte** | Ouvre n'importe quel fichier texte du serveur (aussi par double-clic dans Fichiers) |
-| **Transferts** | Envoi de fichiers vers un dossier du serveur, file des transferts en cours ; **glisser-déposer depuis l'Explorateur Windows** sur une fenêtre Fichiers, et bouton **Envoyer** dans Fichiers |
-| **Journaux** | `journalctl` par service et fichiers de `/var/log`, filtre, suivi en direct, lecture `sudo` via Terminal |
-| **Git** | Dépôts trouvés sur le serveur (`~`, `/var/www`, `/srv`, `/opt`) : statut, historique, branches, diff, pull/fetch avec commande affichée |
-| **Historique des commandes** | Toutes les commandes lancées par sshOs sur chaque serveur (hors sondages périodiques), avec code de retour et durée ; relancer dans un Terminal |
-| **Nginx** | Sites nginx natifs **et** Nginx Proxy Manager dans une seule liste |
-| **Docker** | Conteneurs groupés par projet compose, CPU/RAM en direct, **visiteurs actuels des services web** (adresses IP distinctes connectées au conteneur, lues dans `/proc` sans sudo, plus celles vues ces 5 dernières minutes dans les logs de Nginx Proxy Manager pour les sites qui pointent vers lui), logs, **shell intégré** (panneau en bas de l'app, un onglet par conteneur), inspect, start/stop/restart, ouverture dans le Navigateur, images et volumes (inutilisés compris) |
-| **Navigateur** | Pages web **du serveur** à travers un tunnel SSH : `localhost:3000`, `9443` ou l'IP d'un conteneur. Puces des ports en écoute (`ss -ltn`), **Ping** (`curl` exécuté sur le serveur : code HTTP et temps), historique, ouverture dans une fenêtre séparée pour les sites qui refusent l'affichage intégré |
-| **Sécurité** | Tentatives de connexion SSH (échecs, utilisateurs inconnus, scans), IP les plus actives, graphique horaire, sessions ouvertes, **fail2ban** (jails, IP bannies, ban/déban) et **éditeur visuel** des jails (maxretry, findtime, bantime, port, ignoreip), **pare-feu** (onglet Pare-feu : règles ufw, ouvrir/bloquer un port avec aperçu de la commande, ports en écoute croisés avec les règles ; garde-fou qui autorise le port SSH avant d'activer ufw ; repli en lecture sur nftables) |
-| **Services** | Services systemd (en cours, en échec, arrêtés, lancés au démarrage) : start/stop/restart, activer au démarrage, statut et journal |
-| **Mises à jour** | Paquets à mettre à jour (apt, dnf, yum), mises à jour de sécurité mises en avant, redémarrage requis ; mise à jour lancée dans un Terminal |
-| **Certificats** | Certificats TLS (Let's Encrypt, nginx, domaines ajoutés à la main) avec date d'expiration ; **notification** quand un certificat expire dans 15 jours ou moins ; test et renouvellement `certbot` dans un Terminal |
-| **Tâches planifiées** | crontab utilisateur (éditeur avec raccourcis de planification et description lisible), `/etc/crontab`, `/etc/cron.d` et timers systemd |
-| **Utilisateurs et clés** | Comptes, groupes et administrateurs (groupe sudo / wheel), `authorized_keys` (ajout/retrait, empreintes), dernières connexions |
-| **Réseau** | Interfaces et adresses, routes, DNS, ports en écoute (ouvrir dans le Navigateur ou créer un tunnel), connexions actives, outils (ping, traceroute, dig, curl) |
-| **Tunnels** | Redirections de ports SSH locales (`127.0.0.1:port` → `hôte:port` vu du serveur), suggestions depuis les ports en écoute, fermeture |
-| **Sauvegardes** | Archive `tar.gz` d'un dossier (téléchargeable), dépôts **restic** / **borg** (init, sauvegarde, liste, vérification) dans un Terminal, la phrase de passe n'est jamais vue par sshOs |
-| **Bases de données** | Conteneurs PostgreSQL, MySQL/MariaDB, Redis, MongoDB détectés via Docker (image, ou variables d'environnement et ports exposés pour les images perso) : connexion MySQL/MariaDB avec les identifiants de la config Docker (`MYSQL_*` / `MARIADB_*`, secrets `*_PASSWORD_FILE`, utilisateur applicatif si le mot de passe root est aléatoire), le mot de passe n'est jamais affiché ni stocké ; **explorateur façon phpMyAdmin pour MySQL/MariaDB et PostgreSQL** (bases, schémas, tables, données paginées avec tri et recherche, structure, modification / insertion / suppression de lignes, chaque écriture confirmée avec la commande exacte) et **pour MongoDB** (bases, collections, documents paginés avec filtre texte ou `{ champ: valeur }`, tri, index, édition / insertion / suppression de documents en JSON étendu via `mongosh`) ; connexion PostgreSQL / MongoDB avec `POSTGRES_USER` / `MONGO_INITDB_ROOT_*` lus dans le conteneur ; requêtes rapides en lecture, requête libre confirmée avec la commande affichée, shell client dans un Terminal |
-| **Multi-serveurs** | Une carte par serveur : charge, mémoire, disque, uptime, services en échec, mises à jour en attente, redémarrage requis ; connexion de tous les serveurs |
-| **Scripts** | Bibliothèque de commandes réutilisables, exécutées sur un ou plusieurs serveurs avec la sortie de chacun ; les scripts `sudo` s'ouvrent dans un Terminal par serveur |
+| **Connections** | SSH hosts (password, key, agent or the default `~/.ssh/id_*` keys), ProxyJump, `~/.ssh/config` import, secrets in the OS keychain, host fingerprint checks (TOFU) |
+| **Terminal** | Remote PTY in xterm.js |
+| **Files** | Finder-like SFTP browser (favorites, back/forward, sort by name/size/date, breadcrumb, context menu), upload/download (drag and drop too), operations show the command before running it |
+| **Editor** | CodeMirror 6, atomic writes, `.bak` backup under `/etc` |
+| **Monitor** | Like Activity Monitor: CPU / Memory / Disk / Network / GPU tabs, history graphs, per-core CPU, memory pressure, disk and network throughput, sortable processes (TERM/KILL) |
+| **Disks** | Partitions (`df`), space analysis per folder (`du`, double-click to drill down), guided cleanup (journals, log archives, APT cache, Docker) with the command shown first |
+| **Text** | Opens any text file of the server (also by double-click in Files) |
+| **Transfers** | Upload files to a server folder, queue of running transfers; **drag and drop from Windows Explorer** onto a Files window, and an **Upload** button in Files |
+| **Logs** | `journalctl` per service and `/var/log` files, filter, live follow, `sudo` reads through a Terminal |
+| **Git** | Repositories found on the server (`~`, `/var/www`, `/srv`, `/opt`): status, history, branches, diff, pull/fetch with the command shown |
+| **Command history** | Every command sshOs ran on each server (except periodic polling), with exit code and duration; run again in a Terminal |
+| **Nginx** | Native nginx sites **and** Nginx Proxy Manager in a single list |
+| **Docker** | Containers grouped by compose project, live CPU/RAM, **current visitors of web services** (distinct IP addresses connected to the container, read from `/proc` without sudo, plus those seen in the last 5 minutes in the Nginx Proxy Manager logs of the sites pointing to it), logs, **built-in shell** (panel at the bottom of the app, one tab per container), inspect, start/stop/restart, open in the Browser, images and volumes (unused ones included) |
+| **Browser** | The **server's** web pages through an SSH tunnel: `localhost:3000`, `9443` or a container IP. Chips for listening ports (`ss -ltn`), **Ping** (`curl` run on the server: HTTP code and time), history, separate window for sites that refuse to be embedded |
+| **Security** | SSH login attempts (failures, unknown users, scans), most active IPs, hourly chart, open sessions, **fail2ban** (jails, banned IPs, ban/unban) and a **visual editor** for jails (maxretry, findtime, bantime, port, ignoreip), **firewall** (Firewall tab: ufw rules, open/block a port with a command preview, listening ports matched against rules; safeguard that allows the SSH port before enabling ufw; read-only nftables fallback) |
+| **Services** | systemd services (running, failed, stopped, enabled at boot): start/stop/restart, enable at boot, status and journal |
+| **Updates** | Packages to update (apt, dnf, yum), security updates highlighted, reboot required; the upgrade runs in a Terminal |
+| **Certificates** | TLS certificates (Let's Encrypt, nginx, domains added by hand) with expiry date; **notification** when a certificate expires within 15 days; `certbot` test and renewal in a Terminal |
+| **Scheduled tasks** | User crontab (editor with schedule shortcuts and a readable description), `/etc/crontab`, `/etc/cron.d` and systemd timers |
+| **Users and keys** | Accounts, groups and administrators (sudo / wheel group), `authorized_keys` (add/remove, fingerprints), last logins |
+| **Network** | Interfaces and addresses, routes, DNS, listening ports (open in the Browser or create a tunnel), active connections, tools (ping, traceroute, dig, curl) |
+| **Tunnels** | Local SSH port forwards (`127.0.0.1:port` → `host:port` as seen from the server), suggestions from listening ports, close |
+| **Backups** | `tar.gz` archive of a folder (downloadable), **restic** / **borg** repositories (init, backup, list, check) in a Terminal; sshOs never sees the passphrase |
+| **Databases** | PostgreSQL, MySQL/MariaDB, Redis, MongoDB containers detected through Docker (image, or environment variables and exposed ports for custom images): MySQL/MariaDB login with the credentials of the Docker config (`MYSQL_*` / `MARIADB_*`, `*_PASSWORD_FILE` secrets, app user when the root password is random), the password is never shown or stored; **phpMyAdmin-like explorer for MySQL/MariaDB and PostgreSQL** (databases, schemas, tables, paginated rows with sort and search, structure, edit / insert / delete rows, every write confirmed with the exact command) and **for MongoDB** (databases, collections, paginated documents with a text or `{ field: value }` filter, sort, indexes, edit / insert / delete documents in extended JSON through `mongosh`); PostgreSQL / MongoDB login with `POSTGRES_USER` / `MONGO_INITDB_ROOT_*` read inside the container; quick read-only queries, free queries confirmed with the command shown, client shell in a Terminal |
+| **Multi-server** | One card per server: load, memory, disk, uptime, failed services, pending updates, reboot required; connect all servers |
+| **Homelab** | Interactive map of the server, homelab style: hardware, disks and filesystems used by Docker, Docker networks, open ports, nginx / Nginx Proxy Manager routes and services in columns by category or compose project (one "stack" card per project). Hovering an element lights up its links and cables; click a container for its details. Click-drag to pan, zoom, filter. Read-only |
+| **Scripts** | Library of reusable commands, run on one or several servers with the output of each; `sudo` scripts open in one Terminal per server |
 
-La barre de menu affiche une cloche de **notifications** (services systemd en échec sur chaque serveur connecté, avec accès aux logs et redémarrage ; certificats TLS qui expirent dans 15 jours ou moins) et, en continu, le CPU, la RAM, le disque `/` et le débit réseau du serveur actif.
-### Bureau
+The menu bar shows a **notifications** bell (failed systemd services on each connected server, with logs and restart; TLS certificates expiring within 15 days) and, continuously, the CPU, RAM, `/` disk and network throughput of the active server.
 
-- L'app s'ouvre **en fenêtre maximisée** (plein écran fenêtré) : barre de titre, barre des tâches Windows et Dock natif (macOS/Linux) restent accessibles. **F11** (ou Réglages → plein écran) passe en vrai plein écran.
-- **Lanceur d'applications** (icône à gauche du Dock, **F4**, menu sshOs → Applications…) : toutes les apps rangées par catégorie (Fichiers et terminal, Surveillance, Web et conteneurs, Sécurité et accès, Développement, sshOs), avec une recherche. Le bouton **+** d'une app l'ajoute au Dock, ✓ l'en retire ; « Rétablir le Dock par défaut » remet la liste d'origine.
-- **Dock** par défaut : Terminal, Fichiers, Moniteur, Disques, Docker, Nginx, Sécurité, Git, Navigateur. Les apps ouvertes qui n'y sont pas apparaissent après un séparateur.
-- **Langues** : français, anglais, allemand, espagnol. Par défaut, la langue du système ; modifiable dans l'assistant de bienvenue, le menu de la barre du haut ou les Réglages.
-- **Visite guidée** au premier lancement (menu sshOs → Visite guidée…) : chaque zone (serveur, menus, ressources, notifications, Spotlight, langue, Dock) est mise en avant avec un texte descriptif. ← → / Entrée / Échap.
-- Fenêtres en **verre dépoli** ; la fenêtre au premier plan est un peu plus opaque, et les zones denses (tableaux, terminal, éditeur) restent lisibles.
-- La barre du haut affiche les **menus de l'app au premier plan**, comme sur macOS (Fichiers : Fichier / Présentation / Aller ; Docker : Docker / Présentation ; Navigateur : Navigation…), plus les menus **sshOs** et **Fenêtre**.
-- **Clic droit sur une icône du Dock** : fenêtres ouvertes de l'app, Nouvelle fenêtre, Garder dans le Dock / Retirer du Dock, Afficher toutes les fenêtres, Masquer, Quitter.
-- En cas d'erreur interne de l'interface, un bandeau propose de la recharger ; les connexions SSH, gérées par le backend, sont conservées.
+### Desktop
 
-Toute action qui demande `sudo` (fail2ban, `docker` hors groupe docker…) s'ouvre dans un Terminal avec la commande pré-tapée.
+- The app opens **maximized** (windowed full screen): the title bar, the Windows taskbar and the native Dock (macOS/Linux) stay reachable. **F11** (or Settings → full screen) switches to true full screen.
+- **App launcher** (icon left of the Dock, **F4**, sshOs menu → Applications…): every app by category (Files and terminal, Monitoring, Web and containers, Security and access, Development, sshOs), with search. An app's **+** button adds it to the Dock, ✓ removes it; "Restore default Dock" brings back the original list.
+- Default **Dock**: Terminal, Files, Monitor, Disks, Docker, Nginx, Security, Git, Browser. Open apps that are not in it show after a separator.
+- **Languages**: French, English, German, Spanish. Defaults to the system language; change it in the welcome assistant, the top bar menu or Settings.
+- **Guided tour** on first launch (sshOs menu → Guided tour…): each area (server, menus, resources, notifications, Spotlight, language, Dock) is highlighted with a description. ← → / Enter / Esc.
+- **Frosted glass** windows; the front window is a little more opaque, and dense areas (tables, terminal, editor) stay readable.
+- The top bar shows the **menus of the front app**, as on macOS (Files: File / View / Go; Docker: Docker / View; Browser: Navigation…), plus the **sshOs** and **Window** menus.
+- **Right-click a Dock icon**: open windows of the app, New window, Keep in Dock / Remove from Dock, Show all windows, Hide, Quit.
+- If the UI hits an internal error, a banner offers to reload it; SSH connections, handled by the backend, are kept.
+
+Any action that needs `sudo` (fail2ban, `docker` outside the docker group…) opens in a Terminal with the command pre-typed.
 
 ### Nginx + Nginx Proxy Manager
 
-- **nginx natif** : liste des sites (`sites-available` ou `conf.d`), activer/désactiver, édition,
-  modification rapide (domaines, `proxy_pass`, `client_max_body_size`), nouveau site (reverse proxy,
-  statique, PHP-FPM) avec aperçu, HTTPS via `certbot` dans un terminal.
-  `nginx -t` est **toujours** lancé avant le rechargement ; la sauvegarde est restaurée en cas d'échec.
-- **Nginx Proxy Manager** : détecté via `docker ps` (image `jc21/nginx-proxy-manager`) ou configuré
-  à la main dans la connexion (« API Nginx Proxy Manager »). sshOs parle à son **API REST à travers un tunnel SSH**
-  (`direct-tcpip`) : proxy hosts, redirections, streams, certificats Let's Encrypt, listes d'accès.
-  Les modifications passent **uniquement** par l'API (NPM régénère et recharge nginx lui-même) ;
-  la conf générée est consultable en lecture seule. Les identifiants NPM peuvent être mémorisés
-  dans le trousseau.
+- **Native nginx**: list of sites (`sites-available` or `conf.d`), enable/disable, edit,
+  quick changes (domains, `proxy_pass`, `client_max_body_size`), new site (reverse proxy,
+  static, PHP-FPM) with a preview, HTTPS through `certbot` in a terminal.
+  `nginx -t` **always** runs before the reload; the backup is restored if it fails.
+- **Nginx Proxy Manager**: detected through `docker ps` (image `jc21/nginx-proxy-manager`) or set
+  by hand in the connection ("Nginx Proxy Manager API"). sshOs talks to its **REST API through an SSH tunnel**
+  (`direct-tcpip`): proxy hosts, redirections, streams, Let's Encrypt certificates, access lists.
+  Changes go **only** through the API (NPM regenerates and reloads nginx itself);
+  the generated config can be viewed read-only. NPM credentials can be saved
+  in the keychain.
 
-### Sécurité
+### Security
 
-- Jamais de `sudo` silencieux : une action qui exige root ouvre un Terminal avec la commande
-  pré-tapée, et c'est vous qui appuyez sur Entrée.
-- Chaque opération sur le serveur affiche la commande exacte avant exécution.
-- L'éditeur fail2ban écrit `/etc/fail2ban/jail.d/zz-sshos.local`, puis lance `fail2ban-client -t`
-  avant le rechargement ; si la vérification échoue, l'ancien fichier est restauré.
+- Never a silent `sudo`: an action that needs root opens a Terminal with the command
+  pre-typed, and you press Enter.
+- Every operation on the server shows the exact command before it runs.
+- The fail2ban editor writes `/etc/fail2ban/jail.d/zz-sshos.local`, then runs `fail2ban-client -t`
+  before the reload; if the check fails, the previous file is restored.
 
-## Développement
+## Development
 
-Prérequis : Rust stable, cible `wasm32-unknown-unknown`, [`trunk`](https://trunkrs.dev), Node.js,
+Requirements: stable Rust, the `wasm32-unknown-unknown` target, [`trunk`](https://trunkrs.dev), Node.js,
 WebView2 (Windows).
 
 ```bash
 rustup target add wasm32-unknown-unknown
 cargo install trunk
 npm install
-npm run dev        # = tauri dev (bundle JS + trunk serve + app)
-npm run build      # binaire + installeurs
+npm run dev        # = tauri dev (JS bundle + trunk serve + app)
+npm run build      # binary + installers
 cargo test -p sshos-shared -p sshos
 ```
 
-Sous Linux, il faut aussi les bibliothèques de Tauri : `libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf libssl-dev libdbus-1-dev`.
+On Linux, Tauri also needs: `libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf libssl-dev libdbus-1-dev`.
 
 ### Builds
 
-Le workflow [`.github/workflows/build.yml`](.github/workflows/build.yml) lance les tests puis construit les installeurs
-**Windows** (`.msi`, `.exe` NSIS) et **Linux** (`.deb`, `.rpm`, `.AppImage`) uniquement quand un tag de version
-`vX.Y` ou `vX.Y.Z` est poussé, puis publie une release GitHub avec ces fichiers :
+The [`.github/workflows/build.yml`](.github/workflows/build.yml) workflow runs the tests, then builds the
+**Windows** (`.msi`, NSIS `.exe`) and **Linux** (`.deb`, `.rpm`, `.AppImage`) installers only when a version tag
+`vX.Y` or `vX.Y.Z` is pushed, and publishes a GitHub release with them:
 
 ```bash
 git tag v0.2.0 && git push origin v0.2.0
 ```
 
-Pensez à mettre la même version dans `src-tauri/tauri.conf.json` avant. Le workflow peut aussi être lancé à la
-main depuis l'onglet Actions (installeurs en artefacts, sans release).
+Before that, set the same version in `Cargo.toml` and `src-tauri/tauri.conf.json`, and add its `## [X.Y.Z] - date` section to `CHANGELOG.md` and `CHANGELOG.fr.md`: the release text is taken from them. The workflow can also be started by
+hand from the Actions tab (installers as artifacts, no release).
 
-Serveur de test (nginx natif + Nginx Proxy Manager) : voir [`test/docker-compose.yml`](test/docker-compose.yml).
+Test server (native nginx + Nginx Proxy Manager): see [`test/docker-compose.yml`](test/docker-compose.yml).
 
 ## Structure
 
 ```
-shared/      types sérialisables partagés backend ↔ interface
-src-tauri/   backend : ssh (pool, auth, known_hosts, tunnels), terminal, sftp, monitor, nginx/{files,npm}
-frontend/    interface Leptos : wm.rs (bureau, fenêtres, dock, spotlight), apps/*, js/vendor.js (xterm + CodeMirror)
+shared/      serializable types shared by the backend and the UI
+src-tauri/   backend: ssh (pool, auth, known_hosts, tunnels), terminal, sftp, monitor, nginx/{files,npm}
+frontend/    Leptos UI: wm.rs (desktop, windows, dock, spotlight), apps/*, js/vendor.js (xterm + CodeMirror)
 ```
 
-## Licence
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md). Each GitHub release carries the section of its version, in English and French.
+
+## License
 
 [GPL-3.0-or-later](LICENSE)
 
-## Démarrage et serveurs
-- Le dernier serveur actif est reconnecté automatiquement au lancement (une déconnexion volontaire l'oublie).
-- Le sélecteur de serveur est dans la barre du haut, juste après l'icône sshOs ; « Gérer les connexions… » y ouvre l'app Connexions, qui ne figure plus dans le Dock.
-- Une présentation (onboarding) s'affiche au premier lancement ; elle reste accessible depuis le menu sshOs.
-- Nginx : si le serveur a à la fois nginx (service) et Nginx Proxy Manager (Docker), sshOs demande lequel gérer. Le choix est mémorisé par serveur et modifiable dans le menu Source.
-- Docker : chaque port publié d'un conteneur en cours d'exécution est un bouton qui l'ouvre dans le Navigateur intégré.
+## Startup and servers
+- The last active server reconnects automatically at launch (a deliberate disconnect forgets it).
+- The server picker is in the top bar, right after the sshOs icon; "Manage connections…" there opens the Connections app, which is no longer in the Dock.
+- An onboarding shows on first launch; it stays available from the sshOs menu.
+- Nginx: if the server has both nginx (service) and Nginx Proxy Manager (Docker), sshOs asks which one to manage. The choice is saved per server and can be changed in the Source menu.
+- Docker: each published port of a running container is a button that opens it in the built-in Browser.
 
-## Réglages
-App **Réglages** (Dock, menu sshOs ou Ctrl+,). Tout est enregistré localement (`localStorage`, clé `sshos.settings`) :
-- **Général** : langue, plein écran, présentation, raccourcis clavier.
-- **Apparence** : thème clair / sombre / automatique (suit Windows), couleur d'accentuation, fond d'écran, transparence (forte, normale, aucune), réduction des animations.
-- **Bureau et Dock** : taille du Dock, agrandissement au survol, utilisation du serveur dans la barre de menus, secondes dans l'horloge.
-- **Sécurité** :
-  - reconnexion automatique au lancement ;
-  - déconnexion de tous les serveurs après 5, 15, 30 ou 60 min d'inactivité ;
-  - confirmation avant de quitter, y compris avec Alt+F4 ;
-  - floutage des adresses `user@hôte` (partage d'écran).
-- **Toujours actif** : ces règles sont affichées en lecture seule et ne sont pas désactivables.
-  - pas de sudo silencieux ;
-  - commande affichée avant exécution ;
-  - `nginx -t` / `fail2ban-client -t` avant rechargement ;
-  - NPM uniquement via son API ;
-  - vérification des empreintes d'hôte ;
-  - secrets dans le trousseau du système.
-- **Données locales** : oublier le dernier serveur, réinitialiser les choix Nginx ou les réglages, tout effacer. Cela ne touche ni les serveurs enregistrés ni leurs secrets.
+## Settings
+**Settings** app (Dock, sshOs menu or Ctrl+,). Everything is stored locally (`localStorage`, key `sshos.settings`):
+- **General**: language, full screen, onboarding, keyboard shortcuts.
+- **Appearance**: light / dark / automatic theme (follows Windows), accent color, wallpaper, transparency (strong, normal, none), reduced motion.
+- **Desktop and Dock**: Dock size, magnification on hover, server usage in the menu bar, seconds in the clock.
+- **Security**:
+  - automatic reconnection at launch;
+  - disconnect every server after 5, 15, 30 or 60 min of inactivity;
+  - confirmation before quitting, Alt+F4 included;
+  - blur `user@host` addresses (screen sharing).
+- **Always on**: these rules are shown read-only and cannot be turned off.
+  - no silent sudo;
+  - command shown before running;
+  - `nginx -t` / `fail2ban-client -t` before reload;
+  - NPM only through its API;
+  - host fingerprint checks;
+  - secrets in the system keychain.
+- **Local data**: forget the last server, reset Nginx choices or settings, erase everything. Saved servers and their secrets are not touched.
