@@ -5,11 +5,13 @@
 //! and ports; a disk → the containers storing data on it…). Clicking a container opens its card.
 //! Everything is collected read-only by the `homelab_snapshot` command.
 
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 
 use leptos::prelude::*;
 use leptos::task::spawn_local;
 use serde_json::json;
+use wasm_bindgen::prelude::*;
+use wasm_bindgen::JsCast;
 use sshos_shared::{HomelabContainer, HomelabSnapshot};
 
 use crate::icons::Icon;
@@ -80,6 +82,58 @@ pub fn lit(s: &HomelabSnapshot, f: &Focus) -> Lit {
         }
     }
     l
+}
+
+/// The cables of the diagram: (from key, to key, kind). Keys are the `data-k` attributes of
+/// the drawn elements: `net:`, `port:<n>/<proto>`, `px:<i>`, `fs:<mount>` and `ct:<name>`.
+pub fn links(s: &HomelabSnapshot) -> Vec<(String, String, &'static str)> {
+    let names: HashSet<&str> = s.containers.iter().map(|c| c.name.as_str()).collect();
+    let mut v = Vec::new();
+    for (i, p) in s.proxies.iter().enumerate() {
+        if let Some(c) = p.container.as_deref().filter(|c| names.contains(c)) {
+            v.push((format!("px:{i}"), format!("ct:{c}"), "proxy"));
+        }
+    }
+    for o in s.open_ports.iter().filter(|o| names.contains(o.service.as_str())) {
+        v.push((format!("port:{}/{}", o.port, o.proto), format!("ct:{}", o.service), "port"));
+    }
+    for fs in s.disks.iter().flat_map(|d| &d.filesystems) {
+        for c in fs.containers.iter().filter(|c| names.contains(c.as_str())) {
+            v.push((format!("fs:{}", fs.mount), format!("ct:{c}"), "fs"));
+        }
+    }
+    for c in &s.containers {
+        for (n, _) in &c.networks {
+            v.push((format!("net:{n}"), format!("ct:{}", c.name), "net"));
+        }
+    }
+    v
+}
+
+/// Whether the element behind a `data-k` key is part of the lit set.
+pub fn key_lit(l: &Lit, key: &str) -> bool {
+    match key.split_once(':') {
+        Some(("ct", n)) => l.cts.contains(n),
+        Some(("fs", m)) => l.fss.contains(m),
+        Some(("net", n)) => l.nets.contains(n),
+        Some(("px", i)) => i.parse().is_ok_and(|i| l.proxies.contains(&i)),
+        Some(("port", p)) => p
+            .split_once('/')
+            .and_then(|(n, proto)| Some((n.parse::<u16>().ok()?, proto.to_string())))
+            .is_some_and(|k| l.ports.contains(&k)),
+        _ => false,
+    }
+}
+
+/// One drawn cable, in board coordinates.
+#[derive(Clone, PartialEq)]
+struct Cable {
+    from: String,
+    to: String,
+    color: &'static str,
+    d: String,
+    a: (f64, f64),
+    b: (f64, f64),
 }
 
 /// Diagram columns, as in a hand-drawn homelab map.
@@ -177,6 +231,15 @@ pub fn Homelab(host: String) -> impl IntoView {
     let query = RwSignal::new(String::new());
     let zoom = RwSignal::new(1.0_f64);
     let title = RwSignal::new(tr("Mon homelab", "My Homelab").to_string());
+    let show_wires = RwSignal::new(true);
+    let cables = RwSignal::new(Vec::<Cable>::new());
+    let board = NodeRef::<leptos::html::Div>::new();
+    let scroller = NodeRef::<leptos::html::Div>::new();
+    // Pan state: start point and scroll; `moved` once the pointer went past the threshold
+    // (the click that ends a drag is then ignored).
+    let drag = StoredValue::new(None::<(i32, i32, i32, i32)>);
+    let moved = StoredValue::new(false);
+    let panning = RwSignal::new(false);
 
     let refresh = move || {
         if loading.get_untracked() {
@@ -206,6 +269,7 @@ pub fn Homelab(host: String) -> impl IntoView {
             MenuItem::new(tr("Grouper par projet compose", "Group by compose project"), move || group.set(Group::Project)).checked(move || group.get() == Group::Project),
             None,
             MenuItem::new(tr("Afficher les conteneurs arrêtés", "Show stopped containers"), move || show_stopped.update(|v| *v = !*v)).checked(move || show_stopped.get()),
+            MenuItem::new(tr("Afficher les câbles", "Show cables"), move || show_wires.update(|v| *v = !*v)).checked(move || show_wires.get()),
             None,
             MenuItem::new(tr("Zoom avant", "Zoom in"), move || set_zoom(zoom.get_untracked() + 0.1)).key("Ctrl+molette"),
             MenuItem::new(tr("Zoom arrière", "Zoom out"), move || set_zoom(zoom.get_untracked() - 0.1)),
@@ -219,7 +283,13 @@ pub fn Homelab(host: String) -> impl IntoView {
         let f = focus.get()?;
         snap.with(|s| s.as_ref().map(|s| lit(s, &f)))
     });
-    let enter = move |f: Focus| hover.set(Some(f));
+    let enter = move |f: Focus| {
+        if !panning.get_untracked() {
+            hover.set(Some(f));
+        }
+    };
+    // A click that ends a pan is not a click.
+    let clicked = move || !moved.get_value();
     let leave = move || hover.set(None);
 
     // Network colors, by name.
@@ -250,6 +320,7 @@ pub fn Homelab(host: String) -> impl IntoView {
                             view! {
                                 <div
                                     class="hl-net"
+                                    data-k=format!("net:{}", n.name)
                                     style=format!("--net:{color}")
                                     class:dim=move || dimmed(lights, |l| l.nets.contains(&n2))
                                     on:mouseenter=move |_| enter(Focus::Net(n1.clone()))
@@ -306,6 +377,7 @@ pub fn Homelab(host: String) -> impl IntoView {
                             view! {
                                 <div
                                     class="hl-port"
+                                    data-k=format!("port:{}/{}", p.port, p.proto)
                                     class:dim=move || dimmed(lights, {
                                         let k = k2.clone();
                                         move |l: &Lit| l.ports.contains(&k)
@@ -343,11 +415,12 @@ pub fn Homelab(host: String) -> impl IntoView {
                             view! {
                                 <div
                                     class="hl-route"
+                                    data-k=format!("px:{i}")
                                     class:dim=move || dimmed(lights, |l| l.proxies.contains(&i))
                                     on:mouseenter=move |_| enter(Focus::Proxy(i))
                                     on:mouseleave=move |_| leave()
                                     on:click=move |_| {
-                                        if let Some(n) = &ct {
+                                        if let Some(n) = ct.as_ref().filter(|_| clicked()) {
                                             selected.set(Some(n.clone()));
                                         }
                                     }
@@ -439,6 +512,7 @@ pub fn Homelab(host: String) -> impl IntoView {
                                     view! {
                                         <div
                                             class="hl-fs"
+                                            data-k=format!("fs:{}", fs.mount)
                                             class:dim=move || dimmed(lights, {
                                                 let m = m2.clone();
                                                 move |l: &Lit| l.fss.contains(&m)
@@ -470,7 +544,9 @@ pub fn Homelab(host: String) -> impl IntoView {
                                                             view! {
                                                                 <button class="hl-user" on:click=move |e| {
                                                                     e.stop_propagation();
-                                                                    selected.set(Some(u2.clone()));
+                                                                    if clicked() {
+                                                                        selected.set(Some(u2.clone()));
+                                                                    }
                                                                 }>{u}</button>
                                                             }
                                                         })
@@ -499,6 +575,7 @@ pub fn Homelab(host: String) -> impl IntoView {
         view! {
             <div
                 class="hl-svc"
+                data-k=format!("ct:{}", ct.name)
                 class:stopped=!running
                 class:sel=move || selected.with(|s| s.as_deref() == Some(n4.as_str()))
                 class:dim=move || dimmed(lights, {
@@ -507,7 +584,11 @@ pub fn Homelab(host: String) -> impl IntoView {
                 })
                 on:mouseenter=move |_| enter(Focus::Ct(n1.clone()))
                 on:mouseleave=move |_| leave()
-                on:click=move |_| selected.update(|s| *s = if s.as_deref() == Some(n3.as_str()) { None } else { Some(n3.clone()) })
+                on:click=move |_| {
+                    if clicked() {
+                        selected.update(|s| *s = if s.as_deref() == Some(n3.as_str()) { None } else { Some(n3.clone()) })
+                    }
+                }
             >
                 <span class="hl-ico" style=format!("background:{color}")>{letters}</span>
                 <div class="hl-svc-main">
@@ -689,32 +770,152 @@ pub fn Homelab(host: String) -> impl IntoView {
         })
     };
 
-    // ---------- Pan (drag the background) and Ctrl+wheel zoom ----------
-    let scroller = NodeRef::<leptos::html::Div>::new();
-    let drag = StoredValue::new(None::<(i32, i32, i32, i32)>);
+    // ---------- Pan (click-drag anywhere) and Ctrl+wheel zoom ----------
     let on_down = move |e: leptos::ev::MouseEvent| {
-        let Some(el) = scroller.get() else { return };
-        let on_bg = e
+        let Some(el) = scroller.get_untracked() else { return };
+        let in_field = e
             .target()
-            .and_then(|t| wasm_bindgen::JsCast::dyn_into::<web_sys::Element>(t).ok())
-            .is_some_and(|t| t.class_list().contains("hl-scroll") || t.class_list().contains("hl-board") || t.class_list().contains("hl-grid"));
-        if on_bg && e.button() == 0 {
-            drag.set_value(Some((e.client_x(), e.client_y(), el.scroll_left(), el.scroll_top())));
+            .and_then(|t| t.dyn_into::<web_sys::Element>().ok())
+            .is_some_and(|t| t.closest("input, textarea, select").ok().flatten().is_some());
+        if e.button() != 0 || in_field {
+            return;
         }
+        e.prevent_default(); // no text selection, no focus theft
+        moved.set_value(false);
+        drag.set_value(Some((e.client_x(), e.client_y(), el.scroll_left(), el.scroll_top())));
     };
-    let on_move = move |e: leptos::ev::MouseEvent| {
+    let h_move = window_event_listener(leptos::ev::mousemove, move |e| {
         let Some((x, y, sl, st)) = drag.get_value() else { return };
-        if let Some(el) = scroller.get() {
-            el.set_scroll_left(sl - (e.client_x() - x));
-            el.set_scroll_top(st - (e.client_y() - y));
+        let (dx, dy) = (e.client_x() - x, e.client_y() - y);
+        if !moved.get_value() {
+            if dx * dx + dy * dy < 25 {
+                return;
+            }
+            moved.set_value(true);
+            panning.set(true);
+            hover.set(None);
         }
-    };
-    let on_up = move |_| drag.set_value(None);
+        if let Some(el) = scroller.get_untracked() {
+            el.set_scroll_left(sl - dx);
+            el.set_scroll_top(st - dy);
+        }
+    });
+    let h_up = window_event_listener(leptos::ev::mouseup, move |_| {
+        if drag.get_value().is_some() {
+            drag.set_value(None);
+            panning.set(false);
+        }
+    });
+    on_cleanup(move || {
+        h_move.remove();
+        h_up.remove();
+    });
     let on_wheel = move |e: leptos::ev::WheelEvent| {
         if e.ctrl_key() {
             e.prevent_default();
             set_zoom(zoom.get_untracked() + if e.delta_y() < 0.0 { 0.1 } else { -0.1 });
         }
+    };
+
+    // ---------- Cables: measured from the drawn elements, in board coordinates ----------
+    let measure = move || {
+        let Some(b) = board.get_untracked() else { return };
+        let br = b.get_bounding_client_rect();
+        // Board pixels per CSS pixel (the board is scaled with `zoom`).
+        let scale = if b.offset_width() > 0 { br.width() / b.offset_width() as f64 } else { 1.0 };
+        let Ok(nodes) = b.query_selector_all("[data-k]") else { return };
+        let mut pos: HashMap<String, (f64, f64, f64, f64)> = HashMap::new();
+        for i in 0..nodes.length() {
+            let Some(el) = nodes.item(i).and_then(|n| n.dyn_into::<web_sys::Element>().ok()) else { continue };
+            let (Some(k), r) = (el.get_attribute("data-k"), el.get_bounding_client_rect()) else { continue };
+            if r.width() > 0.0 {
+                let f = |v: f64, o: f64| (v - o) / scale;
+                pos.insert(k, (f(r.left(), br.left()), f(r.top(), br.top()), f(r.right(), br.left()), f(r.bottom(), br.top())));
+            }
+        }
+        let out: Vec<Cable> = snap.with_untracked(|s| {
+            let Some(s) = s else { return Vec::new() };
+            links(s)
+                .into_iter()
+                .filter_map(|(from, to, kind)| {
+                    let (pa, pb) = (pos.get(&from)?, pos.get(&to)?);
+                    let a = (pa.2, (pa.1 + pa.3) / 2.0);
+                    let b = (pb.0, (pb.1 + pb.3) / 2.0);
+                    let dx = ((b.0 - a.0) * 0.45).max(36.0);
+                    let color = match kind {
+                        "proxy" => "#56d364",
+                        "port" => "#5eb1ff",
+                        "fs" => "#39c5cf",
+                        _ => from
+                            .strip_prefix("net:")
+                            .and_then(|n| s.networks.iter().position(|x| x.name == n))
+                            .map(|i| NET_COLORS[i % NET_COLORS.len()])
+                            .unwrap_or("#6e7b91"),
+                    };
+                    let d = format!("M{:.1},{:.1} C{:.1},{:.1} {:.1},{:.1} {:.1},{:.1}", a.0, a.1, a.0 + dx, a.1, b.0 - dx, b.1, b.0, b.1);
+                    Some(Cable { from, to, color, d, a, b })
+                })
+                .collect()
+        });
+        let _ = cables.try_set(out);
+    };
+    // Re-measure after anything that moves the cards…
+    Effect::new(move |_| {
+        snap.track();
+        group.track();
+        show_stopped.track();
+        query.track();
+        selected.track();
+        zoom.track();
+        request_animation_frame(measure);
+    });
+    // …and whenever the board or the window changes size.
+    let observer = StoredValue::new_local(None::<(web_sys::ResizeObserver, Closure<dyn FnMut()>)>);
+    Effect::new(move |_| {
+        let (Some(b), Some(sc)) = (board.get(), scroller.get()) else { return };
+        let cb = Closure::<dyn FnMut()>::new(move || measure());
+        if let Ok(o) = web_sys::ResizeObserver::new(cb.as_ref().unchecked_ref()) {
+            o.observe(&b);
+            o.observe(&sc);
+            observer.try_with_value(|v| v.as_ref().map(|(old, _)| old.disconnect()));
+            observer.set_value(Some((o, cb)));
+        }
+    });
+    on_cleanup(move || {
+        observer.try_with_value(|v| v.as_ref().map(|(o, _)| o.disconnect()));
+    });
+
+    // All cables, faint, under the cards; the lit ones bright, on top.
+    let wires_under = move || {
+        if !show_wires.get() {
+            return ().into_any();
+        }
+        view! {
+            <svg class="hl-wires under" class:quiet=move || lights.with(|l| l.is_some())>
+                {move || cables.with(|cs| cs.iter().map(|c| view! { <path d=c.d.clone() stroke=c.color /> }).collect_view())}
+            </svg>
+        }
+        .into_any()
+    };
+    let wires_over = move || {
+        let l = lights.get()?;
+        Some(view! {
+            <svg class="hl-wires over">
+                {cables.with(|cs| {
+                    cs.iter()
+                        .filter(|c| key_lit(&l, &c.from) && key_lit(&l, &c.to))
+                        .map(|c| view! {
+                            <g>
+                                <path class="sheath" d=c.d.clone() />
+                                <path class="core" d=c.d.clone() stroke=c.color />
+                                <circle cx=c.a.0 cy=c.a.1 r="3.5" fill=c.color />
+                                <circle cx=c.b.0 cy=c.b.1 r="3.5" fill=c.color />
+                            </g>
+                        })
+                        .collect_view()
+                })}
+            </svg>
+        })
     };
 
     view! {
@@ -747,11 +948,8 @@ pub fn Homelab(host: String) -> impl IntoView {
                 <div
                     class="hl-scroll"
                     node_ref=scroller
-                    class:panning=move || drag.with_value(|d| d.is_some())
+                    class:panning=move || panning.get()
                     on:mousedown=on_down
-                    on:mousemove=on_move
-                    on:mouseup=on_up
-                    on:mouseleave=on_up
                     on:wheel=on_wheel
                 >
                     {move || {
@@ -760,7 +958,8 @@ pub fn Homelab(host: String) -> impl IntoView {
                         }
                         let (host_name, date) = snap.with(|s| s.as_ref().map(|s| (s.hostname.clone(), s.date.clone())).unwrap_or_default());
                         view! {
-                            <div class="hl-board" style=move || format!("zoom:{}", zoom.get())>
+                            <div class="hl-board" node_ref=board style=move || format!("zoom:{}", zoom.get())>
+                                {wires_under}
                                 <div class="hl-title">
                                     <input class="hl-title-input" prop:value=move || title.get() on:input=move |e| title.set(event_target_value(&e)) spellcheck="false" />
                                     <span class="grow"></span>
@@ -789,6 +988,7 @@ pub fn Homelab(host: String) -> impl IntoView {
                                         </div>
                                     </div>
                                 </div>
+                                {wires_over}
                             </div>
                         }
                         .into_any()
@@ -841,6 +1041,18 @@ mod tests {
     fn disk_lights_its_containers() {
         let l = lit(&snap(), &Focus::Fs("/srv".into()));
         assert_eq!(l.cts, HashSet::from(["jellyfin".to_string()]));
+    }
+
+    #[test]
+    fn cables_link_everything_to_its_container() {
+        let s = snap();
+        let v = links(&s);
+        for (from, kind) in [("px:0", "proxy"), ("port:8096/tcp", "port"), ("fs:/srv", "fs"), ("net:media", "net")] {
+            assert!(v.contains(&(from.into(), "ct:jellyfin".into(), kind)), "{from}");
+        }
+        let l = lit(&s, &Focus::Ct("jellyfin".into()));
+        assert!(v.iter().all(|(a, b, _)| key_lit(&l, a) && key_lit(&l, b)));
+        assert!(!key_lit(&l, "ct:db") && !key_lit(&l, "port:22/tcp"));
     }
 
     #[test]

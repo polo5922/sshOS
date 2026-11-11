@@ -39,7 +39,7 @@ echo '@@docker'
 docker info --format '{{.ServerVersion}}{{"\t"}}{{.DockerRootDir}}' 2>/dev/null
 echo '@@containers'
 ids=$(docker ps -aq --no-trunc 2>/dev/null)
-[ -n "$ids" ] && docker inspect --format '{{.Name}}{{"\t"}}{{.Config.Image}}{{"\t"}}{{.State.Status}}{{"\t"}}{{index .Config.Labels "com.docker.compose.project"}}{{"\t"}}{{index .Config.Labels "com.docker.compose.service"}}{{"\t"}}{{range $k, $v := .NetworkSettings.Networks}}{{$k}}|{{$v.IPAddress}}|{{range $v.Aliases}}{{.}},{{end}} {{end}}{{"\t"}}{{range $p, $b := .HostConfig.PortBindings}}{{$p}}={{range $b}}{{.HostIp}}/{{.HostPort}},{{end}} {{end}}{{"\t"}}{{range $p, $v := .Config.ExposedPorts}}{{$p}} {{end}}{{"\t"}}{{range .Mounts}}{{.Type}}|{{.Name}}|{{.Source}}|{{.Destination}};{{end}}{{"\t"}}{{.HostConfig.NetworkMode}}' $ids 2>/dev/null
+[ -n "$ids" ] && docker inspect --format '{{.Name}}{{"\t"}}{{.Config.Image}}{{"\t"}}{{.State.Status}}{{"\t"}}{{index .Config.Labels "com.docker.compose.project"}}{{"\t"}}{{index .Config.Labels "com.docker.compose.service"}}{{"\t"}}{{range $k, $v := .NetworkSettings.Networks}}{{$k}}|{{$v.IPAddress}}|{{range $v.Aliases}}{{.}},{{end}} {{end}}{{"\t"}}{{range $p, $b := .HostConfig.PortBindings}}{{$p}}={{range $b}}{{.HostIp}}/{{.HostPort}},{{end}} {{end}}{{"\t"}}{{range $p, $v := .Config.ExposedPorts}}{{$p}} {{end}}{{"\t"}}{{range .Mounts}}{{.Type}}|{{if eq .Type "volume"}}{{.Name}}{{end}}|{{.Source}}|{{.Destination}};{{end}}{{"\t"}}{{.HostConfig.NetworkMode}}' $ids 2>/dev/null
 echo '@@networks'
 nets=$(docker network ls -q 2>/dev/null)
 [ -n "$nets" ] && docker network inspect --format '{{.Name}}{{"\t"}}{{.Driver}}{{"\t"}}{{range .IPAM.Config}}{{.Subnet}} {{end}}{{"\t"}}{{range .Containers}}{{.Name}} {{end}}' $nets 2>/dev/null
@@ -649,4 +649,26 @@ host\thost\t\t
         assert_eq!(split_addr("[::]:443"), Some(("::".into(), 443)));
         assert_eq!(split_addr("127.0.0.53%lo:53"), Some(("127.0.0.53".into(), 53)));
     }
+}
+
+/// Parses a real capture: `HL_OUT=out.txt cargo test -p sshos homelab_real -- --ignored --nocapture`.
+#[cfg(test)]
+#[test]
+#[ignore]
+fn homelab_real() {
+    let Ok(p) = std::env::var("HL_OUT") else { return };
+    let s = parse(&std::fs::read_to_string(p).unwrap());
+    for c in &s.containers {
+        println!("{:28} {:10} nets={:?} ports={:?} domains={:?} public={} mounts={:?}", c.name, c.state, c.networks.iter().map(|n| &n.0).collect::<Vec<_>>(), c.ports, c.domains, c.public, c.mounts.iter().map(|m| (&m.source, &m.fs)).collect::<Vec<_>>());
+    }
+    for p in &s.proxies {
+        println!("PROXY {:?} -> {} = {:?}", p.domains, p.target, p.container);
+    }
+    for d in &s.disks {
+        println!("DISK {} {} {}", d.name, d.kind, d.size);
+        for f in &d.filesystems {
+            println!("   {} {} {:?}", f.mount, f.docker_root, f.containers);
+        }
+    }
+    println!("PORTS {:?}", s.open_ports.iter().map(|p| format!("{}/{} {}", p.port, p.proto, p.service)).collect::<Vec<_>>());
 }
