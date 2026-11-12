@@ -1,5 +1,7 @@
 # sshOs
 
+![sshOs : votre serveur Linux comme un bureau, sans agent, via SSH](docs/banner.png)
+
 *[English](README.md) · Français*
 
 Bureau de gestion de serveurs **sans agent** : tout passe par SSH/SFTP. Application desktop

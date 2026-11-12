@@ -1,5 +1,7 @@
 # sshOs
 
+![sshOs: your Linux server as a desktop, agentless over SSH](docs/banner.png)
+
 *English · [Français](README.fr.md)*
 
 An **agentless** server management desktop: everything goes through SSH/SFTP. A Rust desktop
