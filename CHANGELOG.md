@@ -4,7 +4,7 @@
 
 All notable changes to sshOs. Versions follow [SemVer](https://semver.org/).
 
-## [Unreleased]
+## [0.6.0] - 2026-11-25
 
 ### New
 

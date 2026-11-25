@@ -4,7 +4,7 @@
 
 Toutes les évolutions notables de sshOs. Les versions suivent [SemVer](https://semver.org/lang/fr/).
 
-## [Non publié]
+## [0.6.0] - 2026-11-25
 
 ### Nouveautés
 
