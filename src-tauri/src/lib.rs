@@ -235,6 +235,17 @@ async fn file_read(store: S<'_, HostStore>, pool: S<'_, Pool>, host_id: String, 
     }
 }
 
+/// Content of an image, as base64 for a data URL.
+#[tauri::command]
+async fn file_read_base64(store: S<'_, HostStore>, pool: S<'_, Pool>, host_id: String, path: String) -> AppResult<String> {
+    let bytes = with_sftp(&store, &pool, &host_id, |s| {
+        let path = path.clone();
+        async move { sftp::read_bytes(&s, &path).await }
+    })
+    .await?;
+    Ok(base64::engine::general_purpose::STANDARD.encode(bytes))
+}
+
 #[tauri::command]
 async fn file_write(
     store: S<'_, HostStore>,
@@ -730,6 +741,7 @@ pub fn run() {
             term_close,
             sftp_list,
             file_read,
+            file_read_base64,
             file_write,
             file_op_preview,
             file_op,

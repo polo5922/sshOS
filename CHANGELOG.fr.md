@@ -4,6 +4,12 @@
 
 Toutes les évolutions notables de sshOs. Les versions suivent [SemVer](https://semver.org/lang/fr/).
 
+## [Non publié]
+
+### Nouveautés
+
+- **Visionneuse d'images** : ouvrir une image (PNG, JPEG, GIF, WebP, AVIF, BMP, ICO, SVG) affiche l'image au lieu de son contenu binaire, avec zoom, déplacement à la souris, dimensions et téléchargement. Les SVG restent modifiables en texte.
+
 ## [0.5.0] - 2026-11-11
 
 ### Nouveautés

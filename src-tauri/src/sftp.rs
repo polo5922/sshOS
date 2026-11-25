@@ -11,6 +11,7 @@ use crate::error::{AppError, AppResult};
 use crate::ssh::{sh_quote, Session};
 
 const MAX_EDIT_SIZE: u64 = 8 * 1024 * 1024;
+const MAX_VIEW_SIZE: u64 = 32 * 1024 * 1024;
 
 pub fn join(dir: &str, name: &str) -> String {
     if dir.ends_with('/') {
@@ -73,6 +74,15 @@ pub async fn read_text(sftp: &SftpSession, path: &str) -> AppResult<FileContent>
         Err(e) => (String::from_utf8_lossy(e.as_bytes()).into_owned(), true),
     };
     Ok(FileContent { path: path.into(), text, binary, size })
+}
+
+/// Raw bytes of a file shown in the image viewer.
+pub async fn read_bytes(sftp: &SftpSession, path: &str) -> AppResult<Vec<u8>> {
+    let size = sftp.metadata(path).await?.size.unwrap_or(0);
+    if size > MAX_VIEW_SIZE {
+        return Err(AppError::msg(format!("{path} is too large to preview ({size} bytes)")));
+    }
+    Ok(sftp.read(path).await?)
 }
 
 /// Atomic save: write a temp file next to the target, keep mode/owner, then `mv`.

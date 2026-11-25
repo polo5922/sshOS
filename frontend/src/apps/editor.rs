@@ -7,13 +7,29 @@ use serde_json::json;
 use sshos_shared::{FileContent, NginxPlan, WriteResult};
 use wasm_bindgen::prelude::*;
 
+use crate::apps::imageview::{image_mime, ImageView};
 use crate::apps::nginx::apply_plan;
 use crate::icons::Icon;
 use crate::state::*;
 use crate::tauri::{editor, invoke};
 
+/// Opens a remote file: pictures in the viewer, everything else as text.
 #[component]
 pub fn Editor(host: String, path: String, nginx: bool, title: RwSignal<String>) -> impl IntoView {
+    let mime = image_mime(&path);
+    // SVG files can be switched to their source.
+    let as_text = RwSignal::new(false);
+    move || match mime.filter(|_| !as_text.get()) {
+        Some(mime) => {
+            let on_text = Callback::new(move |()| as_text.set(true));
+            view! { <ImageView host=host.clone() path=path.clone() mime=mime on_text=on_text /> }.into_any()
+        }
+        None => view! { <TextEditor host=host.clone() path=path.clone() nginx=nginx title=title /> }.into_any(),
+    }
+}
+
+#[component]
+fn TextEditor(host: String, path: String, nginx: bool, title: RwSignal<String>) -> impl IntoView {
     let c = ctx();
     let el = NodeRef::<leptos::html::Div>::new();
     let ed = StoredValue::new(None::<u32>);

@@ -4,6 +4,12 @@
 
 All notable changes to sshOs. Versions follow [SemVer](https://semver.org/).
 
+## [Unreleased]
+
+### New
+
+- **Image viewer**: opening a picture (PNG, JPEG, GIF, WebP, AVIF, BMP, ICO, SVG) shows the image instead of its binary content, with zoom, drag to pan, dimensions, and download. SVG files can still be edited as text.
+
 ## [0.5.0] - 2026-11-11
 
 ### New

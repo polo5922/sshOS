@@ -458,6 +458,15 @@ th.sortable.active { color: var(--accent); }
 .editor-host { flex: 1 1 auto; min-height: 0; overflow: hidden; }
 .editor-host .cm-editor { height: 100%; }
 
+.img-area {
+  flex: 1 1 auto; min-height: 0; overflow: auto; display: flex; user-select: none; touch-action: none;
+  background: repeating-conic-gradient(rgba(128, 128, 128, .18) 0 25%, transparent 0 50%) 0 0 / 20px 20px;
+}
+/* margin: auto centers without cutting the top-left corner when the image overflows. */
+.img-area img { margin: auto; flex: none; object-fit: contain; }
+.img-area.zoomed { cursor: grab; }
+.img-area.zoomed:active { cursor: grabbing; }
+
 /* ---------- files */
 .files { display: flex; flex-direction: column; height: 100%; }
 .files form { display: flex; }

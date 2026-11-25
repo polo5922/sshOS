@@ -30,3 +30,4 @@ pub mod mongobrowser;
 pub mod fleet;
 pub mod scripts;
 pub mod homelab;
+pub mod imageview;
