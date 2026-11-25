@@ -4,6 +4,8 @@
 
 *[English](README.md) · Français*
 
+**[sshOs sur la Marketplace](https://paul-barbaux.dev/marketplace/sshos)**
+
 Bureau de gestion de serveurs **sans agent** : tout passe par SSH/SFTP. Application desktop
 Rust — backend [Tauri v2](https://tauri.app) + [russh](https://github.com/Eugeny/russh), interface
 [Leptos](https://leptos.dev) compilée en WebAssembly.

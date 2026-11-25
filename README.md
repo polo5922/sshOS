@@ -4,6 +4,8 @@
 
 *English · [Français](README.fr.md)*
 
+**[sshOs on the Marketplace](https://paul-barbaux.dev/en/marketplace/sshos)**
+
 An **agentless** server management desktop: everything goes through SSH/SFTP. A Rust desktop
 app — [Tauri v2](https://tauri.app) + [russh](https://github.com/Eugeny/russh) backend, UI written in
 [Leptos](https://leptos.dev) and compiled to WebAssembly.
